@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Liquid Type — Magnetic Typographic Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --ink: #f4f1ea;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg); }
+  body {
+    font-family: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
+    cursor: none;
+  }
+  #stage { display: block; width: 100vw; height: 100vh; }
+
+  /* custom cursor dot */
+  #cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 14px; height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(244,241,234,0.7);
+    pointer-events: none;
+    mix-blend-mode: difference;
+    transition: width .18s ease, height .18s ease, margin .18s ease, opacity .3s;
+    z-index: 10;
+  }
+  #cursor.warping { width: 42px; height: 42px; margin: -21px 0 0 -21px; }
+
+  /* hint + caption */
+  .hud {
+    position: fixed;
+    left: 0; right: 0;
+    text-align: center;
+    color: rgba(244,241,234,0.45);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity .5s ease;
+  }
+  #hint { top: 50%; transform: translateY(-50%); font-size: 15px; }
+  #footer { bottom: 22px; font-size: 11px; color: rgba(244,241,234,0.3); }
+  .key {
+    display: inline-block;
+    padding: 2px 7px;
+    margin: 0 3px;
+    border: 1px solid rgba(244,241,234,0.25);
+    border-radius: 4px;
+    font-size: 10px;
+  }
+  .hidden { opacity: 0 !important; }
+</style>
+</head>
+<body>
+  <canvas id="stage"></canvas>
+  <div id="cursor"></div>
+  <div id="hint" class="hud">start typing…</div>
+  <div id="footer" class="hud">
+    <span class="key">type</span> fill the screen
+    <span class="key">move</span> warp the letters
+    <span class="key">⌫</span> delete
+    <span class="key">esc</span> clear
+  </div>
+
+<script>
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("stage");
+  const ctx = canvas.getContext("2d");
+  const cursorEl = document.getElementById("cursor");
+  const hintEl = document.getElementById("hint");
+  const footerEl = document.getElementById("footer");
+
+  // ---- state ----
+  let text = "";
+  let glyphs = [];            // laid-out glyph objects
+  let DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0;
+
+  // pointer (rendered-space, CSS px) — start off-screen
+  const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: false };
+
+  // tuning
+  let RADIUS = 340;            // influence radius of the cursor (css px, set on resize)
+  const PUSH = 0.9;            // repulsion strength
+  const SWELL = 0.85;          // how much letters grow near cursor
+  const SPRING = 0.12;         // return-to-home stiffness
+  const DAMP = 0.78;           // velocity damping (lower = gooier wobble)
+  const MAX_OFF = 260;         // cap displacement so letters don't fly off screen
+
+  // ---- canvas sizing ----
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    RADIUS = Math.max(300, Math.min(W, H) * 0.55);
+    layout();
+  }
+
+  // ---- layout: fit the text into the screen as huge type ----
+  function layout() {
+    glyphs = [];
+    if (!text.trim()) return;
+
+    const words = text.split(/(\s+)/).filter(w => w.length); // keep spaces as tokens
+    const margin = Math.min(W, H) * 0.07;
+    const maxW = W - margin * 2;
+    const maxH = H - margin * 2;
+    const lineGap = 0.92; // line-height multiplier of font size
+
+    // Binary-search the largest font size that fits within maxW x maxH.
+    let lo = 12, hi = Math.min(W, H) * 1.4, best = 12, bestLines = null;
+    for (let i = 0; i < 26; i++) {
+      const fs = (lo + hi) / 2;
+      const res = wrap(words, fs, maxW);
+      const totalH = res.lines.length * fs * lineGap;
+      if (res.maxLineW <= maxW && totalH <= maxH) {
+        best = fs; bestLines = res.lines; lo = fs;
+      } else {
+        hi = fs;
+      }
+    }
+    if (!bestLines) { bestLines = wrap(words, best, maxW).lines; }
+
+    const fs = best;
+    ctx.font = `${fs}px "Archivo Black", sans-serif`;
+    const lineH = fs * lineGap;
+    const blockH = bestLines.length * lineH;
+    let y = (H - blockH) / 2 + lineH * 0.5;
+
+    for (const line of bestLines) {
+      const lineW = ctx.measureText(line).width;
+      let x = (W - lineW) / 2;
+      for (const ch of line) {
+        const w = ctx.measureText(ch).width;
+        if (ch !== " ") {
+          glyphs.push({
+            ch,
+            bx: x + w / 2,         // base center x
+            by: y,                 // baseline-ish center y
+            ox: 0, oy: 0,          // current offset
+            vx: 0, vy: 0,          // velocity
+            sc: 1, rot: 0,         // current scale & rotation
+            fs
+          });
+        }
+        x += w;
+      }
+      y += lineH;
+    }
+  }
+
+  // greedy word-wrap for a given font size; returns lines + widest line width
+  function wrap(words, fs, maxW) {
+    ctx.font = `${fs}px "Archivo Black", sans-serif`;
+    const lines = [];
+    let cur = "";
+    let maxLineW = 0;
+
+    for (const tok of words) {
+      if (tok === "\n") { lines.push(cur.trimEnd()); cur = ""; continue; }
+      const trial = cur + tok;
+      if (ctx.measureText(trial.trimEnd()).width > maxW && cur.trim()) {
+        lines.push(cur.trimEnd());
+        cur = tok.trim() === "" ? "" : tok;
+      } else {
+        cur = trial;
+      }
+    }
+    if (cur.trim()) lines.push(cur.trimEnd());
+
+    for (const ln of lines) maxLineW = Math.max(maxLineW, ctx.measureText(ln).width);
+    return { lines, maxLineW: maxLineW || 1 };
+  }
+
+  // ---- animation loop ----
+  function tick() {
+    // ease the pointer for smooth, liquid tracking
+    mouse.x += (mouse.tx - mouse.x) * 0.22;
+    mouse.y += (mouse.ty - mouse.y) * 0.22;
+
+    ctx.clearRect(0, 0, W, H);
+
+    for (const g of glyphs) {
+      // home position is base + nothing; compute force from cursor
+      const px = g.bx + g.ox;
+      const py = g.by + g.oy;
+      const dx = px - mouse.x;
+      const dy = py - mouse.y;
+      const dist = Math.hypot(dx, dy) || 0.0001;
+
+      let tScale = 1, tRot = 0;
+
+      if (mouse.active && dist < RADIUS) {
+        const f = 1 - dist / RADIUS;        // 0..1, strongest at center
+        const falloff = f * f;              // ease the edge
+        const nx = dx / dist, ny = dy / dist;
+        const force = falloff * RADIUS * PUSH;
+        // repulsion target adds to spring via velocity
+        g.vx += (nx * force) * 0.06;
+        g.vy += (ny * force) * 0.06;
+        tScale = 1 + falloff * SWELL;
+        tRot = (Math.atan2(dy, dx) - Math.PI / 2) * falloff * 0.18;
+      }
+
+      // spring back home
+      g.vx += (-g.ox) * SPRING;
+      g.vy += (-g.oy) * SPRING;
+      g.vx *= DAMP;
+      g.vy *= DAMP;
+      g.ox += g.vx;
+      g.oy += g.vy;
+
+      // cap displacement so a letter never flies off screen
+      const off = Math.hypot(g.ox, g.oy);
+      if (off > MAX_OFF) {
+        const s = MAX_OFF / off;
+        g.ox *= s; g.oy *= s;
+      }
+
+      // ease scale & rotation toward target
+      g.sc += (tScale - g.sc) * 0.18;
+      g.rot += (tRot - g.rot) * 0.18;
+
+      // hue tint based on proximity for a liquid, alive feel
+      const prox = mouse.active ? Math.max(0, 1 - dist / RADIUS) : 0;
+
+      ctx.save();
+      ctx.translate(g.bx + g.ox, g.by + g.oy);
+      ctx.rotate(g.rot);
+      ctx.scale(g.sc, g.sc);
+      ctx.font = `${g.fs}px "Archivo Black", sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      if (prox > 0.01) {
+        const hue = 180 + prox * 140;       // cyan→magenta shimmer near cursor
+        ctx.fillStyle = `hsl(${hue}, ${40 + prox * 50}%, ${78 + prox * 10}%)`;
+        ctx.shadowColor = `hsla(${hue}, 90%, 60%, ${prox * 0.6})`;
+        ctx.shadowBlur = prox * 40;
+      } else {
+        ctx.fillStyle = "#f4f1ea";
+      }
+      ctx.fillText(g.ch, 0, 0);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  // ---- input ----
+  let seeded = true;   // starter word shown until the user types
+  function onKey(e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    // first printable keystroke wipes the seed word, then types normally
+    if (seeded && e.key.length === 1) { text = ""; seeded = false; }
+
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      text = text.slice(0, -1);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      text += "\n";
+    } else if (e.key === "Escape") {
+      text = "";
+    } else if (e.key.length === 1) {
+      text += e.key;
+    } else {
+      return;
+    }
+
+    hintEl.classList.toggle("hidden", text.length > 0);
+    footerEl.classList.toggle("hidden", text.length > 0);
+    layout();
+  }
+
+  function onMove(e) {
+    mouse.tx = e.clientX;
+    mouse.ty = e.clientY;
+    mouse.active = true;
+    cursorEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+
+    // is the cursor over text? swell the cursor ring
+    let near = false;
+    for (const g of glyphs) {
+      if (Math.hypot(g.bx - e.clientX, g.by - e.clientY) < RADIUS * 0.6) { near = true; break; }
+    }
+    cursorEl.classList.toggle("warping", near);
+  }
+
+  // ---- boot ----
+  window.addEventListener("resize", resize);
+  window.addEventListener("keydown", onKey);
+  window.addEventListener("mousemove", onMove);
+  window.addEventListener("mouseleave", () => { mouse.active = false; });
+  document.addEventListener("mouseenter", () => { mouse.active = true; });
+
+  let started = false;
+  function init() {
+    if (started) { resize(); return; }   // re-run only re-measures layout
+    started = true;
+    resize();
+    text = "TYPE";
+    hintEl.classList.add("hidden");
+    layout();
+    requestAnimationFrame(tick);
+  }
+
+  // start immediately, then re-measure once the web font loads so glyph
+  // metrics (and the fitted size) are correct.
+  init();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.load('64px "Archivo Black"')
+      .then(() => document.fonts.ready)
+      .then(() => layout())
+      .catch(() => {});
+  }
+})();
+</script>
+</body>
+</html>

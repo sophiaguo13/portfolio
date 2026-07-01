@@ -196,6 +196,14 @@
       background: #0a0a0f;
     }
 
+    /* ── Divider between experiments ── */
+    .lab-divider {
+      max-width: 1200px;
+      margin: 0 auto 88px;
+      padding: 0 48px;
+    }
+    .lab-divider-line { height: 1px; background: var(--card-border); }
+
     /* ── Coming soon ── */
     .lab-more {
       max-width: 1200px;
@@ -229,12 +237,14 @@
     @media (max-width: 900px) {
       .lab-hero { padding: 0 24px 48px; }
       .lab-section { padding: 0 24px 72px; }
+      .lab-divider { padding: 0 24px; margin-bottom: 64px; }
       .lab-more { padding: 0 24px 88px; }
       .exp-frame iframe { height: 440px; }
     }
     @media (max-width: 540px) {
       .lab-hero { padding: 0 16px 40px; }
       .lab-section { padding: 0 16px 56px; }
+      .lab-divider { padding: 0 16px; margin-bottom: 52px; }
       .lab-more { padding: 0 16px 72px; }
       .exp-frame iframe { height: 380px; }
       .exp-frame-hint { display: none; }
@@ -299,6 +309,38 @@
             <span class="exp-frame-hint">click, then start typing ✧</span>
           </div>
           <iframe src="playground/floating-letters/index.html" title="Floating Letters — interactive typing experiment" loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="lab-divider"><div class="lab-divider-line"></div></div>
+
+    <!-- Experiment: Liquid Type -->
+    <section class="lab-section">
+      <div class="exp">
+        <div class="exp-meta">
+          <h2 class="exp-name">Liquid Type</h2>
+          <p class="exp-blurb">Type to fill the screen with massive type, then sweep your cursor through it — the letters repel, swell, tilt, and shimmer cyan-to-magenta like they're suspended in liquid. <strong>Backspace</strong> deletes, <strong>Esc</strong> clears.</p>
+          <div class="exp-tags">
+            <span class="exp-tag">Canvas 2D</span>
+            <span class="exp-tag">Spring physics</span>
+            <span class="exp-tag">Typography</span>
+            <span class="exp-tag">Built with Claude</span>
+          </div>
+          <div class="exp-actions">
+            <a href="playground/type-warp/index.html" target="_blank" class="exp-btn exp-btn-primary" data-cursor="link">Open full screen ↗</a>
+            <a href="https://github.com/sophiaguo13/portfolio/blob/main/playground/type-warp/index.html" target="_blank" rel="noopener" class="exp-btn exp-btn-ghost" data-cursor="link">View source ↗</a>
+          </div>
+        </div>
+
+        <div class="exp-frame">
+          <div class="exp-frame-bar">
+            <div class="exp-frame-dots"><span></span><span></span><span></span></div>
+            <span class="exp-frame-title">liquid-type</span>
+            <span class="exp-frame-hint">click, then type &amp; move your cursor ✧</span>
+          </div>
+          <iframe src="playground/type-warp/index.html" title="Liquid Type — magnetic typographic canvas" loading="lazy"></iframe>
         </div>
       </div>
     </section>
