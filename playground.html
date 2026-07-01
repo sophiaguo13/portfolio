@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Playground — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=3" />
+  <style>
+    /* ── Playground Page ── */
+    .lab-page {
+      padding-top: 120px;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .lab-hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 64px;
+    }
+
+    .lab-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .lab-back:hover { color: var(--fg); }
+    .lab-back svg { width: 16px; height: 16px; }
+
+    .lab-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .lab-title {
+      font-family: var(--font-serif);
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 1.05;
+      color: var(--fg);
+      margin-bottom: 24px;
+    }
+    .lab-title em { font-style: italic; color: var(--accent); }
+
+    .lab-desc {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 560px;
+    }
+    .lab-desc a {
+      color: var(--accent2);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+
+    /* ── Experiment ── */
+    .lab-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+    }
+
+    .exp {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .exp-meta { max-width: 720px; }
+
+    .exp-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent3);
+      margin-bottom: 14px;
+    }
+    .exp-eyebrow::before {
+      content: "";
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent3);
+    }
+
+    .exp-name {
+      font-family: var(--font-serif);
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.1;
+      color: var(--fg);
+      margin-bottom: 14px;
+    }
+
+    .exp-blurb {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 26px;
+    }
+    .exp-tag {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--fg);
+      background: var(--warm);
+      border: 1px solid var(--card-border);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .exp-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .exp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 11px 20px;
+      border-radius: 999px;
+      transition: transform 0.2s var(--ease-spring), background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .exp-btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .exp-btn-primary:hover { transform: translateY(-2px); background: #e5552e; }
+    .exp-btn-ghost {
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--card-border);
+    }
+    .exp-btn-ghost:hover { transform: translateY(-2px); border-color: var(--fg); }
+
+    /* ── Live embed ── */
+    .exp-frame {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #0a0a0f;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 24px 60px -24px rgba(26,23,20,0.35);
+    }
+    .exp-frame-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 18px;
+      background: #131319;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .exp-frame-dots { display: flex; gap: 7px; }
+    .exp-frame-dots span {
+      width: 11px; height: 11px; border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+    }
+    .exp-frame-title {
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.4);
+      margin-left: 6px;
+    }
+    .exp-frame-hint {
+      margin-left: auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+    }
+    .exp-frame iframe {
+      display: block;
+      width: 100%;
+      height: 520px;
+      border: 0;
+      background: #0a0a0f;
+    }
+
+    /* ── Coming soon ── */
+    .lab-more {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 120px;
+    }
+    .lab-more-divider {
+      height: 1px;
+      background: var(--card-border);
+      margin-bottom: 40px;
+    }
+    .lab-more-card {
+      border: 1px dashed var(--card-border);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+    }
+    .lab-more-card h3 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      color: var(--fg);
+      margin-bottom: 10px;
+    }
+    .lab-more-card p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .lab-hero { padding: 0 24px 48px; }
+      .lab-section { padding: 0 24px 72px; }
+      .lab-more { padding: 0 24px 88px; }
+      .exp-frame iframe { height: 440px; }
+    }
+    @media (max-width: 540px) {
+      .lab-hero { padding: 0 16px 40px; }
+      .lab-section { padding: 0 16px 56px; }
+      .lab-more { padding: 0 16px 72px; }
+      .exp-frame iframe { height: 380px; }
+      .exp-frame-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="play.html" class="nav-link" data-cursor="link">Play</a>
+      <a href="playground.html" class="nav-link" data-cursor="link" style="color: var(--fg);">Lab</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <main class="lab-page">
+
+    <!-- Hero -->
+    <div class="lab-hero">
+      <a href="index.html" class="lab-back" data-cursor="link">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Back to home
+      </a>
+      <p class="lab-label">Interactive Experiments</p>
+      <h1 class="lab-title">the AI <em>playground</em> ✦</h1>
+      <p class="lab-desc">A corner for the small, playful things — interactive toys I prototype by pairing with AI. Poke at them, break them, make a mess. Everything here runs right in your browser.</p>
+    </div>
+
+    <!-- Experiment: Floating Letters -->
+    <section class="lab-section">
+      <div class="exp">
+        <div class="exp-meta">
+          <span class="exp-eyebrow">Live · Type to play</span>
+          <h2 class="exp-name">Floating Letters</h2>
+          <p class="exp-blurb">Type anywhere and each letter drifts up like a balloon — a vibrant color, a little tilt, a gentle bob — crowding together at the ceiling. Hit <strong>clear</strong> to release them all and start fresh.</p>
+          <div class="exp-tags">
+            <span class="exp-tag">JavaScript</span>
+            <span class="exp-tag">requestAnimationFrame</span>
+            <span class="exp-tag">Interaction Design</span>
+            <span class="exp-tag">Built with Claude</span>
+          </div>
+          <div class="exp-actions">
+            <a href="playground/floating-letters/index.html" target="_blank" class="exp-btn exp-btn-primary" data-cursor="link">Open full screen ↗</a>
+          </div>
+        </div>
+
+        <div class="exp-frame">
+          <div class="exp-frame-bar">
+            <div class="exp-frame-dots"><span></span><span></span><span></span></div>
+            <span class="exp-frame-title">floating-letters</span>
+            <span class="exp-frame-hint">click, then start typing ✧</span>
+          </div>
+          <iframe src="playground/floating-letters/index.html" title="Floating Letters — interactive typing experiment" loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- More coming -->
+    <div class="lab-more">
+      <div class="lab-more-divider"></div>
+      <div class="lab-more-card">
+        <h3>more experiments brewing ◡̈</h3>
+        <p>This is where I'll drop new interactive toys as I make them. Check back — or say hi if you want to see something specific.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="main.js?v=2"></script>
+</body>
+</html>

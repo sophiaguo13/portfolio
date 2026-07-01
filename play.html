@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=3" />
+  <style>
+    /* ── Play Page Specific ── */
+    .play-page {
+      padding-top: 120px;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .play-page-hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 72px;
+    }
+
+    .play-page-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .play-page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 1.05;
+      color: var(--fg);
+      margin-bottom: 24px;
+    }
+
+    .play-page-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .play-page-desc {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    /* ── Gallery Sections ── */
+    .gallery-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+    }
+
+    .gallery-section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .gallery-section-title {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      color: var(--fg);
+    }
+
+    .gallery-section-count {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .gallery-section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--card-border);
+      margin-left: 8px;
+    }
+
+    /* Override play-grid for this page */
+    .gallery-section .play-grid {
+      column-count: 3;
+      column-gap: 16px;
+      margin-bottom: 0;
+    }
+
+    /* ── Back Link ── */
+    .play-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .play-back:hover { color: var(--fg); }
+    .play-back svg { width: 16px; height: 16px; }
+
+    /* ── Divider ── */
+    .gallery-divider {
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      padding: 0 48px;
+    }
+    .gallery-divider-line {
+      height: 1px;
+      background: var(--card-border);
+    }
+
+    @media (max-width: 900px) {
+      .play-page-hero { padding: 0 24px 56px; }
+      .gallery-section { padding: 0 24px 72px; }
+      .gallery-divider { padding: 0 24px; }
+      .gallery-section .play-grid { column-count: 2; }
+    }
+
+    @media (max-width: 540px) {
+      .play-page-hero { padding: 0 16px 48px; }
+      .gallery-section { padding: 0 16px 56px; }
+      .gallery-section .play-grid { column-count: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="play.html" class="nav-link" data-cursor="link" style="color: var(--fg);">Play</a>
+      <a href="playground.html" class="nav-link" data-cursor="link">Lab</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="play-page">
+
+    <!-- Hero Header -->
+    <div class="play-page-hero">
+      <a href="index.html" class="play-back" data-cursor="link">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Back to home
+      </a>
+      <p class="play-page-label">Creative Outlet</p>
+      <h1 class="play-page-title">just for <em>fun</em> ♡</h1>
+      <p class="play-page-desc">When I'm not designing enterprise software, I'm making things for the joy of it — illustrations, character art, branding, and photography.</p>
+    </div>
+
+    <!-- Illustrations -->
+    <section class="gallery-section">
+      <div class="gallery-section-header">
+        <h2 class="gallery-section-title">Illustrations</h2>
+        <span class="gallery-section-count">Procreate · Digital Art</span>
+        <div class="gallery-section-line"></div>
+      </div>
+
+      <div class="play-grid">
+
+        <div class="play-card">
+          <img src="images/play/boat.jpg" alt="Dream Boat" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Dream Boat · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/Lisa_Red.jpg" alt="Portrait" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Portrait · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/snowglobe.jpg" alt="Snow Globe" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Snow Globe · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/girls.png" alt="Characters" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Characters · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/girl_with_white_hair.jpg" alt="Girl with White Hair" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Girl with White Hair · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/summer_in_a_pill.jpg" alt="Summer in a Pill" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Summer in a Pill · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/orange.jpg" alt="Orange" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Orange · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/play-04.jpg" alt="Swimming" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Swimming · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/orange_animation.jpg" alt="Orange Study" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Orange Study · Procreate</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/untitled-8.png" alt="Untitled I" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Untitled I · Procreate</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="gallery-divider">
+      <div class="gallery-divider-line"></div>
+    </div>
+
+    <!-- Traditional Art -->
+    <section class="gallery-section">
+      <div class="gallery-section-header">
+        <h2 class="gallery-section-title">Traditional Art</h2>
+        <span class="gallery-section-count">Acrylic · Scratchboard · Mixed Media</span>
+        <div class="gallery-section-line"></div>
+      </div>
+
+      <div class="play-grid">
+
+        <div class="play-card">
+          <img src="images/play/oranges.jpg" alt="Oranges" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Oranges · Acrylic</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/vegetables.jpg" alt="Vegetables" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Vegetables · Acrylic</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/hot-air-balloons.jpg" alt="Hot Air Balloons" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Hot Air Balloons · Acrylic</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/places-youll-go.jpg" alt="The Places You'll Go" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">The Places You'll Go · Mixed Media</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/cat.jpg" alt="Cat" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Cat · Scratchboard</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/Skydiving.jpg" alt="Skydiving" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Skydiving · Mixed Media</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="gallery-divider">
+      <div class="gallery-divider-line"></div>
+    </div>
+
+    <!-- Branding -->
+    <section class="gallery-section">
+      <div class="gallery-section-header">
+        <h2 class="gallery-section-title">Branding</h2>
+        <span class="gallery-section-count">Logo Design · Identity</span>
+        <div class="gallery-section-line"></div>
+      </div>
+
+      <div class="play-grid">
+
+        <div class="play-card">
+          <img src="images/play/hex-logo.png" alt="HEX Branding" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">HEX Branding</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/screenshot.png" alt="GAEA Photography" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">GAEA Photography</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/innod-flyer.png" alt="INNOD Recruitment Flyer" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">INNOD Recruitment Flyer · Innovative Design</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="gallery-divider">
+      <div class="gallery-divider-line"></div>
+    </div>
+
+    <!-- Photography -->
+    <section class="gallery-section">
+      <div class="gallery-section-header">
+        <h2 class="gallery-section-title">Photography</h2>
+        <span class="gallery-section-count">iPhone · Canon</span>
+        <div class="gallery-section-line"></div>
+      </div>
+
+      <div class="play-grid">
+
+        <div class="play-card">
+          <img src="images/play/untitled-9.png" alt="Beach Sunset" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Beach Sunset</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/barn.jpg" alt="Barn" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Barn</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/IMG_8679.png" alt="Golden Hour" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Golden Hour</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/IMG_0856.jpg" alt="Photo" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Photography</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/IMG_4978.jpg" alt="Photo" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Photography</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/IMG_2314.jpg" alt="Photo" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Photography</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/IMG_2247.jpg" alt="Photo" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Photography</span>
+          </div>
+        </div>
+
+        <div class="play-card">
+          <img src="images/play/IMG_2469.jpg" alt="Photo" loading="lazy" />
+          <div class="play-card-overlay">
+            <span class="play-label">Photography</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="main.js?v=2"></script>
+</body>
+</html>

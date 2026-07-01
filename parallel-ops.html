@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parallel Operations — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="case-study.css?v=4" />
+</head>
+<body class="cs-page">
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="play.html" class="nav-link" data-cursor="link">Play</a>
+      <a href="playground.html" class="nav-link" data-cursor="link">Lab</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="cs-hero">
+    <div class="cs-wrap">
+      <a href="index.html#work" class="cs-back" data-cursor="link">
+        <span class="cs-back-arrow">←</span>
+        Back to work
+      </a>
+      <div class="cs-project-label">
+        <span class="cs-project-label-dot"></span>
+        Oracle SCM Manufacturing
+      </div>
+      <h1 class="cs-title">Parallel Operations<br/>in Work Definition</h1>
+      <p class="cs-lead">A visual modeling tool enabling manufacturers to define parallel operations — turning complex manufacturing logic into something anyone on the floor could understand.</p>
+      <div class="cs-meta-strip">
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Timeline</div>
+          <div class="cs-meta-value">3 Months</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Role</div>
+          <div class="cs-meta-value">UX Designer</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Tools</div>
+          <div class="cs-meta-value">Figma</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Company & Team</div>
+          <div class="cs-meta-value">Oracle · SCM Manufacturing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover Image -->
+  <div class="cs-cover-wrap">
+    <img src="images/parallel-ops/cover.png?v=2" alt="Parallel Operations — Operation Dependencies Datagrid and Diagram" />
+  </div>
+
+  <!-- 01 The Challenge -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-cols-ratio cs-reveal">
+        <div>
+          <p class="cs-eyebrow">01 — The Challenge</p>
+          <h2 class="cs-heading">Breaking the Sequential Bottleneck</h2>
+          <p class="cs-body">Manufacturing in electronics, furniture, and packaging requires the ability to run certain tasks in parallel — to fully utilize labor and equipment with minimal downtime. But Oracle's Work Definition only modeled operations <strong>sequentially</strong>, forcing engineers into workarounds that distorted their data and inflated their timelines.</p>
+          <p class="cs-body" style="margin-top:16px;">Users were setting "one-minute lead times" to trick the software into allowing parallel starts — a sign the product had a real gap to close.</p>
+
+          <div class="cs-img-block sharp" style="margin-top:32px;">
+            <img src="images/parallel-ops/sequential-vs-parallel.svg" alt="Sequential Execution vs Parallel Execution diagram" />
+            <p class="cs-img-caption">Sequential vs. parallel execution — the same operations take significantly longer when forced to run one at a time.</p>
+          </div>
+
+        </div>
+        <div>
+          <p class="cs-eyebrow" style="margin-bottom:16px;">Business Impact</p>
+          <ul class="cs-impact-list">
+            <li>
+              <strong>Inflated Lead Times</strong>
+              Parallel tasks modeled sequentially artificially extended production — a 2-hour process showed as 6 hours.
+            </li>
+            <li>
+              <strong>Resource Inefficiency</strong>
+              Labor and equipment sat idle during "sequential" steps that could run simultaneously.
+            </li>
+            <li>
+              <strong>Clunky Workarounds</strong>
+              Users set "one-minute lead times" to trick software into allowing parallel starts — a signal the model was fundamentally broken.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="cs-callout cs-reveal" style="margin-top:32px;">
+        <div class="cs-callout-label">The Goal</div>
+        <p>Design a solution allowing manufacturing engineers to specify which operations run in parallel — based on dependency relationships between operation start and completion — without compromising data integrity or established workflows.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Understanding Users -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">02 — Research</p>
+    <h2 class="cs-heading">Understanding the Users</h2>
+    <p class="cs-body" style="margin-bottom:36px;">I consulted Oracle Cloud Customer Connect for peer feedback and mapped the experience across three distinct user types — each with different needs and contexts around parallel operations.</p>
+
+    <div class="cs-img-block sharp" style="margin:0 0 32px;">
+      <img src="images/parallel-ops/customer-feedback.svg" alt="Oracle Cloud Customer Connect feedback threads with my design insights annotated" />
+      <p class="cs-img-caption">Real requests from Oracle Cloud Customer Connect — peer feedback that surfaced the parallel-operations gap, paired with the insights I pulled from each.</p>
+    </div>
+
+    <div class="cs-img-block no-border" style="margin:0 0 32px;">
+      <img src="images/parallel-ops/users.png?v=2" alt="Three user types: Planning, Scheduling, and Execution" />
+      <p class="cs-img-caption">The parallel operations experience spans three roles — from planning to floor execution.</p>
+    </div>
+
+    <div class="cs-cols-3" style="margin-top:40px;">
+      <div class="cs-callout" style="margin:0;">
+        <div class="cs-callout-label">The Planner</div>
+        <p><strong>Manufacturing Engineer</strong><br/>Defines complex dependency relationships (Finish-to-Start vs. Start-to-Start) to minimize overall lead time. Needs a way to author and validate parallel logic without leaving their authoring context.</p>
+      </div>
+      <div class="cs-callout accent2" style="margin:0;">
+        <div class="cs-callout-label">The Manager</div>
+        <p><strong>Production Supervisor</strong><br/>Monitors real-time progress and intervenes if bottlenecks appear. Needs to see which parallel operations are running and approve changes without disrupting the floor.</p>
+      </div>
+      <div class="cs-callout accent3" style="margin:0;">
+        <div class="cs-callout-label">The Doer</div>
+        <p><strong>Production Operator</strong><br/>Needs to know exactly which operation to start — right now. Parallel logic needs to be surfaced clearly so they can act immediately when a Start-to-Start dependency is satisfied.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Design Principles -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">03 — Design Principles</p>
+        <h2 class="cs-heading">Four anchors before sketching a single frame</h2>
+        <p class="cs-body">Before exploring any solutions, I established four guiding principles to keep every design decision tethered to real user needs.</p>
+        <div class="cs-constraint-list" style="margin-top:24px;max-width:640px;">
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num">1</div>
+            <div class="cs-constraint-text">
+              <strong>Wayfinding</strong>
+              <span>Provide clear visual cues for the "next step" in a complex, multi-stage setup.</span>
+            </div>
+          </div>
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num">2</div>
+            <div class="cs-constraint-text">
+              <strong>Context Awareness</strong>
+              <span>Help users orient within the macro-process even while deep in micro-tasks.</span>
+            </div>
+          </div>
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num">3</div>
+            <div class="cs-constraint-text">
+              <strong>Clear Workflow Visualization</strong>
+              <span>Make non-sequential flows easy to digest — highlight dependency types and transfer percentages.</span>
+            </div>
+          </div>
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num">4</div>
+            <div class="cs-constraint-text">
+              <strong>System Validation & Error Handling</strong>
+              <span>Proactively catch circular dependencies and invalid sequences with clear recovery paths.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Information Architecture -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">04 — Information Architecture</p>
+    <h2 class="cs-heading">The Operation Dependencies Tab</h2>
+    <p class="cs-body" style="margin-bottom:12px;">I restructured the Work Definition experience to accommodate new data points without overwhelming existing users. The solution centers on a new dedicated tab that introduces three new relationship types:</p>
+
+    <div class="cs-cols-3" style="margin-top:32px;">
+      <div style="padding:24px 0; border-top:3px solid var(--accent);">
+        <div style="font-size:15px;font-weight:500;color:var(--fg);margin-bottom:8px;">Finish-to-Start</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">The previous operation must complete before the next one can begin — the traditional sequential model.</div>
+      </div>
+      <div style="padding:24px 0; border-top:3px solid var(--accent2);">
+        <div style="font-size:15px;font-weight:500;color:var(--fg);margin-bottom:8px;">Start-to-Start</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">A scheduling dependency where the next operation can start as soon as the previous one starts — enabling true parallelism.</div>
+      </div>
+      <div style="padding:24px 0; border-top:3px solid var(--accent3);">
+        <div style="font-size:15px;font-weight:500;color:var(--fg);margin-bottom:8px;">Transfer Percent</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">The percentage of completed quantity that moves to the next operation — enabling accurate yield calculations across parallel branches.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Navigating Constraints -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">05 — Exploration</p>
+      <h2 class="cs-heading cs-reveal">Navigating the Redwood Design System</h2>
+      <p class="cs-body cs-reveal">The core challenge: balancing the user's need for a robust, interactive flowchart against the technical boundaries of Oracle's Redwood Design System. Oracle requires consistent UI across the SCM suite, which means using existing, tested components over custom code.</p>
+
+      <p class="cs-body cs-reveal" style="margin-top:16px;">I explored four low-fidelity architectural options, each representing a different tradeoff between authoring power and visual clarity:</p>
+
+      <div class="cs-img-block cs-reveal">
+        <img src="images/parallel-ops/wireframes.png" alt="Three wireframe options for visualizing operation dependencies" />
+        <p class="cs-img-caption">Early wireframe exploration — three distinct approaches to surfacing the dependency diagram.</p>
+      </div>
+
+      <div class="cs-canvas-grid cs-reveal">
+        <div class="cs-canvas-card">
+          <img src="images/parallel-ops/canvas-1.png" alt="Option 1: Diagram + Bottom Drawer" />
+          <div class="cs-canvas-card-body">
+            <div class="cs-canvas-card-title">Option 1 — Diagram + Bottom Drawer</div>
+            <div class="cs-canvas-card-desc">Focus on the flow with a read-only data grid visible below — keeping both views in context simultaneously.</div>
+          </div>
+        </div>
+        <div class="cs-canvas-card">
+          <img src="images/parallel-ops/canvas-2.png" alt="Option 2: Diagram + Properties Panel" />
+          <div class="cs-canvas-card-body">
+            <div class="cs-canvas-card-title">Option 2 — Diagram + Properties Panel</div>
+            <div class="cs-canvas-card-desc">A side configuration drawer for real-time editing alongside the visualization — authoring and validating in one place.</div>
+          </div>
+        </div>
+        <div class="cs-canvas-card">
+          <img src="images/parallel-ops/canvas-3.png" alt="Option 3: In-Tab Canvas" />
+          <div class="cs-canvas-card-body">
+            <div class="cs-canvas-card-title">Option 3 — The In-Tab Canvas</div>
+            <div class="cs-canvas-card-desc">A large diagram opened in a drawer directly from the Operation Dependencies tab — keeping the diagram within the same page context.</div>
+          </div>
+        </div>
+        <div class="cs-canvas-card">
+          <img src="images/parallel-ops/canvas-4.png" alt="Option 4: Toggle Approach" />
+          <div class="cs-canvas-card-body">
+            <div class="cs-canvas-card-title">Option 4 — The Toggle Approach</div>
+            <div class="cs-canvas-card-desc">Switch between "Data Authoring" and "Visual Model" views — reducing cognitive load by separating concerns.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-callout accent2 cs-reveal" style="margin-top:40px;">
+        <div class="cs-callout-label">Redwood Office Hours — Three Critical Constraints</div>
+        <div class="cs-constraint-list" style="margin-top:8px;">
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num" style="color:var(--accent2);background:rgba(124,92,191,0.08);">1</div>
+            <div class="cs-constraint-text">
+              <strong>Release Readiness</strong>
+              <span>The Configuration Drawer component wasn't available until the following quarter — eliminating Options 2 and 3.</span>
+            </div>
+          </div>
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num" style="color:var(--accent2);background:rgba(124,92,191,0.08);">2</div>
+            <div class="cs-constraint-text">
+              <strong>Performance Limits</strong>
+              <span>Large drawers caused significant latency with complex manufacturing datasets — ruling out any drawer-based approach.</span>
+            </div>
+          </div>
+          <div class="cs-constraint-item">
+            <div class="cs-constraint-num" style="color:var(--accent2);background:rgba(124,92,191,0.08);">3</div>
+            <div class="cs-constraint-text">
+              <strong>Template Fidelity</strong>
+              <span>The Toggle idea deviated from established Redwood guidelines, risking inconsistency across the SCM suite.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-callout accent3 cs-reveal" style="margin-top:24px;">
+        <div class="cs-callout-label">The Final Strategy</div>
+        <p>Constraints shifted focus from "interactive editing" to <strong>"visual validation."</strong> The diagram's primary value isn't authoring — it's giving manufacturing engineers a sanity check for the data they've already entered in the grid. This reframing unlocked the dedicated Canvas Page approach.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 The Solution -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">06 — The Solution</p>
+    <h2 class="cs-heading">Bridging Data and Visualization</h2>
+    <p class="cs-body" style="margin-bottom:64px;">The final design pairs two complementary surfaces: a structured datagrid for precise authoring, and a dedicated canvas page for visual validation — connected by a strict save flow that protects data integrity.</p>
+
+    <!-- Solution 1: Datagrid -->
+    <div class="cs-solution-section">
+      <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/parallel-ops/datagrid.svg" alt="Operation Dependencies datagrid in Work Definition" />
+          <p class="cs-img-caption">The Operation Dependencies tab — structured authoring of parallel relationships in a datagrid.</p>
+        </div>
+        <div>
+          <div class="cs-solution-num">01</div>
+          <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;">Principle: Context Awareness</span>
+            <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;">Principle: Wayfinding</span>
+          </div>
+          <h3 class="cs-subheading">The Datagrid: Precise Authoring</h3>
+          <p class="cs-body">A new "Operation Dependencies" tab in Work Definition gives manufacturing engineers a structured space to author complex relationships. Each row defines a dependency between two operations, including:</p>
+          <ul style="margin-top:16px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Finish-to-Start (sequential) and Start-to-Start (parallel) relationships</li>
+            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Transfer Percent — the quantity moving between operations</li>
+            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Initialize and Validate actions for batch setup and error checking</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 2: Diagram -->
+    <div class="cs-solution-section">
+      <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+        <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
+          <img src="images/parallel-ops/diagram.svg" alt="Operation Dependencies Diagram canvas page" />
+          <p class="cs-img-caption">The Dependencies Diagram — a dedicated canvas page for visual validation of the authored flow.</p>
+        </div>
+        <div style="direction:ltr;">
+          <div class="cs-solution-num">02</div>
+          <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;margin-bottom:12px;">Principle: Clear Workflow Visualization</span>
+          <h3 class="cs-subheading">The Visualization Page: A Mental Model Map</h3>
+          <p class="cs-body">From the datagrid, engineers navigate to a dedicated Canvas Page to view their Operation Dependency Diagram. Rather than a duplicate authoring surface, the diagram functions as a <strong>read-only validation tool</strong> — letting engineers confirm that what they entered in the grid matches their actual shop floor mental model before execution begins.</p>
+          <p class="cs-body" style="margin-top:16px;">The Redwood Diagram Node component represents each operation visually, with arrows and transfer percentages showing exactly how work flows between parallel branches.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 3: Save Behavior -->
+    <div class="cs-solution-section">
+      <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/parallel-ops/flow.svg" alt="Two-page flow: datagrid and diagram synced via save behavior" />
+          <p class="cs-img-caption">The two-page flow — datagrid and diagram stay in sync via a strict save behavior.</p>
+        </div>
+        <div>
+          <div class="cs-solution-num">03</div>
+          <h3 class="cs-subheading">Save Behavior: Protecting Data Integrity</h3>
+          <p class="cs-body">Since the diagram opens in a separate browser window, I designed a strict save flow to handle the state between views. When a user edits the datagrid after opening the diagram, the diagram is flagged as stale and must be refreshed — ensuring engineers always validate against the latest authored data, never a cached snapshot.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 4: Error Handling -->
+    <div class="cs-solution-section">
+      <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+        <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
+          <img src="images/parallel-ops/error.svg" alt="Error state in the Dependencies Diagram showing invalid circular dependencies" />
+          <p class="cs-img-caption">Invalid dependency state — circular loops and bad transfer percentages surface clearly with recovery guidance.</p>
+        </div>
+        <div style="direction:ltr;">
+          <div class="cs-solution-num">04</div>
+          <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;margin-bottom:12px;">Principle: System Validation & Error Handling</span>
+          <h3 class="cs-subheading">Proactive Error Validation</h3>
+          <p class="cs-body">Parallel logic introduces risks invisible in a standard grid — circular dependencies, multiple last operations, transfer percentages that don't sum to 100%. I collaborated with developers to categorize every client and server-side error, then designed banners and inline messages that explain exactly what's wrong and how to fix it.</p>
+          <p class="cs-body" style="margin-top:16px;">The diagram turns red for invalid nodes and renders the problematic edges in a distinct error color — making issues unmissable at a glance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cross-Product Impact -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">Cross-Product Impact</p>
+      <h2 class="cs-heading cs-reveal">Designing for the Entire Ecosystem</h2>
+      <p class="cs-body cs-reveal">The project didn't end at Work Definition. Parallel dependency data is only useful if it's visible to the people executing the plan — so I worked with each downstream team to surface it in their own workbench, in the format their role actually needs.</p>
+
+      <div class="cs-cols-3 cs-reveal" style="margin-top:40px;gap:20px;">
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/parallel-ops/wom.png" alt="Work Orders Management showing parallel operations" />
+          <p class="cs-img-caption" style="font-weight:500;color:var(--fg);margin-bottom:4px;">Work Orders — Accurate Scheduling</p>
+          <p class="cs-img-caption">I surfaced Start-to-Start relationships directly in the work order list, so the scheduled duration reflects true parallel-adjusted lead time instead of inflated sequential totals.</p>
+        </div>
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/parallel-ops/psw.png" alt="Production Supervisor Workbench with parallel operations" />
+          <p class="cs-img-caption" style="font-weight:500;color:var(--fg);margin-bottom:4px;">Supervisor Workbench — Real-Time Monitoring</p>
+          <p class="cs-img-caption">I added a parallel-status indicator that flags when a concurrent branch is lagging, so supervisors can intervene before it affects operations waiting on it.</p>
+        </div>
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/parallel-ops/owb.png" alt="Operator Workbench showing which operations can start" />
+          <p class="cs-img-caption" style="font-weight:500;color:var(--fg);margin-bottom:4px;">Operator Workbench — Clear Task Prioritization</p>
+          <p class="cs-img-caption">The task list promotes any operation the moment its Start-to-Start dependency is satisfied, so operators always know the next task to start without interpreting ambiguity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 Impact -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">07 — Impact</p>
+    <h2 class="cs-heading" style="margin-bottom:48px;">Results</h2>
+    <div class="cs-stats cs-reveal">
+      <div class="cs-stat">
+        <div class="cs-stat-num">3×</div>
+        <div class="cs-stat-label">Lead Time Accuracy</div>
+        <div class="cs-stat-desc">Processes previously modeled as 6 hours restored to their true 2–4 hour duration — eliminating phantom time from the production schedule.</div>
+      </div>
+      <div class="cs-stat">
+        <div class="cs-stat-num">17%</div>
+        <div class="cs-stat-label">Yield Variance Reduced</div>
+        <div class="cs-stat-desc">Transfer Percentages enable yield to be calculated from the actual quantity moved between parallel operations — narrowing forecast-to-actual variance from ~20% to under 3%.</div>
+      </div>
+      <div class="cs-stat">
+        <div class="cs-stat-num">0</div>
+        <div class="cs-stat-label">Wait Time for Operators</div>
+        <div class="cs-stat-desc">Production Operators reported decreased wait-time — starting parallel operations immediately upon Start-to-Start dependency satisfaction.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 Reflection -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">08 — Reflection</p>
+      <h2 class="cs-heading cs-reveal">What I learned</h2>
+      <div class="cs-reflection-grid cs-reveal">
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">01</div>
+          <div class="cs-reflection-title">Innovation Through Constraints</div>
+          <div class="cs-reflection-body">Working within the Redwood Design System revealed that constraints filter better decision-making. The desire for interactive side-by-side editing shifted toward a streamlined "validation-first" strategy — and the result was cleaner and more focused than the original idea.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">02</div>
+          <div class="cs-reflection-title">Bridging the "Reality Gap" with Data</div>
+          <div class="cs-reflection-body">The project highlighted a massive disconnect between legacy software logic and actual shop floor reality. Sequential modeling inflating a two-hour process to six hours demonstrated why UX matters deeply in SCM — restoring flexibility eliminated inefficient workarounds and gave engineers back their time.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">03</div>
+          <div class="cs-reflection-title">Visualization as a Form of Validation</div>
+          <div class="cs-reflection-body">Complex logic benefits from a visual "error-checker." Focusing the diagram on validation gave manufacturing engineers a sanity check for catching circular dependencies or multiple last operations — impossible to spot in a standard data grid. Good UI allows data entry while helping users recognize and recover from modeling errors.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">04</div>
+          <div class="cs-reflection-title">Designing for the Entire Ecosystem</div>
+          <div class="cs-reflection-body">The core work in Work Definition only succeeded because the data flowed into Supervisor and Operator Workbenches. Ensuring Production Operators know exactly which operation they can start — based on parallel constraints — is what translates "Plan" into actual floor "Action."</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Case Study -->
+  <div class="cs-next">
+    <div class="cs-next-label">Next Case Study</div>
+    <div class="cs-next-title">Governance Solution<br/>in Fusion Marketing</div>
+    <div class="cs-next-org">Oracle CX Marketing</div>
+    <a href="content-governance.html" class="cs-next-cta" data-cursor="link">
+      View Case Study
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="cs-main.js"></script>
+</body>
+</html>

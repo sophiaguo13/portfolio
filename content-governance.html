@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Governance — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="case-study.css?v=4" />
+</head>
+<body class="cs-page">
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="play.html" class="nav-link" data-cursor="link">Play</a>
+      <a href="playground.html" class="nav-link" data-cursor="link">Lab</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="cs-hero">
+    <div class="cs-wrap">
+      <a href="index.html#work" class="cs-back" data-cursor="link">
+        <span class="cs-back-arrow">←</span>
+        Back to work
+      </a>
+      <div class="cs-project-label">
+        <span class="cs-project-label-dot"></span>
+        Oracle CX Marketing · Internship
+      </div>
+      <h1 class="cs-title">Governance Solution<br/>in Fusion Marketing</h1>
+      <p class="cs-lead">A granular governance system that balances enterprise guardrails with AI-empowered creative freedom — so marketing teams can move fast without breaking the brand.</p>
+      <div class="cs-meta-strip">
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Timeline</div>
+          <div class="cs-meta-value">3 Months</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Role</div>
+          <div class="cs-meta-value">Sole UX Designer</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Tools</div>
+          <div class="cs-meta-value">Figma</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Company & Team</div>
+          <div class="cs-meta-value">Oracle · CX Marketing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover Image -->
+  <div class="cs-cover-wrap">
+    <img src="images/governance/cover.png?v=2" alt="Governance Solution in Fusion Marketing — Email Template Editor" />
+  </div>
+
+  <!-- 01 The Challenge -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-cols-ratio cs-reveal">
+        <div>
+          <p class="cs-eyebrow">01 — The Challenge</p>
+          <h2 class="cs-heading">A Brand at Risk</h2>
+          <p class="cs-body">In large-scale B2B marketing, maintaining brand consistency is a constant battle. Senior Marketers must guarantee all communications align with brand standards — but the tools gave them no real enforcement mechanism.</p>
+          <p class="cs-body" style="margin-top:16px;">Meanwhile, Junior Marketers were overwhelmed by complex tooling, often creating off-brand content or abandoning the platform entirely. Internal Oracle marketing teams had even started building proprietary tools because Fusion Marketing's governance features were inadequate.</p>
+
+        </div>
+        <div>
+          <p class="cs-eyebrow" style="margin-bottom:16px;">Three Core Gaps</p>
+          <ul class="cs-impact-list">
+            <li>
+              <strong>Limited Template Locking</strong>
+              The platform offered minimal locking controls — no way to protect brand-critical elements at the attribute level.
+            </li>
+            <li>
+              <strong>No Asset Enforcement</strong>
+              No mechanism to enforce image or asset guidelines, letting off-brand visuals slip through unchecked.
+            </li>
+            <li>
+              <strong>Outdated UI</strong>
+              An aging interface made features hard to discover, pushing users toward workarounds instead of native tools.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="cs-callout cs-reveal" style="margin-top:32px;">
+        <div class="cs-callout-label">The Goal</div>
+        <p>Design a governance solution within Oracle Fusion Marketing that allows Senior Marketers to set guardrails (constraints) while empowering Junior Marketers to launch campaigns quickly — without sacrificing brand compliance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Research -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">02 — Research</p>
+    <h2 class="cs-heading">Audits and Competitive Tension</h2>
+    <p class="cs-body" style="margin-bottom:40px;">I started with a deep audit of Oracle's existing Eloqua platform, then analyzed 11 competitors to understand the landscape — and where Oracle's approach diverged.</p>
+
+    <div class="cs-cols-2 cs-reveal" style="align-items:start;gap:32px;">
+      <div>
+        <div class="cs-img-block sharp" style="margin:0 0 12px;">
+          <img src="images/governance/canvas-audit.png" alt="Existing Eloqua email canvas — limited constraint controls" />
+        </div>
+        <p class="cs-img-caption">The existing Eloqua canvas — constraint controls buried in a side panel with limited locking granularity.</p>
+      </div>
+      <div>
+        <div class="cs-img-block sharp" style="margin:0 0 12px;">
+          <img src="images/governance/competitive.png" alt="Competitive analysis of 11 email marketing platforms" />
+        </div>
+        <p class="cs-img-caption">Competitive analysis across 11 platforms — 72% used a sidebar, 81% were unlocked by default.</p>
+      </div>
+    </div>
+
+    <div class="cs-cols-2 cs-reveal" style="margin-top:40px;gap:24px;">
+      <div class="cs-callout" style="margin:0;">
+        <div class="cs-callout-label">What the Market Does</div>
+        <p><strong>72%</strong> of competitors placed lock controls in a <strong>sidebar</strong>. <strong>81%</strong> defaulted to an <strong>unlocked state</strong> — giving Junior Marketers full freedom and requiring Senior Marketers to lock elements manually.</p>
+      </div>
+      <div class="cs-callout accent2" style="margin:0;">
+        <div class="cs-callout-label">Initial Strategy</div>
+        <p>Following industry patterns, the initial plan mirrored this approach: maintain an open canvas and let Senior Marketers manually lock individual elements. This would soon need to be challenged.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 User Personas -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">03 — Users</p>
+      <h2 class="cs-heading cs-reveal">Two Users, One System</h2>
+      <p class="cs-body cs-reveal" style="margin-bottom:40px;">Without direct customer access, I worked closely with product managers to build a clear picture of the two primary user types and their often-conflicting needs.</p>
+
+      <div class="cs-img-block cs-reveal" style="margin-bottom:32px;">
+        <img src="images/governance/user-personas.png" alt="User personas: Marketing Specialist and Field Marketer" />
+      </div>
+
+      <div class="cs-img-block sharp cs-reveal">
+        <img src="images/governance/user-goals.png" alt="Clarity of Purpose — user goals for Marketing Specialist and Field Marketer" />
+        <p class="cs-img-caption">Clarity of Purpose — each user's primary goal shapes a fundamentally different relationship with the template system.</p>
+      </div>
+
+      <div class="cs-cols-2 cs-reveal" style="margin-top:40px;gap:24px;">
+        <div class="cs-callout" style="margin:0;">
+          <div class="cs-callout-label">Senior Marketer (Marketing Specialist)</div>
+          <p>Sets policies and constraints on what Field Marketers can or can't do when creating emails. Needs confidence that brand standards are enforced — without reviewing every send manually.</p>
+        </div>
+        <div class="cs-callout accent2" style="margin:0;">
+          <div class="cs-callout-label">Junior Marketer (Field Marketer)</div>
+          <p>Creates emails using a "constrained" version of the canvas. Needs speed and simplicity — launching on-brand campaigns quickly across platforms without needing deep design expertise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Information Architecture -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">04 — Information Architecture</p>
+    <h2 class="cs-heading">Taming the Complexity</h2>
+    <p class="cs-body" style="margin-bottom:12px;">The biggest information architecture challenge: how do you present dozens of lockable attributes — margins, font sizes, colors, padding — without overwhelming users into paralysis?</p>
+    <p class="cs-body" style="margin-bottom:40px;">The solution was a three-pillar framework that grouped every email attribute into high-level "buckets," enabling both rapid governance and surgical precision.</p>
+
+    <div class="cs-img-block sharp cs-reveal" style="margin-bottom:0;">
+      <img src="images/governance/grouping.png" alt="Three-pillar grouping framework: Layout, Style, Content" />
+      <p class="cs-img-caption">Layout, Style, and Content — three master categories that became the backbone of the constraint system.</p>
+    </div>
+
+    <div class="cs-cols-3 cs-reveal" style="margin-top:40px;">
+      <div style="padding:24px 0; border-top:3px solid var(--accent);">
+        <div style="font-size:15px;font-weight:500;color:var(--fg);margin-bottom:8px;">Layout</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">The structural skeleton — components, blocks, and overall layout arrangement.</div>
+      </div>
+      <div style="padding:24px 0; border-top:3px solid var(--accent2);">
+        <div style="font-size:15px;font-weight:500;color:var(--fg);margin-bottom:8px;">Style</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">The visual look and feel — fonts, text decoration, alignment, background colors, cell padding, borders.</div>
+      </div>
+      <div style="padding:24px 0; border-top:3px solid var(--accent3);">
+        <div style="font-size:15px;font-weight:500;color:var(--fg);margin-bottom:8px;">Content</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">The actual message substance — text copy, images, and buttons.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Exploration -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">05 — Exploration</p>
+      <h2 class="cs-heading cs-reveal">Lo-Fi to Hi-Fi</h2>
+      <p class="cs-body cs-reveal" style="margin-bottom:40px;">Weeks 5–6 were about divergence — exploring the solution space broadly before committing to any direction. I tested sidebar placement for lock controls, following the 72% industry standard, with an "Unlocked by Default" mental model.</p>
+
+      <div class="cs-cols-2 cs-reveal" style="gap:24px;align-items:start;">
+        <div>
+          <div class="cs-img-block sharp" style="margin:0 0 12px;">
+            <img src="images/governance/wireframes.png" alt="Lo-fi wireframes for AI content generation panel" />
+          </div>
+          <p class="cs-img-caption">Early wireframes exploring sidebar lock controls and the AI content generation panel.</p>
+        </div>
+        <div>
+          <div class="cs-img-block sharp" style="margin:0 0 12px;">
+            <img src="images/governance/template-lofi.png" alt="Lo-fi template selection flow" />
+          </div>
+          <p class="cs-img-caption">Lo-fi template selection flow for Junior Marketers — choosing a constrained template to start from.</p>
+        </div>
+      </div>
+
+      <div class="cs-callout accent2 cs-reveal" style="margin-top:40px;">
+        <div class="cs-callout-label">AI Integration — Week 3</div>
+        <p>Midway through the project, scope expanded to incorporate Generative AI capabilities. I designed a new left-panel for GenAI copy generation and an "AI Image" replacement feature — enabling Junior Marketers to generate brand-relevant assets instantly, without leaving the canvas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 The Pivot -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">06 — The Pivot</p>
+    <h2 class="cs-heading">Designing for Context,<br/>Not Trends</h2>
+    <p class="cs-body" style="margin-bottom:32px;">At week 7, I presented the high-fidelity "Unlocked by Default" prototype to stakeholders. The feedback was a turning point.</p>
+
+    <div class="cs-cols-2 cs-reveal" style="gap:40px;align-items:start;">
+      <div class="cs-callout" style="margin:0;background:var(--card-bg);">
+        <div class="cs-callout-label">The Reality Check</div>
+        <p>Stakeholders pointed out that in an enterprise context, a Junior Marketer's <strong>primary goal is speed and compliance — not total creative freedom.</strong> Junior Marketers rarely needed structural changes. Open templates meant Senior Marketers had to lock every element individually — an enormous manual burden.</p>
+      </div>
+      <div class="cs-callout accent3" style="margin:0;">
+        <div class="cs-callout-label">The Full Reversal</div>
+        <p>The entire system logic flipped. Instead of "Unlocked by Default" with manual locking, the system became <strong>"Locked by Default."</strong> Senior Marketers would now intentionally <em>allow editing</em> for specific sections — a far lighter lift that aligned with how enterprise governance actually works.</p>
+      </div>
+    </div>
+
+    <div class="cs-cols-3 cs-reveal" style="margin-top:40px;gap:20px;">
+      <div class="cs-img-block sharp" style="margin:0;">
+        <img src="images/governance/canvas-audit.png" alt="Before: Open canvas with no constraints" />
+        <p class="cs-img-caption">Before — open canvas, no governance.</p>
+      </div>
+      <div class="cs-img-block sharp" style="margin:0;">
+        <img src="images/governance/canvas-constraints.png" alt="V1: Unlocked by default with manual locking" />
+        <p class="cs-img-caption">V1 — unlocked by default, sidebar locking.</p>
+      </div>
+      <div class="cs-img-block sharp" style="margin:0;">
+        <img src="images/governance/canvas-locked.png" alt="Final: Locked by default with allowed editing" />
+        <p class="cs-img-caption">Final — locked by default, senior allows editing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 The Solution -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">07 — The Solution</p>
+      <h2 class="cs-heading cs-reveal">Granular Control & Intelligence</h2>
+      <p class="cs-body cs-reveal" style="margin-bottom:64px;">The final design introduced a streamlined "Save as Template" workflow with two-tiered governance — from high-level category toggles down to individual element locks — plus a GenAI assistant operating within brand guardrails.</p>
+    </div>
+
+    <!-- Solution 1: Save as Template -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block sharp" style="margin:0;">
+            <img src="images/governance/gif-save-template.gif" alt="Saving an email as a constrained template" />
+            <p class="cs-img-caption">Senior Marketers save any email as a template, triggering the constraint configuration flow.</p>
+          </div>
+          <div>
+            <div class="cs-solution-num">01</div>
+            <h3 class="cs-subheading">Save as Template</h3>
+            <p class="cs-body">Senior Marketers begin by saving a completed email as a template. This triggers a dedicated constraint configuration flow where they define exactly what Field Marketers can and cannot change — without touching a single lock icon manually.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 2: Setting Constraints -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
+            <img src="images/governance/gif-setting-constraints.gif" alt="Setting high-level and granular constraints on a template" />
+            <p class="cs-img-caption">High-level category toggles first, then granular per-element locks for surgical control.</p>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">02</div>
+            <h3 class="cs-subheading">Two-Tiered Governance</h3>
+            <p class="cs-body">The constraint panel operates at two levels:</p>
+            <ul style="margin-top:16px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+              <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);"><strong style="color:var(--fg);">High-level:</strong> Checkboxes allow or restrict editing for entire categories — Email Content, Email Style, Email Layout</li>
+              <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent)"><strong style="color:var(--fg);">Granular:</strong> Individual lock icons next to every attribute — background, text, padding, border — for precise control</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 3: Junior Marketer Flow -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block sharp" style="margin:0;">
+            <img src="images/governance/gif-using-template.gif" alt="Junior Marketer selecting a template and editing within constraints" />
+            <p class="cs-img-caption">Junior Marketers see a simplified canvas — only the elements they're permitted to edit are interactive.</p>
+          </div>
+          <div>
+            <div class="cs-solution-num">03</div>
+            <h3 class="cs-subheading">The Junior Marketer Experience</h3>
+            <p class="cs-body">When a Field Marketer opens a constrained template, the canvas reflects only what they can change. Locked elements are visually distinct — no confusion, no accidental edits, no brand violations. Speed is preserved because they're not fighting the tool.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 4: AI Generation -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
+            <img src="images/governance/gif-image-selection.gif" alt="AI-powered on-brand image selection for Junior Marketers" />
+            <p class="cs-img-caption">Junior Marketers choose from a pre-approved batch of on-brand images — curated by the Senior Marketer.</p>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">04</div>
+            <h3 class="cs-subheading">GenAI Within Guardrails</h3>
+            <p class="cs-body">A left-panel GenAI assistant lets Field Marketers generate copy and swap images — but only within the boundaries the Senior Marketer has defined. On-brand AI image generation pulls from an approved asset library, so creativity never comes at the cost of compliance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Generate screens -->
+    <div class="cs-wrap" style="margin-top:48px;">
+      <div class="cs-cols-2 cs-reveal" style="gap:20px;">
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/governance/ai-generate.png" alt="AI Generate content panel" style="aspect-ratio:1920/1080;object-fit:cover;width:100%;" />
+          <p class="cs-img-caption">GenAI copy generation — prompt-based content creation within the canvas.</p>
+        </div>
+        <div class="cs-img-block sharp" style="margin:0;">
+          <img src="images/governance/ai-generate-1.png?v=2" alt="AI image replacement with brand-approved assets" style="aspect-ratio:1920/1080;object-fit:cover;width:100%;" />
+          <p class="cs-img-caption">AI image replacement — pulling from the Senior Marketer's approved asset library.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 Reflection -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">08 — Reflection</p>
+    <h2 class="cs-heading">What I learned</h2>
+    <p class="cs-body" style="margin-bottom:40px;">The project was successfully handed to the development team at the end of the 12-week internship. While long-term metrics were unavailable, stakeholder validation confirmed the "Locked by Default" approach better served enterprise governance needs.</p>
+    <div class="cs-reflection-grid cs-reveal">
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">01</div>
+        <div class="cs-reflection-title">Clarity of Purpose</div>
+        <div class="cs-reflection-body">Always design for the specific user's use case — even if it contradicts industry-standard trends. The 81% "Unlocked by Default" benchmark was accurate for the market, but wrong for Oracle's enterprise context where compliance matters more than creative freedom. Data informs, but context decides.</div>
+      </div>
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">02</div>
+        <div class="cs-reflection-title">Zoom Out</div>
+        <div class="cs-reflection-body">It's easy to get lost in the details of a sidebar UI. Regularly stepping back to look at the full "Hero's Journey" — the marketer's end-to-end workflow — was essential. The pivot to "Locked by Default" only became obvious when I stopped obsessing over individual lock icons and looked at what each user actually needed to accomplish.</div>
+      </div>
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">03</div>
+        <div class="cs-reflection-title">Constraints Enable Creativity</div>
+        <div class="cs-reflection-body">Counterintuitively, a tighter system made Junior Marketers more creative — not less. By removing the anxiety of "what can I break?" the constrained canvas let them focus entirely on crafting the message. Good governance isn't a cage; it's a foundation.</div>
+      </div>
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">04</div>
+        <div class="cs-reflection-title">Stakeholder Feedback as a Feature</div>
+        <div class="cs-reflection-body">The week 7 pivot was uncomfortable — significant hi-fi work needed rethinking. But the reversal ultimately produced a stronger, more grounded solution. Learning to treat late-stage feedback as course correction rather than failure made me a more resilient designer.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Case Study -->
+  <div class="cs-next">
+    <div class="cs-next-label">Next Case Study</div>
+    <div class="cs-next-title">SideQuest</div>
+    <div class="cs-next-org">Self-Initiated · Consumer Mobile Concept</div>
+    <a href="sidequest.html" class="cs-next-cta" data-cursor="link">
+      View Case Study
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="cs-main.js"></script>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ploop! — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="case-study.css?v=9" />
+</head>
+<body class="cs-page">
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="play.html" class="nav-link" data-cursor="link">Play</a>
+      <a href="playground.html" class="nav-link" data-cursor="link">Lab</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="cs-hero">
+    <div class="cs-wrap">
+      <a href="index.html#work" class="cs-back" data-cursor="link">
+        <span class="cs-back-arrow">←</span>
+        Back to work
+      </a>
+      <div class="cs-project-label">
+        <span class="cs-project-label-dot"></span>
+        Self-Initiated · Mobile Product Design
+      </div>
+      <h1 class="cs-title">ploop!<br/>Health Tracking, Made Social</h1>
+      <p class="cs-lead">A lighthearted, social utility app that turns the clinical chore of health-habit tracking into a delightful, close-friends game — designed and handed off to development in just 3.5 weeks with AI co-pilots.</p>
+      <div class="cs-meta-strip">
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Timeline</div>
+          <div class="cs-meta-value">3.5 Weeks</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Role</div>
+          <div class="cs-meta-value">Sole Product Designer</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Team</div>
+          <div class="cs-meta-value">Designer + iOS Dev</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Tools</div>
+          <div class="cs-meta-value">Figma · Claude · ChatGPT</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover -->
+  <div class="cs-cover-wrap">
+    <img src="images/ploop/cover.png?v=4" alt="ploop! — onboarding, social feed, and log-a-ploop screens" />
+  </div>
+
+  <!-- 01 Overview -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">01 — Overview</p>
+        <h2 class="cs-heading">Turning a Taboo Chore into a Social Game</h2>
+        <p class="cs-body">Tracking daily health habits is usually clinical, solitary, and boring. <strong>ploop!</strong> transforms this mundane routine into a delightful, shared experience through playful "poop grading," custom status logs, and a private, close-friends social feed.</p>
+        <p class="cs-body" style="margin-top:16px;">The idea came from a real behavior I'd noticed in my own life: my friend group already trades bathroom updates as running jokes in our group chat — latent social energy no existing app had captured. I leaned into a deliberately taboo, low-stakes domain on purpose, because it doubled as a testbed for a second question: could AI co-pilots compress a traditional three-month, zero-to-one mobile lifecycle into a matter of weeks — without sacrificing craft, accessibility, or user trust?</p>
+      </div>
+
+      <div class="cs-callout cs-reveal">
+        <div class="cs-callout-label">TL;DR</div>
+        <p>A designer and developer used AI co-pilots to compress a traditional 3-month mobile app lifecycle into just <strong>3.5 weeks</strong> — building a lighthearted, social utility app for tracking health habits. My role shifted from pixel-pushing to high-level strategic direction, curation, and rigorous critique of AI output.</p>
+      </div>
+
+      <div class="cs-stats cs-reveal" style="margin-top:48px;">
+        <div class="cs-stat">
+          <div class="cs-stat-num">3.5<span style="font-size:24px;"> wks</span></div>
+          <div class="cs-stat-label">Concept to Dev Handoff</div>
+          <div class="cs-stat-desc">A full zero-to-one MVP design lifecycle compressed from a standard 12 weeks.</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-num">3×</div>
+          <div class="cs-stat-label">Faster Delivery</div>
+          <div class="cs-stat-desc">Versus a typical solo 0→1 timeline, by my own time-tracking across the project.</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-num">2</div>
+          <div class="cs-stat-label">Person Team</div>
+          <div class="cs-stat-desc">One product designer and one iOS developer, operating like a much larger squad.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 The Problem -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">02 — The Problem</p>
+        <h2 class="cs-heading">A Habit Nobody Wants to Track Alone</h2>
+        <p class="cs-body">Most health-habit tracking is built like a medical chore — clinical forms, lonely charts, and no reason to come back. People log for a few days out of novelty, then quietly quit. The behavior that actually sticks in real life isn't solo and serious; it's social and a little silly.</p>
+      </div>
+
+      <div class="cs-cols-2 cs-reveal" style="margin-top:32px;gap:24px;">
+        <div class="cs-callout" style="margin:0;">
+          <div class="cs-callout-label">Problem Statement</div>
+          <p>Daily health-habit tracking is clinical, solitary, and forgettable. Existing apps frame it as a medical task, so motivation collapses within days and the habit never sticks.</p>
+        </div>
+        <div class="cs-callout accent3" style="margin:0;">
+          <div class="cs-callout-label">User Goal</div>
+          <p>Keep a daily habit going <strong>with close friends</strong> — fast, lighthearted, and a little competitive — without charts, streak-shaming, or sharing anything personal in public.</p>
+        </div>
+      </div>
+
+      <!-- Persona -->
+      <div class="cs-reveal" style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:32px;margin-top:24px;">
+        <div style="display:flex;align-items:center;gap:18px;margin-bottom:20px;">
+          <div style="width:60px;height:60px;border-radius:50%;background:var(--warm);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:22px;color:var(--accent);flex-shrink:0;">MC</div>
+          <div>
+            <div style="font-size:18px;font-weight:500;color:var(--fg);">Maya Chen · 24</div>
+            <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Recent Grad · The Group-Chat Ringleader</div>
+          </div>
+        </div>
+        <p class="cs-body" style="max-width:none;margin-bottom:24px;">Maya keeps her five-person friend group glued together over text — memes, daily check-ins, inside jokes. She's tried streak apps and a couple of wellness trackers, but always drops them within a week. She doesn't want another health app; she wants something fun to do <em>with</em> her people.</p>
+        <div class="cs-cols-2" style="gap:24px;">
+          <div>
+            <div class="cs-callout-label" style="color:var(--accent3);">Goals</div>
+            <ul class="cs-pill-list">
+              <li>Stay connected to close friends through low-effort daily moments</li>
+              <li>Log in seconds — never a form to fill out</li>
+              <li>A little friendly competition, no pressure</li>
+            </ul>
+          </div>
+          <div>
+            <div class="cs-callout-label" style="color:var(--accent);">Frustrations</div>
+            <ul class="cs-pill-list">
+              <li>Health apps feel clinical and lonely</li>
+              <li>Tracking takes too long and gets boring fast</li>
+              <li>Won't post anything personal in public</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin:24px 0 0;padding-top:20px;border-top:1px solid var(--card-border);font-family:var(--font-serif);font-size:18px;line-height:1.45;color:var(--fg);">"I'll do almost anything if my friends are doing it too — but it has to be fast, and it has to be funny."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Strategy -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">03 — Strategy</p>
+    <h2 class="cs-heading">Market Disruption &amp; Product Strategy</h2>
+    <p class="cs-body" style="margin-bottom:8px;">Habit tracking typically feels clinical or isolating. We wanted to see if we could pivot a taboo health habit into a low-stakes social game. To move at speed, I ran a dual-AI pipeline — <strong>ChatGPT</strong> for market research, <strong>Claude</strong> for structural scoping — while acting as the core product manager and curator.</p>
+
+    <!-- Competitive Auditing -->
+    <div style="margin-top:48px;">
+      <h3 class="cs-subheading">Phase 1 — Auditing the Competitive Landscape</h3>
+      <p class="cs-body">I began by benchmarking existing platforms to find the exact gap in the market, prompting ChatGPT to analyze the strengths and weaknesses of current poop-tracking apps.</p>
+      <div class="cs-prompt">
+        <span class="cs-prompt-label">My Prompt</span>
+        <pre>"I'm designing a lighthearted, social poop-tracking app
+— a habit game, not a medical tool. Audit the most
+popular poop-tracking apps: for each, give me its core
+positioning, strengths, and weaknesses. Then group them
+into categories and pinpoint the clearest gap I could
+own — where today's users are underserved."</pre>
+      </div>
+
+      <div class="cs-cols-3" style="margin-top:32px;">
+        <div class="cs-callout accent2" style="margin:0;">
+          <div class="cs-callout-label">The Clinical Trackers</div>
+          <p><strong>Plop, Happy Poop, Poopify</strong><br/>Excellent medical utility (Bristol scale, symptom charts), but sterile UI and zero entertainment value. Appeals heavily to users with gut-health conditions like IBS.</p>
+        </div>
+        <div class="cs-callout accent3" style="margin:0;">
+          <div class="cs-callout-label">The Novelty Social Trackers</div>
+          <p><strong>Poop Map</strong><br/>Strong social engagement (1M+ downloads) via location tagging and friend leagues — but thin on depth and personalization once the novelty wears off.</p>
+        </div>
+        <div class="cs-callout" style="margin:0;">
+          <div class="cs-callout-label">The Minimalists</div>
+          <p><strong>Number Two</strong><br/>Beautiful UI and extremely fast logging, with a "Throne Room" leaderboard. But social features feel secondary and the personality stays muted — proof that people crave <strong>frictionless logging</strong>.</p>
+        </div>
+      </div>
+
+      <p class="cs-body" style="margin-top:32px;">Mapping the named leaders against their categories made the open lane impossible to miss:</p>
+      <div class="cs-table-wrap">
+        <table class="cs-table">
+          <thead>
+            <tr><th>Category</th><th>Existing Leaders</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Medical &amp; IBS tracking</strong></td><td>Plop, Happy Poop</td><td>Saturated</td></tr>
+            <tr><td><strong>Location tracking</strong></td><td>Poop Map</td><td>Saturated</td></tr>
+            <tr><td><strong>Private / frictionless logging</strong></td><td>Number Two</td><td>Saturated</td></tr>
+            <tr class="cs-table-total"><td><strong>Social habit game</strong></td><td>—</td><td><strong>Wide open ←</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cs-callout cs-reveal" style="margin-top:32px;">
+        <div class="cs-callout-label">The Strategic Pivot</div>
+        <p>The reframe that unlocked everything: almost every poop app asks <em>"How is your digestive health?"</em> — very few ask <em>"How do we make pooping fun?"</em> ChatGPT named the whitespace precisely: <strong>"Strava meets Duolingo meets Letterboxd, but for pooping."</strong> The bet wasn't a better medical tool — it was a social habit game that happens to be about pooping. The evidence already pointed there: users of existing apps consistently engage with friend leagues more than the health tracking itself.</p>
+      </div>
+    </div>
+
+    <!-- User Interviews -->
+    <div style="margin-top:56px;">
+      <h3 class="cs-subheading">Phase 2 — Listening to Real People</h3>
+      <p class="cs-body">A market gap is a hypothesis, not a green light. Before committing to any feature set, I ran <strong>9 informal interviews</strong> with people in the target demographic — friend groups in their early 20s — to pressure-test whether the social-game premise actually resonated, and to hear, in their own words, which features they'd genuinely use versus dismiss as gimmicks.</p>
+
+      <div class="cs-cols-3" style="margin-top:32px;">
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:24px;">
+          <p style="font-family:var(--font-serif);font-size:17px;line-height:1.45;color:var(--fg);margin:0 0 14px;">"Honestly? I'd download it for the group-chat chaos, not my gut health."</p>
+          <p style="font-size:13px;color:var(--muted);font-weight:500;margin:0;">— Maya, 24</p>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:24px;">
+          <p style="font-family:var(--font-serif);font-size:17px;line-height:1.45;color:var(--fg);margin:0 0 14px;">"If logging takes more than ten seconds, I'm out. I'm not journaling."</p>
+          <p style="font-size:13px;color:var(--muted);font-weight:500;margin:0;">— Devin, 22</p>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:24px;">
+          <p style="font-family:var(--font-serif);font-size:17px;line-height:1.45;color:var(--fg);margin:0 0 14px;">"No chance I'm posting that publicly. But to my close friends? That's comedy."</p>
+          <p style="font-size:13px;color:var(--muted);font-weight:500;margin:0;">— Priya, 25</p>
+        </div>
+      </div>
+
+      <p class="cs-body" style="margin-top:32px;">A few priorities surfaced again and again — and they became the backbone of the MVP. This is the moment the feature list stopped being my guesses and started being theirs:</p>
+      <div class="cs-table-wrap">
+        <table class="cs-table">
+          <thead>
+            <tr><th>What I heard</th><th>How it shaped the MVP</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>"Speed, or I won't bother."</strong></td><td>Quick Log became the hero — a center-screen button and an under-30-second flow.</td></tr>
+            <tr><td><strong>"Only with close friends — never publicly."</strong></td><td>A friends-only feed with opt-in sharing; the global public feed was cut to V2.</td></tr>
+            <tr><td><strong>"The competition is the whole point."</strong></td><td>The weekly "Throne Room" leaderboard earned a permanent spot as a core tab.</td></tr>
+            <tr><td><strong>"I want to see my own streaks."</strong></td><td>History &amp; calendar prioritized for private, personal tracking — separate from the social feed.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Scoping the MVP -->
+    <div style="margin-top:56px;">
+      <h3 class="cs-subheading">Phase 3 — Scoping the MVP</h3>
+      <p class="cs-body">With the positioning validated by both the market audit and real user signal, I translated the priorities into a functional, shippable scope for a lean two-person team. Claude was a fast brainstorming partner for gamification mechanics — but my job was to protect the engineering timeline and stay honest to what users actually told me they wanted. I applied a strict human filter, sorting features into launch phases.</p>
+
+      <h4 class="cs-subheading" style="font-size:20px;margin-top:48px;">The AI's Output vs. The Human Filter</h4>
+      <p class="cs-body">Claude generated 15 distinct feature vectors. My role was to act as the product curator — evaluating each suggestion through a lens of strict UX feasibility and human empathy. A few representative calls:</p>
+      <div class="cs-verdict-list">
+        <div class="cs-verdict-card reject">
+          <div class="cs-verdict-suggestion"><span class="cs-verdict-tag">AI Suggestion</span>Real-time push notifications when a friend is currently "on the pot."</div>
+          <div class="cs-verdict-ruling">
+            <span class="cs-verdict-badge">✕ Rejected</span>
+            <p>Highly invasive and causes immediate social friction — the kind of feature that gets an app deleted within a day. Cut entirely.</p>
+          </div>
+        </div>
+        <div class="cs-verdict-card refine">
+          <div class="cs-verdict-suggestion"><span class="cs-verdict-tag">AI Suggestion</span>An automated, algorithmic "Poop Score" based on consistency and frequency.</div>
+          <div class="cs-verdict-ruling">
+            <span class="cs-verdict-badge">⟳ Refined</span>
+            <p>Too clinical — it turns the app into an exam. I pivoted it to a subjective, playful <strong>"Poop Grade"</strong> (A+, B−, "The Masterpiece") that users self-select or let a fun prompt decide. Kept the engagement hook, dropped the judgment.</p>
+          </div>
+        </div>
+        <div class="cs-verdict-card accept">
+          <div class="cs-verdict-suggestion"><span class="cs-verdict-tag">AI Suggestion</span>A localized private group feed where only explicit, accepted close friends can view daily updates.</div>
+          <div class="cs-verdict-ruling">
+            <span class="cs-verdict-badge">✓ Accepted</span>
+            <p>Exactly right — it minimizes social anxiety and guarantees a psychologically safe space. This became the backbone of the entire feed model.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-cols-2" style="margin-top:48px;">
+        <div class="cs-callout keep" style="margin:0;">
+          <div class="cs-callout-label">Keep for MVP</div>
+          <ul class="cs-pill-list">
+            <li>Quick Log (under 30 seconds)</li>
+            <li>Friends-Only Feed</li>
+            <li>Weekly Leaderboard</li>
+            <li>History &amp; Calendar</li>
+          </ul>
+        </div>
+        <div class="cs-callout" style="margin:0;border-left-color:var(--muted);">
+          <div class="cs-callout-label" style="color:var(--muted);">Cut to V2 / Deferred</div>
+          <ul class="cs-pill-list cut">
+            <li>"Poop Pet" Companion</li>
+            <li>"Poop Wrapped" Yearly Recap</li>
+            <li>Global Public Feed</li>
+            <li>Wearable Integrations</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 class="cs-subheading" style="font-size:20px;margin-top:48px;">Solving the "Oversharing" UX Problem</h4>
+      <p class="cs-body">The biggest UX risk was the privacy barrier. To make users feel safe in a social app about bowel movements, I set two non-negotiable guardrails:</p>
+      <div class="cs-constraint-list" style="max-width:720px;">
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">1</div>
+          <div class="cs-constraint-text">
+            <strong>Privacy-by-Default</strong>
+            <span>Sharing to the feed is a conscious, post-log <strong>opt-in</strong> action — never an automatic opt-out.</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">2</div>
+          <div class="cs-constraint-text">
+            <strong>Data Minimization</strong>
+            <span>Feed posts are heavily restricted — friends only see a "Grade Bubble," a location tag, and a caption. Detailed health metrics (color, size, consistency) stay strictly private on the user's personal history tab.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final MVP Brief -->
+    <div style="margin-top:56px;">
+      <h3 class="cs-subheading">The Final MVP Design Brief</h3>
+      <p class="cs-body">Within 48 hours I synthesized our AI conversations into a comprehensive product spec, anchored by a <strong>5-tab architecture</strong> with a prominent center-floating action button for logging.</p>
+      <div class="cs-constraint-list" style="max-width:760px;">
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">1</div>
+          <div class="cs-constraint-text">
+            <strong>Feed</strong>
+            <span>A private close-friends timeline with emoji reactions (👑 🔥 😂 😬 💪) instead of generic likes.</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">2</div>
+          <div class="cs-constraint-text">
+            <strong>Leaderboard — "Throne Room"</strong>
+            <span>Weekly rotating crowns for playful titles like <em>Morning Monarch</em> (most logs before 9 AM) or <em>Quick Draw</em> (shortest duration).</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">3</div>
+          <div class="cs-constraint-text">
+            <strong>Log Entry</strong>
+            <span>A rapid multi-step flow tracking color, duration, location, and Bristol Stool Type paired with plain-language labels (e.g. "Type 7 — fully liquid").</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">4</div>
+          <div class="cs-constraint-text">
+            <strong>History</strong>
+            <span>A monthly calendar grid built on our visual signature — the <strong>Grade Bubble</strong> (A–F), where color represents quality and a count represents frequency.</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">5</div>
+          <div class="cs-constraint-text">
+            <strong>Profile</strong>
+            <span>A hub for personal stats and accumulated leaderboard crowns.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Visual Identity -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">04 — Visual Identity</p>
+        <h2 class="cs-heading">Systemizing Fun</h2>
+        <p class="cs-body">Setting the right tone was a tightrope walk. Too sterile and it reads as a medical app; too loud and it looks childish. My goal was a <strong>"sophisticated cute"</strong> aesthetic — using structural typography to carry the playful energy so the palette and UI could stay clean, minimal, and modern.</p>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:40px;">From AI Clichés to Pinterest Inspiration</h3>
+      <p class="cs-body">I first asked Claude to explore visual directions for a "cute and lighthearted" app. It returned three generic archetypes — <em>Pastel Playground</em>, <em>Earthy Wit</em> (leaning into literal browns), and <em>Neon Soft</em>. I rejected all three; the AI was relying on obvious tropes.</p>
+
+      <div class="cs-cols-3" style="margin-top:32px;gap:20px;">
+        <div class="cs-img-block no-border" style="margin:0;">
+          <img src="images/ploop/direction-pastel-playground.png?v=2" alt="AI direction 01 — Pastel Playground: soft bubbly pastels with Nunito" />
+        </div>
+        <div class="cs-img-block no-border" style="margin:0;">
+          <img src="images/ploop/direction-earthy-wit.png?v=2" alt="AI direction 02 — Earthy Wit: literal warm browns with DM Sans" />
+        </div>
+        <div class="cs-img-block no-border" style="margin:0;">
+          <img src="images/ploop/direction-neon-soft.png?v=2" alt="AI direction 03 — Neon Soft: white base with electric pops" />
+        </div>
+      </div>
+      <p class="cs-img-caption" style="margin-top:16px;">Claude's three opening directions — predictable tropes: literal browns, kids'-book pastels, and a generic "Gen Z" neon. None earned the "sophisticated cute" brief, so I rejected the batch.</p>
+
+      <p class="cs-body" style="margin-top:32px;">Recognizing the limits of AI moodboarding, I took over creative direction. I sourced real-world color inspiration on Pinterest, brought swatches into Figma, and manually tuned a <strong>vibrant, eclectic palette anchored by a rich, grounded base</strong> — balancing deep organic dark tones with saturated, energetic pops. I swapped a warm yellow-beige background for a crisper, cooler-toned light cream to keep things fresh.</p>
+      <p class="cs-body" style="margin-top:16px;">For type, I paired <strong>Fredoka One</strong> (display) with <strong>Nunito</strong> (body). Fredoka's roundness does the heavy lifting of looking "cute," so the layout itself can stay modern and structured — no loud graphics required.</p>
+
+      <div class="cs-img-block" style="margin-top:32px;max-width:620px;margin-left:auto;margin-right:auto;">
+        <img src="images/ploop/design-system.png?v=2" alt="ploop! design system — Fredoka One / Nunito type scale and the final color palette" />
+        <p class="cs-img-caption">The final system I built in Figma — a Fredoka One / Nunito type scale paired with a grounded dark-brown base (#3C302B), a crisp cream canvas (#FEF9EB), and saturated accents in bubblegum, coral, forest, sky, and amber.</p>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:40px;">Co-Piloting the Design System with Claude</h3>
+      <p class="cs-body">With the visual foundation set, I compiled the design brief, color tokens, and a custom onboarding illustration into one package and fed it to <strong>Claude Design</strong> to generate the initial components. It mapped a full UI kit at lightning speed — but its execution lacked product maturity, falling into the trap of excessive decoration.</p>
+
+      <div class="cs-callout accent2 cs-reveal">
+        <div class="cs-callout-label">⚠ The AI Trap</div>
+        <p>The initial output was flooded with emojis in every text string, heavy drop shadows, and glossy button highlights. It looked juvenile — exactly the vibe I wanted to avoid.</p>
+      </div>
+
+      <p class="cs-body" style="margin-top:24px;">I issued a strict course-correction prompt to strip the fluff and inject a more minimal, high-end mobile aesthetic:</p>
+      <div class="cs-prompt">
+        <span class="cs-prompt-label">My Course-Correction Prompt</span>
+        <pre>"This reads juvenile — it's over-decorated. Strip it
+back toward a minimal, high-end mobile aesthetic where
+the personality comes from the type and mascot, not
+ornament. Specifically: no emojis in app copy (reserve
+them for feed reactions only); remove the glossy
+highlights on grade bubbles and buttons; cut the heavy
+drop shadows; and in the bottom nav, replace the emojis
+with clean line icons — including a distinct icon for
+the center 'log a ploop' button."</pre>
+      </div>
+      <p class="cs-body" style="margin-top:24px;">Holding the line on execution quality, the revised system captured exactly the personality I envisioned: a flat, clean aesthetic with micro-elevation, heavier font weight on buttons for clear tap targets, and a witty, conversational tone that hypes the user up like a friend in a group chat.</p>
+
+      <div class="cs-cols-2" style="margin-top:36px;gap:20px;">
+        <div class="cs-img-block" style="margin:0;">
+          <img src="images/ploop/ds-colors.png?v=2" alt="ploop! design system — Squad accent colors and the Bubblegum primary-action scale" />
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <img src="images/ploop/ds-brown-grade.png?v=2" alt="ploop! design system — Mascot cocoa brown/ink scale and the A–F Grade spectrum" />
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <img src="images/ploop/ds-type.png?v=2" alt="ploop! design system — Fredoka display voice and the full type scale" />
+        </div>
+        <div style="margin:0;display:flex;flex-direction:column;gap:20px;">
+          <div class="cs-img-block" style="margin:0;">
+            <img src="images/ploop/ds-mascot.png?v=2" alt="ploop! design system — lil ploop, the cocoa-swirl mascot" />
+          </div>
+          <div class="cs-img-block" style="margin:0;">
+            <img src="images/ploop/ds-voice.png?v=2" alt="ploop! voice and tone system — playful, celebratory copy versus clinical phrasing to avoid" />
+          </div>
+        </div>
+      </div>
+      <p class="cs-img-caption" style="margin-top:16px;">The refined system in Claude Design — flat color tokens, the A–F grade spectrum, a disciplined Fredoka/Nunito type scale, "lil ploop" as the mascot, and a playful, never-medical voice ("A+ morning, legend" over "Bowel Movement Successfully Recorded"). Note the guardrail baked into the brief: no emoji in copy — the mascot, color, and tone carry the warmth instead.</p>
+    </div>
+  </section>
+
+  <!-- 04 Wireframing -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">05 — Wireframing</p>
+    <h2 class="cs-heading">Scaling Layouts with Multi-Option AI Wireframing</h2>
+    <p class="cs-body">With the visual system locked, I used Claude Design as a high-speed production assistant — exploring layout variations simultaneously rather than sketching screen by screen. I prioritized the four foundational screens: <strong>Onboarding, Social Feed, Leaderboard, and the "Log a ploop" flow.</strong></p>
+
+    <h3 class="cs-subheading" style="margin-top:40px;">The Multi-Option Workflow</h3>
+    <p class="cs-body">Instead of asking for a single "perfect" screen, I prompted Claude to generate three distinct layout variations for each core screen, each with its own pros-and-cons list.</p>
+    <div class="cs-constraint-list" style="max-width:720px;">
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">1</div>
+        <div class="cs-constraint-text">
+          <strong>Prompt</strong>
+          <span>"For each core screen, give me 3 distinct layout directions — each with pros and cons for scannability and speed of logging."</span>
+        </div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">2</div>
+        <div class="cs-constraint-text">
+          <strong>Analyze</strong>
+          <span>Evaluate layout logic, scannability, and how each architecture serves the product goals.</span>
+        </div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">3</div>
+        <div class="cs-constraint-text">
+          <strong>Iterate</strong>
+          <span>Annotate the interface logic directly on the canvas and request structural merges until the layout fit.</span>
+        </div>
+      </div>
+    </div>
+    <p class="cs-body" style="margin-top:24px;">This structural sandbox dramatically compressed iteration time. Sometimes a single direction was an immediate winner; other times I merged the strongest elements of several until the layout matched the product goals exactly.</p>
+
+    <div class="cs-cols-2" style="margin-top:36px;gap:20px;">
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/ploop/wf-onboarding.png?v=2" alt="Onboarding wireframes — three variations: Mascot welcome, Log-first, and Squad-first" />
+      </div>
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/ploop/wf-feed.png?v=2" alt="Social feed wireframes — three variations: Card stream, Compact list, and Stories + chat" />
+      </div>
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/ploop/wf-leaderboard.png?v=2" alt="Leaderboard wireframes — three variations: Category cards, Podium + tabs, and Ranked list" />
+      </div>
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/ploop/wf-log.png?v=2" alt="Log a ploop wireframes — three variations: Full sheet live grade, Express + details, and Big playful dial" />
+      </div>
+    </div>
+    <p class="cs-img-caption" style="margin-top:16px;">Three labeled directions for each core screen — Onboarding, Social Feed, Leaderboard, and the Log flow — each annotated with pros, cons, and the rationale behind my pick (tagged "your pick").</p>
+  </section>
+
+  <!-- 05 Calendar Deep Dive -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">06 — Deep Dive</p>
+        <h2 class="cs-heading">Overcoming the Data-Density Trap</h2>
+        <p class="cs-body">While the core flows fell into place quickly, the <strong>History (Calendar View)</strong> tab posed a real challenge: a high-level monthly overview had to track three data layers at once without cluttering the screen.</p>
+      </div>
+
+      <div class="cs-constraint-list" style="max-width:720px;">
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">1</div>
+          <div class="cs-constraint-text">
+            <strong>Consistency</strong>
+            <span>Did the user log an entry on a given day?</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">2</div>
+          <div class="cs-constraint-text">
+            <strong>Quality (Ploop Score)</strong>
+            <span>What was the grade rating for that day?</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num">3</div>
+          <div class="cs-constraint-text">
+            <strong>Volume</strong>
+            <span>How many times did they log an entry on that same day?</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:40px;">The Failure of the Proportional Dot</h3>
+      <p class="cs-body">The initial concept used colored dots where circle size was proportional to logging frequency. I quickly spotted the flaws: it was subjective, added visual noise, and forced users to guess the mathematical ratio between one log and three.</p>
+
+      <h3 class="cs-subheading" style="margin-top:40px;">Cracking the Information Architecture</h3>
+      <p class="cs-body">I challenged Claude to bypass the proportional-dot logic and explore a broader spectrum of data-visualization styles. It returned a matrix of alternatives:</p>
+      <div class="cs-constraint-list" style="max-width:720px;">
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num" style="color:var(--muted);background:rgba(122,116,112,0.1);">A–C</div>
+          <div class="cs-constraint-text">
+            <strong>Per-log pips, dot + numeral, tally bar</strong>
+            <span>Localized markers and segmented lines kept the background clean, but concentrated too much fine detail inside a tiny tap target.</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num" style="color:var(--muted);background:rgba(122,116,112,0.1);">D–E</div>
+          <div class="cs-constraint-text">
+            <strong>Corner badges, hand-tally ticks</strong>
+            <span>Corner-tucked numerals and organic tally marks introduced geometric clutter and felt text-heavy.</span>
+          </div>
+        </div>
+        <div class="cs-constraint-item">
+          <div class="cs-constraint-num" style="color:var(--accent3);background:rgba(58,191,159,0.1);">F</div>
+          <div class="cs-constraint-text">
+            <strong>The Breakthrough — Tinted Cell + Number</strong>
+            <span>Shifting the grade logic to a full background cell tint makes the entire month read as a clear color map of health trends. A localized count pill only renders on days with 2+ entries — keeping single-log days quiet and balanced against unlogged paper-white cells. The tinted-cell idea had two finalists — a count numeral (F) versus neutral cocoa pips (G) — and I chose the numeral for instant legibility at a glance.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-img-block" style="margin-top:36px;">
+        <img src="images/ploop/calendar-explorations.png" alt="Seven calendar visualization explorations (A–G) for the History tab, from per-log pips to the winning tinted-cell architecture" />
+        <p class="cs-img-caption">Seven directions for encoding three data layers in one calendar cell — per-log pips, dot + numeral, tally bar, corner badge, hand-tally ticks, and the two tinted-cell finalists. Option F (tinted cell + number) won: the background tint turns the whole month into a readable color map, while the count pill stays quiet until it's actually needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 Hi-Fi & Accessibility -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">07 — Hi-Fi &amp; Accessibility</p>
+    <h2 class="cs-heading">High-Fidelity Transition &amp; Accessibility Optimization</h2>
+    <p class="cs-body">With the structure in place, I moved into high-fidelity prototyping — balancing design goals against engineering constraints through a continuous feedback loop with my developer partner.</p>
+
+    <h3 class="cs-subheading" style="margin-top:40px;">A Gut-Check with Real People</h3>
+    <p class="cs-body">AI could generate options, but only real people could tell me whether a social app about poop would actually feel <em>safe</em> and <em>fun</em>. So before hardening anything, I ran a scrappy round of guerrilla testing — a clickable prototype put in front of 7 people in the target demographic (early-20s, all active in group chats). It wasn't a formal study, but it changed real decisions:</p>
+    <div class="cs-constraint-list" style="max-width:720px;">
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">1</div>
+        <div class="cs-constraint-text">
+          <strong>Privacy was the dealbreaker</strong>
+          <span>5 of 7 said they'd never post without an explicit, per-post opt-in. This validated privacy-by-default — and surfaced one thing I hadn't planned: a per-post audience toggle, so a log can go to "close friends" or stay fully private.</span>
+        </div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">2</div>
+        <div class="cs-constraint-text">
+          <strong>The 30-second goal held — barely</strong>
+          <span>Median time to log a full entry was ~22 seconds — comfortably under the 30-second goal. But two testers stalled on the raw Bristol scale numbers, which confirmed the call to pair every type with a plain-language label like "Type 7 — fully liquid."</span>
+        </div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">3</div>
+        <div class="cs-constraint-text">
+          <strong>The grade bubble was the breakout</strong>
+          <span>Testers fixated on it as the fun, shareable hook — so I promoted it from a calendar detail to the primary visual anchor across the feed, calendar, and leaderboard.</span>
+        </div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">4</div>
+        <div class="cs-constraint-text">
+          <strong>The gamification landed</strong>
+          <span>The rotating leaderboard titles drew the biggest laughs ("Morning Monarch" was the favorite) — confirming the social-game direction over anything that smelled like a health tracker.</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">Designing with Engineering Empathy</h3>
+    <p class="cs-body">To maximize delivery speed and minimize platform costs, I actively consulted my developer on implementation complexity. During onboarding, for example, we chose classic <strong>email-and-password authentication over SMS verification</strong>. SMS offers lower friction, but introduces ongoing operational API costs — auditing this early preserved our budget and kept the MVP lean and shippable.</p>
+
+      <div class="cs-callout accent3 cs-reveal">
+        <div class="cs-callout-label">🤖 AI Touchpoint — Enforcing WCAG</div>
+        <p>Vibrant, eclectic palettes frequently compromise legibility. I leveraged Claude to run a comprehensive <strong>WCAG 1.4.3 color-contrast audit</strong> across our active tokens. Its verdict: our foundations were "mostly, but not fully" passing.</p>
+      </div>
+
+    <div class="cs-cols-2" style="margin-top:32px;">
+      <div class="cs-callout keep" style="margin:0;">
+        <div class="cs-callout-label">The Passes</div>
+        <p>Dark headings on a light cream canvas scored a powerful <strong>12:1</strong> ratio, and dark ink typography over light sky and amber grade bubbles cleared comfortably.</p>
+      </div>
+      <div class="cs-callout" style="margin:0;border-left-color:var(--accent);">
+        <div class="cs-callout-label">The Fails</div>
+        <p>Vibrant accents carrying white text failed AA. The white-on-bubblegum CTA sat at an unstable <strong>3.0:1</strong>, while white-on-sky and white-on-amber dropped as low as <strong>1.6:1</strong>.</p>
+      </div>
+    </div>
+
+    <div class="cs-callout accent2 cs-reveal" style="margin-top:24px;">
+      <div class="cs-callout-label">💡 The Human Intervention</div>
+      <p>Rather than abandon our playful identity, I directed the AI to systematically calculation-tune our color tokens — deepening only the accents that carry text, while leaving the light background surfaces and empty canvas untouched.</p>
+    </div>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">The Accessible Evolution</h3>
+    <p class="cs-body" style="margin-bottom:8px;">We mathematically re-engineered the palette to safely cross the 4.5:1 AA threshold across every interactive component:</p>
+    <div class="cs-table-wrap" style="background:var(--card-bg);">
+      <table class="cs-table cs-table-lighthead">
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Used For</th>
+            <th>Before</th>
+            <th>After (≥ 4.5:1)</th>
+            <th>Resolution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--bubblegum-500</code></td>
+            <td>Primary Button Fill</td>
+            <td>3.0:1</td>
+            <td class="cs-th-num">4.6:1</td>
+            <td>Shifted to <code>#D9208D</code></td>
+          </tr>
+          <tr>
+            <td><code>--sunny-600</code></td>
+            <td>Avatar / Badge Fill</td>
+            <td>2.1:1</td>
+            <td class="cs-th-num">4.5:1</td>
+            <td>Shifted to <code>#926107</code></td>
+          </tr>
+          <tr>
+            <td><code>--sky-600</code></td>
+            <td>Avatar / Badge Fill</td>
+            <td>2.3:1</td>
+            <td class="cs-th-num">4.5:1</td>
+            <td>Shifted to <code>#33757F</code></td>
+          </tr>
+          <tr>
+            <td><code>--grade-d</code></td>
+            <td>Grade-D Gumball Card</td>
+            <td>3.3:1</td>
+            <td class="cs-th-num">4.6:1</td>
+            <td>Shifted to <code>#E02C0F</code></td>
+          </tr>
+          <tr>
+            <td><code>--ink-300</code></td>
+            <td>Faint Text / Placeholders</td>
+            <td>2.8:1</td>
+            <td class="cs-th-num">4.6:1</td>
+            <td>Shifted to <code>#806D60</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs-img-block" style="margin-top:36px;max-width:440px;margin-left:auto;margin-right:auto;">
+      <img src="images/ploop/wcag-before-after.png" alt="Before and after the WCAG AA pass — onboarding screen with original tokens (failing contrast) versus the corrected AA-compliant prototype" />
+      <p class="cs-img-caption">Before vs. after the AA pass. Left: original tokens — primary button 3.0:1, grade-D 3.3:1, badges 2.1–2.9:1. Right: every pairing ≥ 4.5:1 with visible focus — the deepened accents read as clearly legible while the playful identity stays fully intact.</p>
+    </div>
+
+    <p class="cs-body" style="margin-top:24px;">By pairing rigorous manual product oversight with AI contrast calculations, we elevated the layout from a fun concept into an inclusive, production-ready design system.</p>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">The Final Product</h3>
+    <p class="cs-body" style="margin-bottom:8px;">The polished build, prototyped in Claude Design — every earlier decision made visible: the tinted-cell calendar, the accessible color tokens, the Bristol scale softened into plain-language labels, and a voice that hypes you up instead of charting your health.</p>
+    <div class="final-rows">
+      <div class="final-row">
+        <div class="cs-img-block no-border">
+          <video src="images/ploop/onboarding.mp4?v=3" muted loop playsinline preload="none" class="final-vid" aria-label="ploop! onboarding flow — mascot welcome and first-run walkthrough" style="width:100%;display:block;border-radius:28px;"></video>
+        </div>
+        <div class="cs-img-block no-border">
+          <video src="images/ploop/log.mp4?v=2" muted loop playsinline preload="none" class="final-vid" aria-label="ploop! log-a-ploop flow — Bristol scale, grade, color, size, and duration" style="width:100%;display:block;border-radius:28px;"></video>
+        </div>
+        <div class="cs-img-block no-border">
+          <video src="images/ploop/feed.mp4" muted loop playsinline preload="none" class="final-vid" aria-label="ploop! social feed flow — close-friends timeline with grade bubbles and emoji reactions" style="width:100%;display:block;border-radius:28px;"></video>
+        </div>
+      </div>
+      <div class="final-row">
+        <div class="cs-img-block no-border">
+          <video src="images/ploop/leaderboard.mp4" muted loop playsinline preload="none" class="final-vid" aria-label="ploop! leaderboard flow — the weekly Throne Room with rotating crowns" style="width:100%;display:block;border-radius:28px;"></video>
+        </div>
+        <div class="cs-img-block no-border">
+          <video src="images/ploop/history.mp4" muted loop playsinline preload="none" class="final-vid" aria-label="ploop! history calendar flow — tinted-cell month view and day detail" style="width:100%;display:block;border-radius:28px;"></video>
+        </div>
+      </div>
+    </div>
+    <p class="cs-img-caption" style="margin-top:16px;">Five core flows from the final prototype — onboarding, the under-30-second log, the friends-only feed, the weekly "Throne Room" leaderboard, and the tinted-cell history calendar.</p>
+  </section>
+
+  <!-- 07 Status & Takeaways -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">08 — Status &amp; Takeaways</p>
+        <h2 class="cs-heading">Current Status &amp; What I Learned</h2>
+        <p class="cs-body"><strong>ploop!</strong> is currently moving through active development. Because the design system, component states, and accessibility tokens were rigorously defined and validated up front, the handoff has been clean — my engineering partner is using the structured token system to spin up the functional iOS app with minimal layout friction.</p>
+      </div>
+
+      <div class="cs-callout cs-reveal" style="margin-top:24px;">
+        <div class="cs-callout-label">Defining Success</div>
+        <p>Since it's pre-launch, I defined the metrics we'll judge it on so the team isn't flying blind: <strong>activation</strong> (share of new users who complete a first log), <strong>D7 retention</strong>, <strong>share rate</strong> (logs posted to the feed vs. kept private), and <strong>median time-to-log</strong> (holding under 30s). Share rate is the one I'm watching hardest — it's the single number that tells us whether the privacy-and-delight balance actually works in the wild, not just in a 7-person test.</p>
+      </div>
+
+      <div class="cs-reflection-grid cs-reveal">
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">01</div>
+          <div class="cs-reflection-title">AI is an Accelerator, Not an Author</div>
+          <div class="cs-reflection-body">Claude and ChatGPT excel at eliminating blank-canvas syndrome — generating structural variations, market baselines, and tokens at lightning speed. But they lack human empathy and taste. The breakthroughs here — catching the over-indexing on literal browns, stripping juvenile emoji clutter, engineering the cell-tint calendar — all required decisive human intervention.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">02</div>
+          <div class="cs-reflection-title">Prompting is a Form of Critique</div>
+          <div class="cs-reflection-body">My role shifted from manual pixel-pushing to high-level strategic direction and rigorous critique. An AI's output quality is entirely dependent on the constraints you set. Writing precise, analytical prompts — and refusing to accept generic first-round drafts — is a vital skill for modern designers.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">03</div>
+          <div class="cs-reflection-title">Scaling Cross-Functional Communication</div>
+          <div class="cs-reflection-body">By using Claude to audit accessibility and translate color systems into clean, framework-ready variables, I could speak my developer's language more fluently. AI acted as a bridge between design and engineering — letting a lean two-person team operate with the efficiency of a much larger product squad.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">04</div>
+          <div class="cs-reflection-title">The Risk I'm Still Watching</div>
+          <div class="cs-reflection-body">The privacy model is the load-bearing wall of this whole app, and it's still only lightly tested. Before a public launch I'd run a larger study on whether opt-in sharing preserves the social loop — if too few people share, the feed goes quiet and the product loses its point. I'd also pressure-test whether the playful framing alienates users who genuinely have gut-health concerns, so the fun never excludes the people it could help most.</div>
+        </div>
+      </div>
+
+      <div class="cs-callout cs-reveal" style="margin-top:40px;">
+        <div class="cs-callout-label">💡 Final Thought</div>
+        <p>Leveraging AI didn't change <strong>why</strong> I design — it changed <strong>how fast</strong> I can bring a strategic, human-centered solution to life. By offloading the operational heavy lifting to my co-pilots, I spent less time pushing pixels and more time solving core user-experience problems.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Case Study -->
+  <div class="cs-next">
+    <div class="cs-next-label">Next Case Study</div>
+    <div class="cs-next-title">Parallel Operations<br/>in Work Definition</div>
+    <div class="cs-next-org">Oracle SCM Manufacturing</div>
+    <a href="parallel-ops.html" class="cs-next-cta" data-cursor="link">
+      View Case Study
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="cs-main.js"></script>
+  <script>
+    // Lazy play: load + play the final-product videos only when in view, pause off-screen
+    (function () {
+      var vids = document.querySelectorAll('.final-vid');
+      if (!vids.length) return;
+      if (!('IntersectionObserver' in window)) {
+        vids.forEach(function (v) { v.setAttribute('preload', 'metadata'); v.play().catch(function(){}); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var v = e.target;
+          if (e.isIntersecting) {
+            if (v.preload !== 'auto') v.preload = 'auto';
+            v.play().catch(function () {});
+          } else {
+            v.pause();
+          }
+        });
+      }, { rootMargin: '200px 0px', threshold: 0.25 });
+      vids.forEach(function (v) { io.observe(v); });
+    })();
+  </script>
+</body>
+</html>

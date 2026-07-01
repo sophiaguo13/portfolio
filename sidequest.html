@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SideQuest — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="case-study.css?v=9" />
+  <style>
+    /* ── SideQuest research components ── */
+    .sq-persona-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:28px; }
+    .sq-persona { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:18px; }
+    .sq-persona-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:17px; color:var(--fg); margin-bottom:12px; }
+    .sq-persona-name { font-size:14px; font-weight:500; color:var(--fg); margin-bottom:5px; }
+    .sq-persona-desc { font-size:12.5px; color:var(--muted); line-height:1.45; }
+
+    .sq-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:32px; }
+    .sq-stat { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:24px; }
+    .sq-stat-label { font-size:13px; color:var(--muted); margin-bottom:10px; }
+    .sq-stat-num { font-family:var(--font-serif); font-size:38px; line-height:1; color:var(--fg); margin-bottom:10px; }
+    .sq-stat-sub { font-size:12.5px; color:var(--muted); line-height:1.45; }
+
+    .sq-insight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:28px; }
+    .sq-insight { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:24px; display:flex; flex-direction:column; gap:12px; }
+    .sq-tag { align-self:flex-start; font-size:12px; font-weight:500; padding:4px 12px; border-radius:100px; }
+    .sq-tag.pain { background:rgba(216,71,45,0.10); color:#c43b22; }
+    .sq-tag.motivation { background:rgba(47,125,153,0.12); color:#2f7d99; }
+    .sq-tag.concern { background:rgba(230,168,23,0.16); color:#956808; }
+    .sq-insight-title { font-family:var(--font-serif); font-size:19px; line-height:1.25; color:var(--fg); }
+    .sq-insight-body { font-size:14px; line-height:1.6; color:var(--muted); }
+    .sq-insight-who { font-size:12px; color:var(--muted); opacity:0.7; margin-top:auto; line-height:1.4; }
+
+    .sq-bars { margin-top:20px; max-width:760px; }
+    .sq-bar-row { display:flex; align-items:center; gap:16px; margin-bottom:12px; }
+    .sq-bar-label { flex:0 0 210px; font-size:14px; color:var(--fg); }
+    .sq-bar-track { flex:1; height:13px; background:var(--warm); border-radius:100px; overflow:hidden; }
+    .sq-bar-fill { height:100%; border-radius:100px; }
+    .sq-bar-fill.pos { background:var(--accent3); }
+    .sq-bar-fill.neg { background:var(--accent); }
+    .sq-bar-val { flex:0 0 38px; font-size:13px; color:var(--muted); text-align:right; }
+
+    .sq-verdict { display:inline-block; font-size:12px; font-weight:500; padding:4px 12px; border-radius:100px; white-space:nowrap; }
+    .sq-verdict.confirmed { background:rgba(58,191,159,0.16); color:#2a7d5f; }
+    .sq-verdict.partial { background:rgba(230,168,23,0.16); color:#956808; }
+    .sq-verdict.challenged { background:rgba(216,71,45,0.10); color:#c43b22; }
+
+    .sq-copy { border:1px solid var(--card-border); border-radius:14px; overflow:hidden; margin-top:24px; max-width:760px; }
+    .sq-copy-row { display:flex; gap:20px; align-items:baseline; padding:16px 22px; background:var(--card-bg); }
+    .sq-copy-row + .sq-copy-row { border-top:1px solid var(--card-border); }
+    .sq-copy-moment { flex:0 0 150px; font-size:11px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+    .sq-copy-text { font-family:var(--font-serif); font-size:18px; color:var(--fg); line-height:1.4; }
+
+    .sq-tag.critical { background:rgba(216,71,45,0.12); color:#c43b22; }
+    .sq-tag.high { background:rgba(230,168,23,0.18); color:#956808; }
+    .sq-tag.medium { background:rgba(47,125,153,0.12); color:#2f7d99; }
+    .sq-tag.low { background:var(--warm); color:var(--muted); }
+    .sq-finding { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:24px; display:flex; flex-direction:column; gap:12px; }
+    .sq-finding-title { font-family:var(--font-serif); font-size:18px; line-height:1.25; color:var(--fg); }
+    .sq-finding-body { font-size:13.5px; line-height:1.55; color:var(--muted); }
+    .sq-finding-quote { font-size:13.5px; line-height:1.5; color:var(--fg); font-style:italic; border-left:2px solid var(--card-border); padding-left:13px; }
+    .sq-finding-fix { font-size:13.5px; line-height:1.55; color:var(--muted); margin-top:auto; }
+    .sq-finding-fix strong { color:#2a7d5f; }
+
+    /* ── Product brief panel ── */
+    .brief { border:1px solid var(--card-border); border-radius:16px; overflow:hidden; margin-top:32px; background:var(--card-bg); }
+    .brief-head { background:#2E2A26; color:#F7EFDD; padding:20px 28px; display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:6px; }
+    .brief-head h4 { font-family:var(--font-serif); font-size:20px; margin:0; font-weight:400; }
+    .brief-head .brief-tag { font-size:11px; letter-spacing:0.07em; text-transform:uppercase; opacity:0.65; }
+    .brief-meta { display:flex; flex-wrap:wrap; border-bottom:1px solid var(--card-border); }
+    .brief-meta > div { flex:1; min-width:130px; padding:14px 28px; }
+    .brief-meta > div + div { border-left:1px solid var(--card-border); }
+    .brief-meta .l { font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    .brief-meta .v { font-size:13.5px; color:var(--fg); font-weight:500; }
+    .brief-body { padding:28px; }
+    .brief-row { margin-bottom:24px; }
+    .brief-label { font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#5856D6; margin-bottom:8px; }
+    .brief-body p { font-size:14.5px; line-height:1.6; color:var(--muted); margin:0; max-width:none; }
+    .brief-body p strong { color:var(--fg); font-weight:500; }
+    .brief-scope { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-bottom:24px; }
+    .brief-scope ul { list-style:none; margin:6px 0 0; padding:0; display:flex; flex-direction:column; gap:7px; }
+    .brief-scope li { font-size:13.5px; line-height:1.45; color:var(--muted); padding-left:18px; position:relative; }
+    .brief-scope li::before { content:''; position:absolute; left:0; top:7px; width:6px; height:6px; border-radius:50%; }
+    .brief-scope .in li::before { background:var(--accent3); }
+    .brief-scope .out li::before { background:var(--muted); }
+    .brief-scope .out li { opacity:0.85; }
+    .brief-northstar { background:rgba(88,86,214,0.07); border:1px solid rgba(88,86,214,0.2); border-radius:12px; padding:18px 22px; }
+    .brief-northstar p { color:var(--fg); }
+
+    @media (max-width:900px) {
+      .sq-persona-grid { grid-template-columns:repeat(2,1fr); }
+      .sq-stats { grid-template-columns:repeat(2,1fr); }
+      .sq-insight-grid { grid-template-columns:1fr; }
+      .sq-bar-label { flex-basis:150px; }
+      .brief-scope { grid-template-columns:1fr; gap:20px; }
+    }
+    @media (max-width:540px) {
+      .sq-persona-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body class="cs-page">
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="play.html" class="nav-link" data-cursor="link">Play</a>
+      <a href="playground.html" class="nav-link" data-cursor="link">Lab</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="cs-hero">
+    <div class="cs-wrap">
+      <a href="index.html#work" class="cs-back" data-cursor="link">
+        <span class="cs-back-arrow">←</span>
+        Back to work
+      </a>
+      <div class="cs-project-label">
+        <span class="cs-project-label-dot"></span>
+        Self-Initiated · Consumer Mobile Concept
+      </div>
+      <h1 class="cs-title">SideQuest<br/>A Weekly Ritual for Scattered Friend Groups</h1>
+      <p class="cs-lead">An asynchronous iOS concept that turns fading group chats into a recurring weekly ritual — a rotating judge, a creative challenge, and a game loop designed to keep friends close long after the novelty wears off.</p>
+      <div class="cs-meta-strip">
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Timeline</div>
+          <div class="cs-meta-value">2026 · In Progress</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Role</div>
+          <div class="cs-meta-value">Product Designer (Solo)</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Platform</div>
+          <div class="cs-meta-value">iOS Mobile App Concept</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Tools</div>
+          <div class="cs-meta-value">Figma · Claude · Claude Design · ChatGPT · Gemini Images</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover -->
+  <div class="cs-cover-wrap">
+    <img src="images/sidequest/cover.png" alt="SideQuest — the reveal-night results and the weekly challenge screens" />
+  </div>
+
+  <!-- 01 Overview -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">01 — Overview</p>
+        <h2 class="cs-heading">When Friend Groups Drift Apart</h2>
+        <p class="cs-body">As young adults leave college or relocate for work, close friend groups fragment across time zones, careers, and life stages. Messaging apps and social feeds keep us updated on the big milestones, but they fail to maintain everyday closeness. Relationships don't fade because people stop caring — they fade because they lose the spontaneous, organic triggers to do things together.</p>
+        <p class="cs-body" style="margin-top:16px;"><strong>SideQuest</strong> turns a fading group chat into a structured weekly ritual. Inspired by the British comedy game show <em>Taskmaster</em>, each week a rotating judge sets a creative, low-stakes challenge. Friends submit a photo or video, the judge ranks them, and points stack across a single round before resetting — a fresh start, every week.</p>
+      </div>
+
+      <div class="cs-callout cs-reveal">
+        <div class="cs-callout-label">TL;DR</div>
+        <p>A solo, end-to-end consumer concept built to answer one question: how do you design a structural, emotional habit loop that keeps a scattered friend group returning week after week — not just for the novelty of week one? It marks a deliberate shift from enterprise efficiency to consumer engagement.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 User Research -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">02 — User Research</p>
+        <h2 class="cs-heading">Talking to Scattered Friends</h2>
+        <p class="cs-body">SideQuest is about a problem I'm living, so I took it to the people living it. I ran <strong>18 generative interviews with peers aged 22–30</strong> — friends now scattered across six cities, a mix of genders, and every kind of post-grad life stage: some in grad school, some in med or law school, others working full-time across different industries. Same open-ended guide each time, then I coded the transcripts for patterns. The goal: stress-test my core assumptions and find the real design problem before drawing a single screen.</p>
+      </div>
+
+      <div class="sq-stats cs-reveal">
+        <div class="sq-stat"><div class="sq-stat-label">Interviews</div><div class="sq-stat-num">18</div><div class="sq-stat-sub">Peers, ages 22–30, 6 cities</div></div>
+        <div class="sq-stat"><div class="sq-stat-label">Would try it</div><div class="sq-stat-num">16/18</div><div class="sq-stat-sub">The 2 holdouts were a fit issue, not the concept</div></div>
+        <div class="sq-stat"><div class="sq-stat-label">Top fear</div><div class="sq-stat-num">Drop-off</div><div class="sq-stat-sub">Named by 14 of 18</div></div>
+        <div class="sq-stat"><div class="sq-stat-label">Biggest unlock</div><div class="sq-stat-num">Triggers</div><div class="sq-stat-sub">Groups need a reason to reach out</div></div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:56px;">What I Asked — and What I Heard</h3>
+      <p class="cs-body">I kept the guide open-ended and story-first — asking people to describe real friendships and real group chats rather than react to my idea. A few of the questions that did the most work, with representative answers:</p>
+      <div style="margin-top:28px;max-width:780px;">
+        <div style="border-left:2px solid var(--card-border);padding-left:20px;margin-bottom:24px;">
+          <p style="font-family:var(--font-serif);font-size:17px;color:var(--fg);line-height:1.4;margin:0 0 8px;">Think of a friendship that's faded. Did people actually stop caring — or did something else happen?</p>
+          <p style="font-size:14.5px;line-height:1.6;margin:0;color:var(--muted);"><span style="color:var(--fg);">"No, we all still love each other. The chat just goes quiet. Nobody reaches out until there's a reason — someone's engaged, someone's in town. There's no default thing pulling us together anymore."</span> &nbsp;<span style="opacity:0.7;">— Anna (she/her), 23, San Francisco</span></p>
+        </div>
+        <div style="border-left:2px solid var(--card-border);padding-left:20px;margin-bottom:24px;">
+          <p style="font-family:var(--font-serif);font-size:17px;color:var(--fg);line-height:1.4;margin:0 0 8px;">Have you kept any recurring thing going with friends? What made it stick, or fall apart?</p>
+          <p style="font-size:14.5px;line-height:1.6;margin:0;color:var(--muted);"><span style="color:var(--fg);">"Fantasy football is the only group chat that's survived. It's dumb, but it's standing — every week there's a reason to talk trash. Our 'book club' lasted exactly one book."</span> &nbsp;<span style="opacity:0.7;">— Dylan (he/him), 26, New York</span></p>
+        </div>
+        <div style="border-left:2px solid var(--card-border);padding-left:20px;">
+          <p style="font-family:var(--font-serif);font-size:17px;color:var(--fg);line-height:1.4;margin:0 0 8px;">Picture an app built for this. What would make you quit after a week or two?</p>
+          <p style="font-size:14.5px;line-height:1.6;margin:0;color:var(--muted);"><span style="color:var(--fg);">"If it felt like homework. Or if I missed a week and felt behind with no way to catch up — I'd just mute it. The busy weeks are exactly when I'd bail."</span> &nbsp;<span style="opacity:0.7;">— Audrey (she/her), 30, Seattle</span></p>
+        </div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:56px;">Who We're Designing For</h3>
+      <p class="cs-body">Synthesizing the eighteen interviews surfaced two archetypes the product has to serve — and the tension between them shaped the core mechanic. The goal isn't more messaging; it's giving a drifting group a recurring, low-effort reason to show up for each other.</p>
+      <div class="cs-cols-2 cs-reveal" style="gap:24px;margin-top:28px;">
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:28px;">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+            <div style="width:54px;height:54px;border-radius:50%;background:#cfe3b8;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:19px;color:var(--fg);flex-shrink:0;">SC</div>
+            <div>
+              <div style="font-size:17px;font-weight:500;color:var(--fg);">The Scattered Connector</div>
+              <div style="font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Primary · the pattern in most interviews</div>
+            </div>
+          </div>
+          <p class="cs-body" style="max-width:none;font-size:15px;margin-bottom:18px;">A few years out of college, their once-tight group is now spread across cities. They're usually the one trying to keep everyone together — and quietly worried the group is slipping away.</p>
+          <div style="margin-bottom:14px;">
+            <div class="cs-callout-label" style="color:var(--accent3);">Goal</div>
+            <p style="font-size:14px;color:var(--fg);line-height:1.55;margin:5px 0 0;">A low-effort, recurring reason to stay close — without always being the one who has to organize it.</p>
+          </div>
+          <div>
+            <div class="cs-callout-label" style="color:var(--accent);">Frustration</div>
+            <p style="font-size:14px;color:var(--muted);line-height:1.55;margin:5px 0 0;">The chat only reacts when something happens. The social load falls on them, and vague plans rarely land.</p>
+          </div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:28px;">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+            <div style="width:54px;height:54px;border-radius:50%;background:#f3d2bf;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:19px;color:var(--fg);flex-shrink:0;">RC</div>
+            <div>
+              <div style="font-size:17px;font-weight:500;color:var(--fg);">The Reluctant Competitor</div>
+              <div style="font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Secondary · the non-competitive minority (≈4 of 18)</div>
+            </div>
+          </div>
+          <p class="cs-body" style="max-width:none;font-size:15px;margin-bottom:18px;">Part of a small, creative, emotionally close group. They cherish shared moments but find ranking and winning-or-losing more threatening than fun.</p>
+          <div style="margin-bottom:14px;">
+            <div class="cs-callout-label" style="color:var(--accent3);">Goal</div>
+            <p style="font-size:14px;color:var(--fg);line-height:1.55;margin:5px 0 0;">Shared rituals and inside jokes — the togetherness, minus the pressure of competing.</p>
+          </div>
+          <div>
+            <div class="cs-callout-label" style="color:var(--accent);">Frustration</div>
+            <p style="font-size:14px;color:var(--muted);line-height:1.55;margin:5px 0 0;">Leaderboard-driven apps feel alienating and performative — so the product needs a genuinely low-stakes mode.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:56px;">Core Insights</h3>
+      <div class="sq-insight-grid cs-reveal">
+        <div class="sq-insight">
+          <span class="sq-tag pain">Pain point</span>
+          <div class="sq-insight-title">Groups don't fade — they lose triggers</div>
+          <div class="sq-insight-body">Nearly every interviewee described the same pattern: the chat isn't dead, it's just <em>reactive</em>. Nothing happens until something happens. The hardest problem isn't reconnecting — it's having a reason to reach out. Chats came alive on photos, drama, and roasting; "hey what's up" died on arrival.</div>
+          <div class="sq-insight-who">Raised by nearly everyone</div>
+        </div>
+        <div class="sq-insight">
+          <span class="sq-tag motivation">Motivation</span>
+          <div class="sq-insight-title">Rituals with stakes stick — open-ended dies</div>
+          <div class="sq-insight-body">The bonds that survived shared two traits: <strong>ongoing stakes</strong> (it keeps mattering week to week) and <strong>shared exposure</strong> (everyone's equally on the hook — no one's just watching). Fantasy leagues, annual trips, group challenges. "You're in last place" lives; open-ended sharing fizzles.</div>
+          <div class="sq-insight-who">The most-cited "we felt closest" moments</div>
+        </div>
+        <div class="sq-insight">
+          <span class="sq-tag concern">The core problem</span>
+          <div class="sq-insight-title">Week 2 is the real design problem</div>
+          <div class="sq-insight-body">No one doubted their group would <em>try</em> SideQuest. Almost everyone doubted they'd <em>sustain</em> it. The onramp isn't the challenge — keeping it alive after novelty wears off is. Content freshness and minimum-viable-effort are the two levers, and the busy week is exactly when people bail.</div>
+          <div class="sq-insight-who">The near-universal worry</div>
+        </div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:56px;">Assumption Validation</h3>
+      <p class="cs-body" style="margin-bottom:8px;">I went in with seven assumptions. Most held — but the two that got <em>nuanced</em> shaped the design more than the ones that simply confirmed. The verdicts that mattered:</p>
+      <div class="cs-table-wrap">
+        <table class="cs-table">
+          <thead>
+            <tr><th>Assumption</th><th>Verdict</th><th>What people actually said</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Friendships fade without intentional effort</strong></td><td><span class="sq-verdict confirmed">Confirmed</span></td><td>Nearly everyone described a group that faded or is fading. The mechanism is always the same: no trigger → silence → awkwardness to re-start.</td></tr>
+            <tr><td><strong>People need a reason to interact</strong></td><td><span class="sq-verdict confirmed">Confirmed</span></td><td>Universally validated. Even people in active groups said activity clusters around specific triggers, not general warmth.</td></tr>
+            <tr><td><strong>Competition is a universal motivator</strong></td><td><span class="sq-verdict partial">Partial</span></td><td>True for most, but Aaliyah's and Priya's groups rejected it outright. The judging mechanic needs a genuinely low-stakes mode or the product has a ceiling.</td></tr>
+            <tr><td><strong>Weekly cadence is sustainable</strong></td><td><span class="sq-verdict challenged">Challenged</span></td><td>Marcus flagged that missing two weeks creates shame-dropout; Sofia needs sub-30-second participation. Cadence needs grace periods and a passive-participation path — which became the "I'm here" tap.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Strategy & Pivot -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">03 — Strategy &amp; Pivot</p>
+    <h2 class="cs-heading">From Enterprise Efficiency to Consumer Engagement</h2>
+    <p class="cs-body" style="margin-bottom:8px;">After two years designing enterprise software, my product instincts were rooted in optimizing workflows — helping users finish explicit tasks as efficiently as possible with minimal risk. Designing a social product flipped that on its head. The problem wasn't ease of task completion; it was <strong>long-term behavior change</strong>. A novel app sparks early downloads, but a sustained group ritual demands consistent motivation and social momentum. My focus pivoted from "How fast can a user finish this task?" to "How do I design a habit loop that keeps friends interested, involved, and returning?"</p>
+
+    <div class="cs-cols-2" style="margin-top:40px;gap:24px;">
+      <div class="cs-callout" style="margin:0;border-left-color:var(--muted);">
+        <div class="cs-callout-label" style="color:var(--muted);">Enterprise Mindset (Old)</div>
+        <ul class="cs-pill-list cut">
+          <li>Optimize for speed &amp; efficiency</li>
+          <li>Eliminate risk &amp; friction</li>
+          <li>Utility-driven interactions</li>
+        </ul>
+      </div>
+      <div class="cs-callout accent3" style="margin:0;">
+        <div class="cs-callout-label">Consumer Social Mindset (New)</div>
+        <ul class="cs-pill-list">
+          <li>Optimize for engagement &amp; fun</li>
+          <li>Introduce <em>playful</em> friction</li>
+          <li>Emotional &amp; community loops</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">From Insight to Product Pillars</h3>
+    <p class="cs-body">The research made the design problem unmistakable: <strong>Week 2 — not Week 1 — is where rituals die.</strong> Novelty handles the first round; the real challenge is engineering a reason to come back after the shine wears off. To make the ritual survive past novelty, I anchored the product to two foundational pillars:</p>
+    <div class="cs-constraint-list" style="max-width:760px;">
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">1</div>
+        <div class="cs-constraint-text">
+          <strong>The Challenge Bank</strong>
+          <span>Challenges must be doable from anywhere, yet creative enough to delight — with no "wrong answers," to dissolve participation anxiety.</span>
+        </div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">2</div>
+        <div class="cs-constraint-text">
+          <strong>The Rotating Judge</strong>
+          <span>Distributing structural ownership means everyone takes a turn in the hot seat — preventing host burnout and stopping any one person from feeling singled out.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product brief at a glance -->
+    <div class="brief">
+      <div class="brief-head">
+        <h4>Side Quest — Product Requirements Document</h4>
+        <span class="brief-tag">v1.0 · iOS · June 2025 · Draft</span>
+      </div>
+      <div class="brief-meta">
+        <div><div class="l">Author</div><div class="v">Sophia Guo</div></div>
+        <div><div class="l">Platform</div><div class="v">iOS only</div></div>
+        <div><div class="l">Target Users</div><div class="v">Post-grad friends, 22–28</div></div>
+        <div><div class="l">Group Size</div><div class="v">4–8 members</div></div>
+      </div>
+      <div class="brief-body">
+        <div class="brief-row">
+          <div class="brief-label">Problem</div>
+          <p>Friendships don't end — they lose their triggers. After graduation, groups scatter and the chat goes reactive: alive when something happens, silent when it doesn't. Caring isn't enough without a structure that gives people a reason to show up.</p>
+        </div>
+        <div class="brief-row">
+          <div class="brief-label">Solution &amp; Core Thesis</div>
+          <p><strong>A recurring weekly ritual.</strong> Each week a rotating judge sets a creative challenge; everyone submits a photo or video; the judge picks a winner; points stack across a round, then reset. The mechanic <strong>distributes the social labor</strong> of keeping the group alive — making showing up the default, not the exception.</p>
+        </div>
+        <div class="brief-scope">
+          <div class="in">
+            <div class="brief-label" style="color:var(--accent3);">In Scope · v1</div>
+            <ul>
+              <li>Groups of 4–8 — invite-link join, multi-group</li>
+              <li>Weekly challenge: rotating judge, a bank of 5 or a custom prompt</li>
+              <li>Submit-to-see wall (post to unlock)</li>
+              <li>Scoring where everyone earns ≥ 1 point; round leaderboard</li>
+              <li>Challenge bank — 6 categories, tagged by effort</li>
+              <li>Notifications that sound like the group, not the app</li>
+            </ul>
+          </div>
+          <div class="out">
+            <div class="brief-label" style="color:var(--muted);">Out of Scope · v1</div>
+            <ul>
+              <li>In-app messaging (iMessage already exists)</li>
+              <li>Badges &amp; streaks</li>
+              <li>Spectator / watch-only mode</li>
+              <li>Judge veto or challenge appeals</li>
+              <li>Cross-group discovery</li>
+              <li>Android &amp; AI-generated challenges</li>
+            </ul>
+          </div>
+        </div>
+        <div class="brief-northstar">
+          <div class="brief-label">North Star</div>
+          <p><strong>% of groups that complete at least 2 full rounds</strong> — capturing both retention and the core loop working as intended.</p>
+        </div>
+      </div>
+    </div>
+    <p class="cs-img-caption" style="text-align:left;margin-top:14px;">The <strong>original v1 product brief</strong> I wrote at the start of the project, captured here at a glance — the scope and success thinking it locked in before research and testing reshaped them.</p>
+  </section>
+
+  <!-- 03 Interaction Architecture -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">04 — Interaction Architecture</p>
+      <h2 class="cs-heading cs-reveal">The Contestant vs. The Judge</h2>
+      <p class="cs-body cs-reveal">To make the mechanics reinforce psychological safety and bonding rather than stressful competition, I split the core architecture into two distinct flows — mapped first as <strong>low-fidelity wireframes</strong> to lock the structure and pacing before any visual design.</p>
+
+      <!-- Contestant -->
+      <h3 class="cs-subheading" style="margin-top:40px;">1 · The Contestant — Lowering the Pressure to Post</h3>
+      <p class="cs-body">SideQuest uses a <strong>Submit-to-See wall</strong>: friends can't view any submissions until they upload their own — everyone else's entries stay blurred behind a frosted preview card. The moment a user posts, the space transforms into a private social room where contestants react to and joke about each other's entries. That shifts the experience from a high-stakes contest into a collaborative thing friends do simply because they want to.</p>
+      <div class="cs-img-block no-border" style="margin-top:24px;">
+        <img src="images/sidequest/wf-contestant-submit.svg?v=2" alt="Contestant submit flow wireframes — frosted Submit-to-See wall, upload, and post-submission social space" />
+        <p class="cs-img-caption">Contestant flow — the frosted Submit-to-See wall, the upload step, and the social space that unlocks once you've posted.</p>
+      </div>
+
+      <!-- Judge -->
+      <h3 class="cs-subheading" style="margin-top:48px;">2 · The Judge — Humanizing the Scoring</h3>
+      <p class="cs-body">On the judge's side, the interface walks them through reviewing each full-screen entry and assigning rankings — deliberately avoiding corporate, punitive language like "best" or "loser." On <strong>Reveal Night</strong>, the results screen celebrates the winner but shows everyone's points and positions clearly underneath, and the scoring model guarantees every active player walks away with <strong>at least 1 point</strong>. That sidesteps winner-take-all dynamics and reframes the week as a collective effort.</p>
+      <div class="cs-img-block no-border" style="margin-top:24px;">
+        <img src="images/sidequest/wf-judge-rank.svg" alt="Judge ranking flow wireframes — full-screen entry review, ranking, and the reveal-night results screen" />
+        <p class="cs-img-caption">Judge flow — reviewing each entry full-screen, assigning ranks, and posting the reveal-night results where everyone earns at least a point.</p>
+      </div>
+
+      <!-- Full user-flow diagram -->
+      <h3 class="cs-subheading" style="margin-top:48px;">The Full User Flow</h3>
+      <p class="cs-body" style="margin-bottom:8px;">The same journey as a horizontal map: onboarding up top, then the weekly loop as a swimlane — the judge lane above the spine, contestants below. Scroll right to follow a full week.</p>
+      <div style="margin-top:24px;overflow-x:auto;border:1px solid var(--card-border);border-radius:14px;-webkit-overflow-scrolling:touch;">
+        <img src="images/sidequest/user-flows.png" alt="SideQuest user-flow diagram — onboarding and the weekly loop across judge, system, and contestant lanes, read left to right" style="display:block;height:560px;width:auto;max-width:none;" />
+      </div>
+      <p class="cs-img-caption" style="text-align:left;">Onboarding (getting in) flows into the weekly loop, with the judge, system, and contestant lanes stacked along a shared spine. ↔ Scroll horizontally to follow the full week.</p>
+    </div>
+  </section>
+
+  <!-- 04 Visual Craft -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">05 — Visual Craft</p>
+    <h2 class="cs-heading">Building a Digital Party Game</h2>
+    <p class="cs-body" style="margin-bottom:8px;">The visual language had to feel quirky and playful without tipping into childish or overwhelming. SideQuest consciously avoids the clean, sterile aesthetics of modern SaaS and social platforms, positioning itself instead as an <strong>analog party game</strong> — a private, tactile hangout rather than a public broadcast feed.</p>
+
+    <div class="cs-callout" style="margin-top:32px;">
+      <div class="cs-callout-label">Type System</div>
+      <p><strong>Playfair Display</strong> (expressive editorial serif) for headers signals an analog party game; <strong>DM Sans</strong> handles interface text to keep operations clear. The pairing pushes the personality away from "productivity tool" toward "board game night."</p>
+    </div>
+
+    <p class="cs-body" style="margin-top:36px;margin-bottom:0;font-weight:500;color:var(--fg);">Palette — rejecting social-media blue</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:16px;">
+      <div style="flex:1;min-width:130px;">
+        <div style="height:84px;border-radius:12px;background:#B5462E;border:1px solid var(--card-border);"></div>
+        <div style="font-size:13px;font-weight:500;color:var(--fg);margin-top:8px;">Rust</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.4;">Sidesteps social-media blue</div>
+      </div>
+      <div style="flex:1;min-width:130px;">
+        <div style="height:84px;border-radius:12px;background:#2E2A26;border:1px solid var(--card-border);"></div>
+        <div style="font-size:13px;font-weight:500;color:var(--fg);margin-top:8px;">Warm Ink</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.4;">Grounded, high-contrast base</div>
+      </div>
+      <div style="flex:1;min-width:130px;">
+        <div style="height:84px;border-radius:12px;background:#F7EFDD;border:1px solid var(--card-border);"></div>
+        <div style="font-size:13px;font-weight:500;color:var(--fg);margin-top:8px;">Cream</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.4;">Tactile, low-stakes backdrop</div>
+      </div>
+      <div style="flex:1;min-width:130px;">
+        <div style="height:84px;border-radius:12px;background:#E6A817;border:1px solid var(--card-border);"></div>
+        <div style="font-size:13px;font-weight:500;color:var(--fg);margin-top:8px;">Saffron</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.4;">Saffron-as-gold marks wins</div>
+      </div>
+    </div>
+
+    <div class="cs-constraint-list" style="max-width:820px;margin-top:36px;">
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">→</div>
+        <div class="cs-constraint-text"><strong>Tactile, low-stakes backgrounds</strong><span>Cream backdrops and sticker textures evoke a physical hangout, reducing the pressure of broadcasting to a public feed.</span></div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">→</div>
+        <div class="cs-constraint-text"><strong>Functional color-state systems</strong><span>Per-category colors and bold display text let users scan the state of the active game without wading through instructional copy.</span></div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">→</div>
+        <div class="cs-constraint-text"><strong>Deadpan, witty copy</strong><span>Confident, dry voice brings momentum to the screens and makes the app sound like a friend, not a brand.</span></div>
+      </div>
+    </div>
+
+    <div class="cs-img-block" style="margin-top:40px;">
+      <img src="images/sidequest/design-system-1.svg" alt="SideQuest design system — type scale, color tokens, and core components" />
+      <p class="cs-img-caption">The SideQuest design system — type scale, color tokens, and the core component set that keeps the playful tone consistent across every screen.</p>
+    </div>
+
+    <h3 class="cs-subheading" style="margin-top:56px;">How SideQuest Writes</h3>
+    <p class="cs-body">Voice is a UI layer here. SideQuest writes with <strong>dry, deadpan wit</strong> — second person, sentence case, periods that land the joke, and no emoji or exclamation unless a win is genuinely earned. It talks to friends, not "users," and never hypes.</p>
+    <div class="sq-copy">
+      <div class="sq-copy-row"><div class="sq-copy-moment">Judge assigned</div><div class="sq-copy-text">"It's your week. Choose wisely."</div></div>
+      <div class="sq-copy-row"><div class="sq-copy-moment">Submit nudge</div><div class="sq-copy-text">"4 people have submitted. You haven't seen them yet."</div></div>
+      <div class="sq-copy-row"><div class="sq-copy-moment">Win</div><div class="sq-copy-text">"You won this week."</div></div>
+      <div class="sq-copy-row"><div class="sq-copy-moment">Round end</div><div class="sq-copy-text">"Round 1 is done. Here's how it went."</div></div>
+    </div>
+  </section>
+
+  <!-- 05 Usability Testing -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">06 — Usability Testing</p>
+      <h2 class="cs-heading cs-reveal">Pressure-Testing the Ritual</h2>
+      <p class="cs-body cs-reveal">Once the first hi-fi prototype was clickable, I ran <strong>moderated usability sessions with five of the same peers from discovery</strong> — each walked the full loop (create a group, judge a week, submit an entry, read the results) while I watched for friction and thought-aloud reactions. Judged against the one question that matters — <em>does this actually keep a scattered group close, week after week?</em> — the interface held up. The risks lived in the <strong>gaps between taps</strong>: the waiting, the one slow judge, the friend who's too busy this week.</p>
+
+      <div class="sq-stats cs-reveal">
+        <div class="sq-stat"><div class="sq-stat-label">Critical</div><div class="sq-stat-num" style="color:#c43b22;">2</div><div class="sq-stat-sub">Block the ritual from starting or resolving</div></div>
+        <div class="sq-stat"><div class="sq-stat-label">High</div><div class="sq-stat-num" style="color:#956808;">3</div><div class="sq-stat-sub">Quietly push the busy friend to churn</div></div>
+        <div class="sq-stat"><div class="sq-stat-label">Medium</div><div class="sq-stat-num" style="color:#2f7d99;">3</div><div class="sq-stat-sub">Weaken retention and shared memory</div></div>
+        <div class="sq-stat"><div class="sq-stat-label">Low</div><div class="sq-stat-num" style="color:var(--muted);">1</div><div class="sq-stat-sub">Under-specified edge states</div></div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:56px;">Who I Tested With</h3>
+      <p class="cs-body">Five of the interviewees, chosen to span the roles a real group contains — the glue, the busy one, the lurker, the newcomer, the competitor — so every seat at the table got pressure-tested.</p>
+      <div class="sq-persona-grid cs-reveal">
+        <div class="sq-persona"><div class="sq-persona-avatar" style="background:#cfe3b8;">A</div><div class="sq-persona-name">Anna (she/her) · the glue</div><div class="sq-persona-desc">23, San Francisco. Starts the group, chases everyone to join, feels responsible when it goes quiet.</div></div>
+        <div class="sq-persona"><div class="sq-persona-avatar" style="background:#f0c4c4;">A</div><div class="sq-persona-name">Audrey (she/her) · the busy one</div><div class="sq-persona-desc">30, Seattle. Wants in but misses weeks — the exact user this app exists for, and the most likely to churn.</div></div>
+        <div class="sq-persona"><div class="sq-persona-avatar" style="background:#bcd6f0;">R</div><div class="sq-persona-name">Rachel (she/her) · the lurker</div><div class="sq-persona-desc">24, Washington DC. Loves seeing what everyone made, rarely posts first. Needs a low-stakes way in.</div></div>
+        <div class="sq-persona"><div class="sq-persona-avatar" style="background:#f2d79a;">M</div><div class="sq-persona-name">Marcus (he/him) · the newcomer</div><div class="sq-persona-desc">29, Chicago. Joined via invite — doesn't know the in-jokes yet; the first impression decides if he stays.</div></div>
+        <div class="sq-persona"><div class="sq-persona-avatar" style="background:#d2c6ef;">D</div><div class="sq-persona-name">Dylan (he/him) · the competitor</div><div class="sq-persona-desc">26, New York. Plays to win. Tracks the leaderboard, cares about fairness, notices every scoring edge case.</div></div>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:56px;">The Findings</h3>
+      <p class="cs-body">All nine issues sorted cleanly by severity. The five that could actually break the ritual — every Critical and High — are detailed below; the three Mediums and one Low were smaller polish items.</p>
+      <div class="sq-insight-grid cs-reveal" style="margin-top:24px;">
+        <div class="sq-finding">
+          <span class="sq-tag critical">Critical · F1 · Onboarding</span>
+          <div class="sq-finding-title">The cold start is the group, not the user</div>
+          <div class="sq-finding-body">Create-a-group ends on "wait for 4–8." Nothing happens until enough friends download, sign up, and join. With busy, scattered people, two stragglers mean week one never starts — and the group dies before the ritual begins.</div>
+          <div class="sq-finding-quote">"So I set it all up and now I just… text everyone to go download it? That's the part that always dies in our group chat." — Anna (she/her)</div>
+          <div class="sq-finding-fix"><strong>Fix →</strong> Start week one at 3 with a live in/pending roster and one-tap re-nudge; deep-link invites straight into "join this group" before account creation.</div>
+        </div>
+        <div class="sq-finding">
+          <span class="sq-tag critical">Critical · F2 · Judge flows</span>
+          <div class="sq-finding-title">The whole week hangs on one judge — with no deadline on the judge</div>
+          <div class="sq-finding-body">Contestants get a 6-day timer; the judge gets none. If they're slow or ghost, everyone is frozen — no auto-advance, no fallback. The rotating-judge mechanic spreads ownership but also spreads single points of failure.</div>
+          <div class="sq-finding-quote">"It's been four days and Audrey still hasn't picked the challenge. Now the whole week is just… nothing." — Dylan (he/him)</div>
+          <div class="sq-finding-fix"><strong>Fix →</strong> Time-box the judge: auto-pick from the bank after ~24h, escalate reminders before ranking, then allow a group vote if they no-show.</div>
+        </div>
+        <div class="sq-finding">
+          <span class="sq-tag high">High · F3 · Submit &amp; wall</span>
+          <div class="sq-finding-title">The engagement engine is also the churn engine — for the same person</div>
+          <div class="sq-finding-body">The gate creates real anticipation, but the busy friend who can't make something this week is double-punished: locked out of seeing entries and scored 0. That's the precise moment a drifting friend quietly drops.</div>
+          <div class="sq-finding-quote">"I had a brutal week so I didn't post. Then I couldn't even see what everyone did. Felt like I got kicked out for being busy." — Audrey (she/her)</div>
+          <div class="sq-finding-fix"><strong>Fix →</strong> Keep the gate during the active week, but open the wall after judging; add a low-effort "I'm here" path so a missed week isn't exile.</div>
+        </div>
+        <div class="sq-finding">
+          <span class="sq-tag high">High · F4 · The waiting week</span>
+          <div class="sq-finding-title">Six days of dead air, with the social glue locked behind the gate</div>
+          <div class="sq-finding-body">Between lock and reveal, a non-submitter sees a static "It's Anna's week" card and little else. Reactions and comments — the part that actually keeps people close — only unlock after you post.</div>
+          <div class="sq-finding-quote">"I opened it midweek and there was nothing to do. So I closed it." — Rachel (she/her)</div>
+          <div class="sq-finding-fix"><strong>Fix →</strong> Add spoiler-free midweek life: a progress pulse ("3 of 5 are in"), group banter that doesn't reveal entries, and a gentle countdown.</div>
+        </div>
+        <div class="sq-finding">
+          <span class="sq-tag high">High · F5 · Cadence</span>
+          <div class="sq-finding-title">It's a rolling timer, not a shared moment</div>
+          <div class="sq-finding-body">Each group runs its own 6-day countdown starting whenever the judge locks the challenge. There's no synchronized reveal the whole group shows up for. Rituals are powerful because they're predictable and shared — Sunday dinner, Friday drinks.</div>
+          <div class="sq-finding-fix"><strong>Fix →</strong> Anchor the reveal to a group-chosen day and time ("Sunday 8pm") and drop every wall at once — a real event the group attends together.</div>
+        </div>
+      </div>
+
+      <p class="cs-body cs-reveal" style="margin-top:40px;">Nearly every fix here became a feature in the build: the partial-roster start, the judge time-box, the "I'm here" path, the synchronized reveal night, and the Yearbook all trace directly back to a finding on this page.</p>
+    </div>
+  </section>
+
+  <!-- 06 Iteration: The Yearbook -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">07 — Iteration</p>
+    <h2 class="cs-heading">Iterating Toward Closeness</h2>
+    <p class="cs-body">Two iterations pushed SideQuest from a game loop into a place a group actually hangs out — one adding conversation <em>in the moment</em>, the other giving the group a way to look back together.</p>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">Making It Social, Not Transactional</h3>
+    <p class="cs-body">Reviewing my own design, I realized the loop still felt like <strong>"complete the challenge and you're done."</strong> The whole point of the product — bonding — was missing the back-and-forth that actually makes a group feel close. I wanted people to discuss, react, and banter <em>inside</em> the app, not just submit and leave. So I layered conversation into the three moments that carry the most social energy:</p>
+    <div class="cs-constraint-list" style="max-width:760px;">
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">1</div>
+        <div class="cs-constraint-text"><strong>Comments when the challenge drops</strong><span>Banter starts the moment the prompt lands — reactions and trash-talk give the group something to do on day one, before anyone has submitted.</span></div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">2</div>
+        <div class="cs-constraint-text"><strong>React &amp; comment on each other's submissions</strong><span>Fire / laugh / clap reactions and threaded comments turn one-off entries into the running in-jokes that bond a group over time.</span></div>
+      </div>
+      <div class="cs-constraint-item">
+        <div class="cs-constraint-num">3</div>
+        <div class="cs-constraint-text"><strong>Comments when the ranking drops</strong><span>The results carry their own thread — congratulations, gloating, and demands for a recount — channeling the week's biggest emotional spike straight into conversation instead of letting it die on a static screen.</span></div>
+      </div>
+    </div>
+    <p class="cs-body" style="margin-top:24px;">Together, these turn the app from a task you finish into a space the group keeps coming back to — the difference between a chore and a hangout.</p>
+
+    <div class="cs-cols-3" style="margin-top:32px;gap:20px;">
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/sidequest/social-challenge.png" alt="Comment thread when the weekly challenge drops" />
+      </div>
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/sidequest/social-entry.png?v=2" alt="Reactions and comments on a friend's submission" />
+      </div>
+      <div class="cs-img-block no-border" style="margin:0;">
+        <img src="images/sidequest/social-results.png?v=2" alt="Comment thread when the weekly ranking drops" />
+      </div>
+    </div>
+    <p class="cs-img-caption" style="margin-top:16px;">Conversation at the three highest-energy moments — banter when the challenge drops, reactions and comments on each entry, and a thread when the ranking lands.</p>
+
+    <h3 class="cs-subheading" style="margin-top:56px;">The Yearbook Capsule</h3>
+    <p class="cs-body" style="margin-bottom:8px;">The second realization: lasting closeness is built on <em>looking back</em> at shared memories together, but the design had no structured way to revisit the past. That led to <strong>The Yearbook</strong>.</p>
+    <p class="cs-body">To keep the information architecture clean, the Yearbook lives inside the Group Tab — so the primary game interface stays uncluttered. It's a grid of past milestones: a thumbnail of each week's winning submission alongside the winner's avatar. Tapping into a week opens an immersive time capsule — every friend's entry, the original captions, and the historical comment threads from that results night. Temporary interactions become permanent memories; inside jokes are preserved.</p>
+
+    <div class="cs-img-block no-border" style="margin-top:32px;">
+      <img src="images/sidequest/yearbook-flow.png" alt="The Yearbook — Group tab with past-weeks grid, the full Yearbook archive, and an expanded week capsule" />
+      <p class="cs-img-caption">From the Group tab into the Yearbook — each past week kept as a capsule of the challenge, the winning entry, and every submission.</p>
+    </div>
+  </section>
+
+  <!-- 08 Final Designs -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">08 — Final Designs</p>
+        <h2 class="cs-heading">Every Flow Serves One Goal</h2>
+        <p class="cs-body">Not one screen in the prototype is a feature for its own sake. Each traces back to the single job the product exists to do: <strong>keep a scattered group genuinely close, week after week.</strong> Groups don't fade because people stop caring — they fade because there's nothing to do together. Walk through the core flows below, end to end — each one a connected prototype, with the design decisions that earn its place against that goal.</p>
+      </div>
+
+      <!-- Job 1 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block no-border" style="margin:0;">
+            <video src="images/sidequest/onboarding.mp4?v=3" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest onboarding flow — create a group, invite friends, and start the first week" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div>
+            <div class="cs-solution-num">01</div>
+            <h3 class="cs-subheading">Get a Scattered Group Started</h3>
+            <p class="cs-body">The real cold start isn't one user — it's a whole group. Onboarding starts the first week at three with a one-tap re-nudge for stragglers, deep-links invites straight past the sign-up cliff, and routes each member by how many groups they're in — the fixes for the cold-start gaps from testing, now in motion.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 2 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block no-border" style="margin:0;direction:ltr;">
+            <video src="images/sidequest/judge-challenge.mp4" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the judge sets the weekly challenge from a bank or a custom prompt" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">02</div>
+            <h3 class="cs-subheading">The Judge Sets the Challenge</h3>
+            <p class="cs-body">Each week the role rotates to a new judge, who picks from a curated bank of five prompts — six categories, 1–3 effort dots — or writes a custom 120-character challenge, then locks it. A <strong>24-hour clock</strong>, with a group-vote fallback, closes the judge bottleneck testing surfaced, so the week always starts on time no matter who's busy.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 3 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block no-border" style="margin:0;">
+            <video src="images/sidequest/submit-see.mp4" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — submit your entry, then see and comment on everyone else's" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div>
+            <div class="cs-solution-num">03</div>
+            <h3 class="cs-subheading">Submit, Then See</h3>
+            <p class="cs-body">The engagement engine, live. The <strong>submit-to-see wall</strong> keeps every entry blurred until you post your own — then opens into the private social space, with full-screen reactions, threaded comments, and the one-tap <strong>"I'm here"</strong> path for a busy week. Anticipation, participation, and banter in a single move.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 4 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block no-border" style="margin:0;direction:ltr;">
+            <video src="images/sidequest/judge-ranks.mp4" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the judge reviews every entry, ranks them, and reveals the results" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">04</div>
+            <h3 class="cs-subheading">The Judge Ranks &amp; Reveals</h3>
+            <p class="cs-body">On the synchronized <strong>reveal night</strong>, the judge reviews each entry full-screen, ranks them 1–2–3, and posts. There's deliberately no "best" or "loser" — every active player earns at least a point, so the week reads as a collective effort, and the results land with their own thread for the gloating and recount demands.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 5 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block no-border" style="margin:0;">
+            <video src="images/sidequest/yearbook.mp4?v=2" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the Yearbook archive of past weeks' challenges and winning entries" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div>
+            <div class="cs-solution-num">05</div>
+            <h3 class="cs-subheading">The Yearbook</h3>
+            <p class="cs-body">The looking-back layer from the iteration phase, in the Group tab: a scrollable archive of every past week — challenge, winning entry, full ranking — that reopens as a complete time capsule of entries, captions, and comment threads. Standings reset each round, but the memories stay.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
+        <div class="cs-callout-label">The Through-Line</div>
+        <p>Every flow is in service of one thing: giving a scattered group a reason to show up for each other — and making sure no gap (a slow judge, a quiet midweek, a busy friend) is ever allowed to break the habit.</p>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:64px;">Supporting Screens &amp; Edge Cases</h3>
+      <p class="cs-body">A few stationary flows that keep the core loop legible and handle the real-world states a scattered group actually runs into.</p>
+
+      <!-- Edge 1: In-group tabs -->
+      <div style="margin-top:36px;">
+        <h4 class="cs-subheading" style="font-size:20px;">In-Group Tabs</h4>
+        <p class="cs-body">Three stable tabs under a fixed header keep the whole loop one tap apart: <strong>This Week</strong> holds the active challenge and submission flow, <strong>Standings</strong> tracks the round's leaderboard, and <strong>Group</strong> houses members, settings, and the Yearbook. Keeping them fixed means the ritual never feels confusing or like work to follow.</p>
+        <div class="cs-img-block no-border" style="margin:16px auto 0;max-width:62%;">
+          <img src="images/sidequest/edge-tabs.png" alt="The three in-group tabs — This Week with the active challenge, Standings leaderboard, and Group with members and Yearbook" />
+        </div>
+      </div>
+
+      <!-- Edge 2: Adaptive landing -->
+      <div style="margin-top:48px;">
+        <h4 class="cs-subheading" style="font-size:20px;">Adaptive Landing</h4>
+        <p class="cs-body">The open screen routes by how many groups you're in, so no one ever hits a cold, empty dashboard: <strong>zero groups →</strong> create or join; <strong>one group →</strong> straight into it; <strong>two or more →</strong> a groups dashboard that flags the one that needs you now. Every member lands on the thing that matters to them.</p>
+        <div class="cs-img-block no-border" style="margin:16px auto 0;max-width:62%;">
+          <img src="images/sidequest/edge-landing.png" alt="Adaptive landing — the open screen for zero groups (create/join), exactly one group (straight in), and two or more (groups dashboard)" />
+        </div>
+      </div>
+
+      <!-- Edge 3: Add a new group -->
+      <div style="margin-top:48px;">
+        <h4 class="cs-subheading" style="font-size:20px;">Adding a New Group</h4>
+        <p class="cs-body">Real life means more than one circle. From the switcher you can spin up a brand-new group or join another by invite — the same two-minute, low-friction path as the first — without turning the home into an endless feed of groups that dilutes the one that matters.</p>
+        <div class="cs-img-block no-border" style="margin-top:16px;">
+          <img src="images/sidequest/edge-newgroup.png" alt="Adding a new group — single-group home, the switcher, create or join, name your group, and now in two groups" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 Measuring Success & Next Steps -->
+  <section class="cs-section warm-bg">
+    <p class="cs-eyebrow">09 — Measuring Success</p>
+    <h2 class="cs-heading">If It Shipped, How I'd Know It Worked</h2>
+    <p class="cs-body" style="margin-bottom:8px;">SideQuest is a concept, not a launched product — so the honest end of this case study isn't a metric, it's a plan. The whole bet rests on one question the design can't answer on its own: <strong>does the ritual actually hold past Week 2?</strong> Here's how I'd put that to the test.</p>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">The Bet, Stated as Hypotheses</h3>
+    <div class="cs-constraint-list" style="max-width:820px;">
+      <div class="cs-constraint-item"><div class="cs-constraint-num">1</div><div class="cs-constraint-text"><strong>The ritual survives novelty</strong><span>Groups are still playing in Week 3, not just Week 1 — the central risk the research surfaced.</span></div></div>
+      <div class="cs-constraint-item"><div class="cs-constraint-num">2</div><div class="cs-constraint-text"><strong>Submit-to-see drives participation, not lurking</strong><span>A clear majority of members post their own entry instead of waiting to watch.</span></div></div>
+      <div class="cs-constraint-item"><div class="cs-constraint-num">3</div><div class="cs-constraint-text"><strong>The gap-fixes keep the busy friend</strong><span>A missed week doesn't become an exit — the "I'm here" path and the open-after-judging wall pull people back in.</span></div></div>
+      <div class="cs-constraint-item"><div class="cs-constraint-num">4</div><div class="cs-constraint-text"><strong>The low-stakes path holds non-competitive groups</strong><span>The segment that nearly rejected the concept — the Reluctant Competitor — stays engaged rather than churning.</span></div></div>
+    </div>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">How I'd Measure Success</h3>
+    <p class="cs-body" style="margin-bottom:8px;">Without a live baseline, committing to exact numbers up front would be guesswork. What I <em>can</em> define precisely is what to measure and why — every signal tied to a specific design decision, so a weak result points to the exact mechanic to fix, not just "something's off."</p>
+
+    <div class="cs-callout accent3" style="margin-top:24px;">
+      <div class="cs-callout-label">★ North Star</div>
+      <p><strong>Week-3 participation.</strong> The single signal that answers the core bet — does the ritual survive past novelty? If most of a group is still submitting (or tapping "I'm here") in week 3, the Week-2 cliff the research warned about has been cleared. Everything else is diagnostic.</p>
+    </div>
+
+    <p class="cs-body" style="margin-top:32px;margin-bottom:8px;">The supporting signals each isolate one mechanic, so the data tells me <em>where</em> the loop leaks:</p>
+    <div class="cs-table-wrap">
+      <table class="cs-table">
+        <thead><tr><th>Signal</th><th>The question it answers</th><th>The design decision it tests</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Round completion</strong></td><td>Do rounds reach reveal night without me nudging anyone?</td><td>The judge time-box, auto-pick, and group-vote fallback</td></tr>
+          <tr><td><strong>Repeat rounds</strong></td><td>Do groups choose to start a second round?</td><td>Whether the loop compounds or fizzles after one round</td></tr>
+          <tr><td><strong>Return after a miss</strong></td><td>Does a busy week turn into an exit?</td><td>The "I'm here" path and the open-after-judging wall</td></tr>
+          <tr><td><strong>Reactions &amp; comments</strong></td><td>Is the group actually talking, not just submitting?</td><td>The midweek social layer</td></tr>
+          <tr><td><strong>Post rate vs. lurk rate</strong></td><td>Are people participating or just watching?</td><td>The submit-to-see wall</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="cs-body" style="margin-top:24px;">Concrete targets come <em>after</em> week one — set against each group's own baseline and the natural decay curve, not a number picked in advance. The point of the first run isn't to clear an arbitrary bar; it's to learn the real shape of the funnel and where it drops off.</p>
+
+    <div class="cs-callout accent3" style="margin-top:40px;">
+      <div class="cs-callout-label">The First Test — a 3-Week Pilot</div>
+      <p>Recruit 2–3 real friend groups from the interview pool and run one full round. Instrument the funnel end to end — invite → first submission → reveal night → week-3 return — with a short weekly check-in. The signal I'd be watching for: a <strong>week-3 participation rate that holds well above the natural drop-off</strong>, and at least one round that completes the judge hand-off without me intervening.</p>
+    </div>
+
+    <h3 class="cs-subheading" style="margin-top:48px;">What's Next</h3>
+    <div class="cs-constraint-list" style="max-width:820px;">
+      <div class="cs-constraint-item"><div class="cs-constraint-num">→</div><div class="cs-constraint-text"><strong>Validate before building</strong><span>Run the pilot above and let real week-3 behavior — not my assumptions — decide what ships next.</span></div></div>
+      <div class="cs-constraint-item"><div class="cs-constraint-num">→</div><div class="cs-constraint-text"><strong>Ship the V2 deferred set</strong><span>The full notification ladder, a true low-stakes / non-competitive mode, and the under-specified edge states (ties, mid-round joiners, timezones).</span></div></div>
+      <div class="cs-constraint-item"><div class="cs-constraint-num">→</div><div class="cs-constraint-text"><strong>Answer the open questions</strong><span>Whether weekly cadence needs grace periods, and where multi-group support starts to dilute the one circle that matters.</span></div></div>
+    </div>
+  </section>
+
+  <!-- 10 Reflections -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">10 — Reflections</p>
+      <h2 class="cs-heading cs-reveal">Strategic Reflections &amp; Product Logic</h2>
+      <div class="cs-reflection-grid cs-reveal">
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">01</div>
+          <div class="cs-reflection-title">System Design Over Feature Accumulation</div>
+          <div class="cs-reflection-body">Designing for consumer communities means engineering social safety. Structural time-boxes, automated fallbacks for busy judges, and guaranteed participation points reduce churn far more than any notification-push strategy can on its own.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">02</div>
+          <div class="cs-reflection-title">The Power of Voice</div>
+          <div class="cs-reflection-body">Content strategy and product voice are real UI layers. Speaking with a confident, dry wit instead of generic marketing copy makes the app sound like a friend — which lowers the barrier to engagement.</div>
+        </div>
+        <div class="cs-reflection-card">
+          <div class="cs-reflection-num">03</div>
+          <div class="cs-reflection-title">Designing for the Gaps</div>
+          <div class="cs-reflection-body">A loop is only as strong as its quietest moment. Real product thinking lives at the edges — letting a busy member mark themselves present with an "I'm Here" tap, or giving people a spoiler-free midweek chat thread to keep the app alive between rounds.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Case Study -->
+  <div class="cs-next">
+    <div class="cs-next-label">Next Case Study</div>
+    <div class="cs-next-title">Mobile Production<br/>Reporting</div>
+    <div class="cs-next-org">Oracle SCM Smart Operations</div>
+    <a href="mobile-production-reporting.html" class="cs-next-cta" data-cursor="link">
+      View Case Study
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="cs-main.js"></script>
+  <script>
+    // Lazy play: load + play SideQuest videos only when in view, pause off-screen
+    (function () {
+      var vids = document.querySelectorAll('.sq-lazy-vid');
+      if (!vids.length) return;
+      if (!('IntersectionObserver' in window)) {
+        vids.forEach(function (v) { v.setAttribute('preload', 'metadata'); v.play().catch(function(){}); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var v = e.target;
+          if (e.isIntersecting) { if (v.preload !== 'auto') v.preload = 'auto'; v.play().catch(function () {}); }
+          else { v.pause(); }
+        });
+      }, { rootMargin: '200px 0px', threshold: 0.25 });
+      vids.forEach(function (v) { io.observe(v); });
+    })();
+  </script>
+</body>
+</html>
