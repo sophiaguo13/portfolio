@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Constellation Builder</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050505;
+  }
+
+  /* Custom crosshair cursor: 16px SVG, thin white lines + center dot, opacity 0.6 */
+  body {
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48ZyBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC42Ij48bGluZSB4MT0iOCIgeTE9IjEiIHgyPSI4IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB5MT0iMTAiIHgyPSI4IiB5Mj0iMTUiLz48bGluZSB4MT0iMSIgeTE9IjgiIHgyPSI2IiB5Mj0iOCIvPjxsaW5lIHgxPSIxMCIgeTE9IjgiIHgyPSIxNSIgeTI9IjgiLz48Y2lyY2xlIGN4PSI4IiBjeT0iOCIgcj0iMSIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSJub25lIi8+PC9nPjwvc3ZnPg==") 8 8, crosshair;
+  }
+
+  /* Circle-with-pulse cursor when near a star */
+  body.near-star {
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC45Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxLjUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=") 12 12, pointer;
+  }
+
+  #sky {
+    display: block;
+    position: fixed;
+    inset: 0;
+  }
+
+  /* Frosted-glass tooltip */
+  #tooltip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -100%) translateY(-4px);
+    padding: 4px 8px;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    will-change: opacity, transform;
+    z-index: 10;
+  }
+  #tooltip.visible { opacity: 1; }
+
+  /* Bottom-center hint */
+  #hint {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1200ms ease;
+    z-index: 10;
+  }
+  #hint.hidden { opacity: 0; }
+</style>
+</head>
+<body>
+  <canvas id="sky"></canvas>
+  <div id="tooltip"></div>
+  <div id="hint">click to place stars — hover to trace connections</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const canvas = document.getElementById("sky");
+  const ctx = canvas.getContext("2d");
+  const tooltip = document.getElementById("tooltip");
+  const hint = document.getElementById("hint");
+
+  const CONNECT_DIST = 180;
+  const HOVER_DIST = 60;
+  const MAX_STARS = 40;
+  const ENTRANCE_MS = 600;
+  const LINE_REVEAL_MS = 400;
+  const FADE_OUT_MS = 500;
+  const LABEL_LIFE = 4200;      // how long a recognized name lingers
+  const GROUP_MIN = 3;          // stars in a cluster before it "glows as a constellation"
+
+  let W = 0, H = 0, DPR = 1;
+  let cx = 0, cy = 0; // gradient center
+
+  const bgStars = [];   // static atmosphere
+  const stars = [];     // user-placed
+  let starCounter = 0;  // ever-incrementing index for labels
+
+  const BAND_ANG = -0.34; // tilt of the galactic plane (radians), lower-left → upper-right
+
+  // Mesh-gradient blobs (x,y as fractions of screen; r as fraction of long edge;
+  // c = "r,g,b"; a = peak alpha). Cool purples/blues for the deep sky, plus warm
+  // orange/gold dust clouds gathered toward the galactic core (right of center).
+  const MESH = [
+    { x: 0.50, y: 0.50, r: 0.75, c: "48,38,130",  a: 0.4 },  // indigo base
+    { x: 0.20, y: 0.28, r: 0.55, c: "92,48,150",  a: 0.28 }, // violet
+    { x: 0.16, y: 0.80, r: 0.55, c: "104,44,130", a: 0.24 }, // magenta-purple
+    { x: 0.84, y: 0.80, r: 0.55, c: "44,58,150",  a: 0.24 }, // royal blue
+    { x: 0.30, y: 0.20, r: 0.45, c: "60,86,160",  a: 0.22 }, // blue (upper-left region)
+    // warm galactic-core dust
+    { x: 0.74, y: 0.38, r: 0.34, c: "175,125,75", a: 0.26 }, // gold core glow
+    { x: 0.80, y: 0.33, r: 0.20, c: "220,180,130",a: 0.24 }, // bright warm center
+    { x: 0.58, y: 0.52, r: 0.34, c: "140,95,80",  a: 0.12 }, // orange-brown dust
+  ];
+
+  // Dark dust lanes — soft near-black rifts running along the band (in band-
+  // local coords: u along the plane, v across it, all as fractions of the diagonal).
+  const DUST_LANES = [
+    { u: -0.50, v: -0.03, rx: 0.14, ry: 0.05, a: 0.45 },
+    { u: -0.30, v: 0.03,  rx: 0.17, ry: 0.045, a: 0.5 },
+    { u: -0.08, v: 0.06,  rx: 0.20, ry: 0.05, a: 0.55 },
+    { u: 0.14,  v: 0.0,   rx: 0.15, ry: 0.05, a: 0.5 },
+    { u: 0.32,  v: -0.05, rx: 0.13, ry: 0.045, a: 0.4 },
+  ];
+
+  // Bright star clusters ("knots") seated on the band; f = along-band position
+  // (fraction of diagonal from center), glow color, brightness.
+  const KNOT_DEFS = [
+    { f: -0.14, col: "200,216,255", glow: "150,180,255" }, // cool knot, left of core
+    { f: 0.12,  col: "255,236,206", glow: "220,180,130" }, // warm knot, near core
+  ];
+  let knots = []; // resolved centers for glow rendering
+
+  let components = [];              // connected clusters, rebuilt each frame
+  const labels = new Map();         // signature -> {name, born}
+  const attempted = new Set();      // signatures already tested for a match
+
+  const mouse = { x: -9999, y: -9999, inside: false };
+  let hoveredStar = null;
+
+  // Known constellation templates — matched by scale/rotation/translation-
+  // invariant pairwise-distance signature, so orientation doesn't matter.
+  const TEMPLATES = [
+    { name: "Orion’s Belt", pts: [[0, 0], [1, 0.06], [2, 0.13]] },
+    { name: "Triangulum",   pts: [[0, 0], [2, 0], [1, 1.7]] },
+    { name: "Crux",         pts: [[0, 1.6], [0, -1.6], [1.1, 0], [-1.0, 0.2]] },
+    { name: "Cassiopeia",   pts: [[0, 0], [1, 0.85], [2, 0.05], [3, 0.95], [4, 0.1]] },
+    { name: "The Big Dipper", pts: [[0, 2], [0, 0], [2, 0], [2, 1.8], [4, 2.2], [5.6, 2.7], [7, 2.5]] },
+  ];
+
+  function distSignature(pts) {
+    const d = [];
+    for (let i = 0; i < pts.length; i++)
+      for (let j = i + 1; j < pts.length; j++) {
+        d.push(Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1]));
+      }
+    const mean = d.reduce((a, b) => a + b, 0) / d.length;
+    return d.map((v) => v / mean).sort((a, b) => a - b);
+  }
+  TEMPLATES.forEach((t) => { t.sig = distSignature(t.pts); });
+
+  function recognize(pts) {
+    if (pts.length < 3) return null;
+    const sig = distSignature(pts);
+    let best = null, bestErr = Infinity;
+    for (const t of TEMPLATES) {
+      if (t.sig.length !== sig.length) continue;
+      let err = 0;
+      for (let i = 0; i < sig.length; i++) err += Math.abs(sig[i] - t.sig[i]);
+      err /= sig.length;
+      if (err < bestErr) { bestErr = err; best = t; }
+    }
+    return best && bestErr < 0.12 ? best.name : null;
+  }
+
+  // cubic-bezier(0.32, 0.72, 0, 1) sampler for line reveal
+  const easeLine = makeCubicBezier(0.32, 0.72, 0, 1);
+
+  function makeCubicBezier(x1, y1, x2, y2) {
+    // Returns f(t) in [0,1]. Solve x(param)=t via bisection, then eval y.
+    const cx3 = 3 * x1, bx = 3 * (x2 - x1) - cx3, ax = 1 - cx3 - bx;
+    const cy3 = 3 * y1, by = 3 * (y2 - y1) - cy3, ay = 1 - cy3 - by;
+    const sampleX = (u) => ((ax * u + bx) * u + cx3) * u;
+    const sampleY = (u) => ((ay * u + by) * u + cy3) * u;
+    return function (t) {
+      if (t <= 0) return 0;
+      if (t >= 1) return 1;
+      let lo = 0, hi = 1, u = t;
+      for (let i = 0; i < 20; i++) {
+        const x = sampleX(u) - t;
+        if (Math.abs(x) < 1e-4) break;
+        if (x > 0) hi = u; else lo = u;
+        u = (lo + hi) / 2;
+      }
+      return sampleY(u);
+    };
+  }
+
+  // Spring-ish scale: 0 -> 1.15 -> 1.0 over the entrance
+  function entranceScale(p) {
+    if (p >= 1) return 1;
+    if (p < 0.6) {
+      // rise 0 -> 1.15 with ease-out
+      const t = p / 0.6;
+      const e = 1 - Math.pow(1 - t, 2);
+      return e * 1.15;
+    }
+    // settle 1.15 -> 1.0
+    const t = (p - 0.6) / 0.4;
+    const e = 1 - Math.pow(1 - t, 2);
+    return 1.15 - e * 0.15;
+  }
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    seedBackground();
+  }
+
+  // approx standard-normal in [-~2, ~2]
+  function gauss() {
+    return (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 0.9;
+  }
+  // most stars white, some blue-white, a few warm
+  function fieldColor() {
+    const r = Math.random();
+    if (r < 0.78) return "255,255,255";
+    if (r < 0.92) return "196,214,255"; // blue-white
+    return "255,214,176";               // warm
+  }
+  // band stars skew warmer, especially toward the core (right side)
+  function bandColor(x) {
+    const warmBias = 0.35 + 0.4 * (x / W); // warmer to the right
+    const r = Math.random();
+    if (r < warmBias) {
+      const rr = Math.random();
+      if (rr < 0.5) return "255,238,214"; // warm white
+      if (rr < 0.82) return "255,204,150"; // orange/tan
+      return "255,176,120";                // deep orange
+    }
+    return r < warmBias + 0.12 ? "190,208,255" : "255,255,255";
+  }
+
+  function seedBackground() {
+    bgStars.length = 0;
+    const area = (W * H) / (1280 * 800);
+
+    // Uniform faint field across the whole sky (depth layers).
+    const layers = [
+      { count: Math.round(520 * area), size: 0.6, oMin: 0.03, oMax: 0.1 },  // dust
+      { count: Math.round(300 * area), size: 1,   oMin: 0.05, oMax: 0.18 }, // far
+      { count: Math.round(110 * area), size: 1.4, oMin: 0.12, oMax: 0.34 }, // mid
+      { count: Math.round(38 * area),  size: 2,   oMin: 0.28, oMax: 0.6 },  // near
+    ];
+    for (const L of layers) {
+      for (let i = 0; i < L.count; i++) {
+        bgStars.push({
+          x: Math.random() * W, y: Math.random() * H,
+          size: L.size, o: L.oMin + Math.random() * (L.oMax - L.oMin),
+          col: fieldColor(),
+        });
+      }
+    }
+
+    // Dense Milky-Way band: stars gathered along the galactic plane with a
+    // gaussian falloff perpendicular to it, denser toward the core.
+    const dirx = Math.cos(BAND_ANG), diry = Math.sin(BAND_ANG);
+    const nx = -diry, ny = dirx;
+    const halfW = Math.min(W, H) * 0.16; // perpendicular thickness — a tighter streak
+    const bandCount = Math.round(3200 * area);
+    for (let i = 0; i < bandCount; i++) {
+      const t = (Math.random() - 0.5) * Math.hypot(W, H) * 1.15;
+      const g = gauss() * halfW;
+      const x = cx + dirx * t + nx * g;
+      const y = cy + diry * t + ny * g;
+      if (x < 0 || x >= W || y < 0 || y >= H) continue;
+      // brighter/denser toward the band's spine, fading to the fringes
+      const core = Math.max(0, 1 - Math.abs(g) / (halfW * 2));
+      if (Math.random() > 0.3 + 0.7 * core) continue; // thin the outer fringes
+      const roll = Math.random();
+      // favor visible 1px points so the band reads as a dense streak
+      const size = roll < 0.68 ? 1 : roll < 0.9 ? 0.6 : 1.4;
+      bgStars.push({
+        x, y, size,
+        o: 0.12 + Math.random() * (0.28 + 0.45 * core),
+        col: bandColor(x),
+      });
+    }
+
+    // Bright cluster knots seated on the band — tight, dense, luminous.
+    const diag = Math.hypot(W, H);
+    const knotR = Math.min(W, H) * 0.03;
+    knots = [];
+    for (const k of KNOT_DEFS) {
+      const kx = cx + dirx * (k.f * diag);
+      const ky = cy + diry * (k.f * diag);
+      if (kx < 0 || kx >= W || ky < 0 || ky >= H) continue;
+      knots.push({ x: kx, y: ky, r: knotR * 2.4, glow: k.glow });
+      const n = 34;
+      for (let i = 0; i < n; i++) {
+        const rr = Math.pow(Math.random(), 0.6) * knotR;
+        const ph = Math.random() * Math.PI * 2;
+        const roll = Math.random();
+        const size = roll < 0.6 ? 0.6 : roll < 0.92 ? 1 : 1.4;
+        bgStars.push({
+          x: kx + Math.cos(ph) * rr, y: ky + Math.sin(ph) * rr,
+          size, o: 0.35 + Math.random() * 0.5,
+          col: Math.random() < 0.7 ? k.col : "255,255,255",
+        });
+      }
+    }
+
+    // Sort by color so the draw loop changes fillStyle rarely (fewer state sets).
+    bgStars.sort((a, b) => (a.col < b.col ? -1 : a.col > b.col ? 1 : 0));
+  }
+
+  function addStar(x, y) {
+    // Enforce cap: begin graceful fade-out of the oldest active star.
+    const active = stars.filter((s) => !s.dying);
+    if (active.length >= MAX_STARS) {
+      const oldest = active[0];
+      if (oldest) {
+        oldest.dying = true;
+        oldest.deathStart = performance.now();
+      }
+    }
+
+    const now = performance.now();
+    const star = {
+      x, y,
+      index: ++starCounter,
+      // skewed toward tiny: ~1px up to ~9px, most stars small with occasional big ones
+      radius: 1 + Math.pow(Math.random(), 2.2) * 8,
+      vx: rndVel(),
+      vy: rndVel(),
+      born: now,
+      dying: false,
+      deathStart: 0,
+      compSize: 1,
+      // record which existing stars it connects to, for reveal animation
+      revealFrom: now,
+    };
+    stars.push(star);
+    hideHint();
+  }
+
+  function rndVel() {
+    const mag = 0.03 + Math.random() * 0.04; // 0.03 - 0.07 — slower drift
+    return Math.random() < 0.5 ? -mag : mag;
+  }
+
+  // ---- update ----
+  function update(now) {
+    for (let i = stars.length - 1; i >= 0; i--) {
+      const s = stars[i];
+
+      // drift
+      s.x += s.vx;
+      s.y += s.vy;
+      // soft boundary bounce
+      if (s.x < s.radius) { s.x = s.radius; s.vx = Math.abs(s.vx); }
+      else if (s.x > W - s.radius) { s.x = W - s.radius; s.vx = -Math.abs(s.vx); }
+      if (s.y < s.radius) { s.y = s.radius; s.vy = Math.abs(s.vy); }
+      else if (s.y > H - s.radius) { s.y = H - s.radius; s.vy = -Math.abs(s.vy); }
+
+      // remove finished deaths
+      if (s.dying && now - s.deathStart >= FADE_OUT_MS) {
+        stars.splice(i, 1);
+      }
+    }
+
+    // hover detection
+    hoveredStar = null;
+    if (mouse.inside) {
+      let best = Infinity;
+      for (const s of stars) {
+        if (s.dying) continue;
+        const d = Math.hypot(s.x - mouse.x, s.y - mouse.y);
+        if (d < HOVER_DIST && d < best) { best = d; hoveredStar = s; }
+      }
+    }
+    document.body.classList.toggle("near-star", !!hoveredStar);
+    updateTooltip();
+
+    computeComponents();
+    updateLabels(now);
+  }
+
+  // Union-find over the connection graph → clusters ("constellations").
+  function computeComponents() {
+    const live = stars.filter((s) => !s.dying);
+    const n = live.length;
+    for (const s of live) s.compSize = 1;
+
+    const parent = live.map((_, i) => i);
+    const find = (a) => { while (parent[a] !== a) { parent[a] = parent[parent[a]]; a = parent[a]; } return a; };
+    for (let i = 0; i < n; i++) {
+      for (let j = i + 1; j < n; j++) {
+        if (Math.hypot(live[i].x - live[j].x, live[i].y - live[j].y) <= CONNECT_DIST) {
+          const ra = find(i), rb = find(j);
+          if (ra !== rb) parent[ra] = rb;
+        }
+      }
+    }
+
+    const groups = new Map();
+    for (let i = 0; i < n; i++) {
+      const r = find(i);
+      if (!groups.has(r)) groups.set(r, []);
+      groups.get(r).push(live[i]);
+    }
+
+    components = [];
+    for (const mem of groups.values()) {
+      let sx = 0, sy = 0, minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const s of mem) {
+        s.compSize = mem.length;
+        sx += s.x; sy += s.y;
+        if (s.x < minX) minX = s.x; if (s.x > maxX) maxX = s.x;
+        if (s.y < minY) minY = s.y; if (s.y > maxY) maxY = s.y;
+      }
+      const signature = mem.map((s) => s.index).sort((a, b) => a - b).join(",");
+      components.push({
+        members: mem, size: mem.length, signature,
+        cx: sx / mem.length, cy: sy / mem.length,
+        minX, minY, maxX, maxY,
+        spread: Math.hypot(maxX - minX, maxY - minY),
+      });
+    }
+  }
+
+  function updateLabels(now) {
+    const present = new Set(components.map((c) => c.signature));
+    // let a rearranged cluster be re-evaluated once its makeup actually changes
+    for (const sig of attempted) if (!present.has(sig)) attempted.delete(sig);
+
+    for (const c of components) {
+      if (c.size >= GROUP_MIN && c.spread > 70 && !attempted.has(c.signature)) {
+        attempted.add(c.signature);
+        const name = recognize(c.members.map((s) => [s.x, s.y]));
+        if (name) labels.set(c.signature, { name, born: now });
+      }
+    }
+
+    for (const [sig, lab] of labels) {
+      const comp = components.find((c) => c.signature === sig);
+      if (!comp || now - lab.born > LABEL_LIFE) { labels.delete(sig); continue; }
+      lab.x = comp.maxX + 14;
+      lab.y = comp.minY - 4;
+    }
+  }
+
+  function starAlpha(s, now) {
+    // birth fade-in coupled with entrance; death fade-out
+    let a = 1;
+    const bp = (now - s.born) / ENTRANCE_MS;
+    if (bp < 1) a *= Math.max(0, Math.min(1, bp / 0.5)); // fade in over first half
+    if (s.dying) {
+      const dp = (now - s.deathStart) / FADE_OUT_MS;
+      a *= Math.max(0, 1 - dp);
+    }
+    return a;
+  }
+
+  // ---- draw ----
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+
+    // base — deep navy rather than dead black, so edges keep some color
+    ctx.fillStyle = "#0b0a1c";
+    ctx.fillRect(0, 0, W, H);
+
+    // Soft mesh gradient — overlapping radial "blobs" of purples and blues
+    // blended together for a subtle, painterly night wash.
+    for (const bl of MESH) {
+      const px = bl.x * W, py = bl.y * H, rad = bl.r * Math.max(W, H);
+      const g = ctx.createRadialGradient(px, py, 0, px, py, rad);
+      g.addColorStop(0, "rgba(" + bl.c + "," + bl.a + ")");
+      g.addColorStop(0.55, "rgba(" + bl.c + "," + (bl.a * 0.32).toFixed(3) + ")");
+      g.addColorStop(1, "rgba(" + bl.c + ",0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // galactic band — an elongated dusty warm glow across the diagonal
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(BAND_ANG);
+    ctx.scale(1, 0.24); // squash a radial into a broad band
+    const diag = Math.hypot(W, H);
+    const band = ctx.createRadialGradient(diag * 0.12, 0, 0, diag * 0.12, 0, diag * 0.62);
+    band.addColorStop(0, "rgba(150,120,95,0.22)");
+    band.addColorStop(0.45, "rgba(120,105,110,0.12)");
+    band.addColorStop(1, "rgba(80,70,110,0)");
+    ctx.fillStyle = band;
+    ctx.fillRect(-diag, -diag, diag * 2, diag * 2);
+    ctx.restore();
+
+    // soft glow behind each bright cluster knot
+    for (const k of knots) {
+      const g = ctx.createRadialGradient(k.x, k.y, 0, k.x, k.y, k.r);
+      g.addColorStop(0, "rgba(" + k.glow + ",0.32)");
+      g.addColorStop(0.5, "rgba(" + k.glow + ",0.1)");
+      g.addColorStop(1, "rgba(" + k.glow + ",0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // edge lift — keep the borders from reading pure black
+    const edge = ctx.createRadialGradient(cx, cy, Math.min(W, H) * 0.35, cx, cy, Math.max(W, H) * 0.75);
+    edge.addColorStop(0, "rgba(20, 18, 48, 0)");
+    edge.addColorStop(1, "rgba(22, 20, 56, 0.5)");
+    ctx.fillStyle = edge;
+    ctx.fillRect(0, 0, W, H);
+
+    // static background stars — depth layers + warm/cool Milky-Way tints
+    let curCol = null;
+    for (const b of bgStars) {
+      if (b.col !== curCol) { ctx.fillStyle = "rgb(" + b.col + ")"; curCol = b.col; }
+      ctx.globalAlpha = b.o;
+      ctx.fillRect(b.x, b.y, b.size, b.size);
+    }
+    ctx.globalAlpha = 1;
+
+    // dark dust lanes — near-black rifts drawn over the field to carve gaps
+    // through the band, like the dust clouds in a real Milky Way photo.
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(BAND_ANG);
+    for (const d of DUST_LANES) {
+      ctx.save();
+      ctx.translate(d.u * diag, d.v * diag);
+      ctx.scale(d.rx * diag, d.ry * diag);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+      g.addColorStop(0, "rgba(6,5,16," + d.a + ")");
+      g.addColorStop(0.6, "rgba(6,5,16," + (d.a * 0.4).toFixed(3) + ")");
+      g.addColorStop(1, "rgba(6,5,16,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(-1, -1, 2, 2);
+      ctx.restore();
+    }
+    ctx.restore();
+
+    drawConnections(now);
+    drawStars(now);
+  }
+
+  function drawConnections(now) {
+    ctx.save();
+    ctx.lineCap = "round";
+    for (let i = 0; i < stars.length; i++) {
+      const a = stars[i];
+      if (a.dying && now - a.deathStart > FADE_OUT_MS) continue;
+      for (let j = i + 1; j < stars.length; j++) {
+        const b = stars[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > CONNECT_DIST) continue;
+
+        // The "newer" star owns the reveal animation of this line.
+        const newer = a.born > b.born ? a : b;
+        const older = newer === a ? b : a;
+        const rp = (now - newer.revealFrom) / LINE_REVEAL_MS;
+        const reveal = rp >= 1 ? 1 : easeLine(Math.max(0, rp));
+
+        // endpoint fade from births/deaths
+        const fade = Math.min(starAlpha(a, now), starAlpha(b, now));
+
+        // hover brighten: line connected to hovered star gets stronger
+        const hot = hoveredStar && (a === hoveredStar || b === hoveredStar);
+        const baseOpacity = hot ? 0.7 : 0.25;
+        const width = hot ? 0.7 : 0.4;
+
+        // distance falloff so far links are even more ghostly
+        const near = 1 - dist / CONNECT_DIST;
+        const opacity = baseOpacity * (0.35 + 0.65 * near) * fade;
+
+        // draw from newer star outward toward older, revealing `reveal` fraction
+        const ex = newer.x + (older.x - newer.x) * reveal;
+        const ey = newer.y + (older.y - newer.y) * reveal;
+
+        ctx.globalAlpha = opacity;
+        ctx.strokeStyle = "rgba(255,255,255,1)";
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        ctx.moveTo(newer.x, newer.y);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+
+  function drawStars(now) {
+    ctx.save();
+    for (const s of stars) {
+      const alpha = starAlpha(s, now);
+      if (alpha <= 0) continue;
+
+      const bp = (now - s.born) / ENTRANCE_MS;
+      const scale = entranceScale(bp < 0 ? 0 : bp);
+      const r = s.radius * scale;
+
+      const isHover = s === hoveredStar;
+
+      // entrance glow pulse: bright white -> muted blue-white
+      let glowColor, glow;
+      if (bp < 1) {
+        const t = Math.max(0, Math.min(1, bp));
+        // shadowBlur pulses up then eases down toward the resting 8px
+        const pulse = Math.sin(Math.min(t, 1) * Math.PI); // 0->1->0
+        glow = 8 + pulse * 22;
+        // color lerp white -> blue-white
+        const mix = t;
+        const rr = Math.round(255 - mix * 20);
+        const gg = Math.round(255 - mix * 15);
+        const bb = 255;
+        glowColor = "rgb(" + rr + "," + gg + "," + bb + ")";
+      } else {
+        // stars bound into a constellation cluster glow brighter, and larger
+        // groups glow more — a gentle collective radiance.
+        const grouped = s.compSize >= GROUP_MIN;
+        let base = 8;
+        if (grouped) base = 11 + Math.min(s.compSize, 8) * 1.7;
+        glow = isHover ? 18 : base;
+        glowColor = isHover
+          ? "rgba(255,255,255,1)"
+          : grouped ? "rgba(150,180,255,0.95)" : "rgba(200,215,255,0.9)";
+      }
+
+      ctx.globalAlpha = alpha;
+      ctx.shadowBlur = glow;
+      ctx.shadowColor = glowColor;
+      ctx.fillStyle = isHover ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.92)";
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+
+    drawLabels(now);
+  }
+
+  function drawLabels(now) {
+    if (labels.size === 0) return;
+    ctx.save();
+    ctx.font = "italic 15px Georgia, 'Times New Roman', serif";
+    if ("letterSpacing" in ctx) ctx.letterSpacing = "1.5px";
+    ctx.textBaseline = "middle";
+    for (const lab of labels.values()) {
+      const age = now - lab.born;
+      let a;
+      if (age < 400) a = age / 400;                       // fade in
+      else if (age > LABEL_LIFE - 900) a = Math.max(0, (LABEL_LIFE - age) / 900); // fade out
+      else a = 1;
+      a *= 0.85;
+      ctx.globalAlpha = a;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "rgba(150,180,255,0.9)";
+      ctx.fillStyle = "rgba(224,232,255,0.95)";
+      ctx.fillText(lab.name, lab.x, lab.y);
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+    if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+  }
+
+  function updateTooltip() {
+    if (hoveredStar) {
+      const label = "★ " + String(hoveredStar.index).padStart(2, "0");
+      tooltip.textContent = label;
+      tooltip.style.transform =
+        "translate(" + hoveredStar.x + "px," + (hoveredStar.y - 20) + "px) translate(-50%, -100%)";
+      tooltip.classList.add("visible");
+    } else {
+      tooltip.classList.remove("visible");
+    }
+  }
+
+  // ---- hint ----
+  let hintHidden = false;
+  function hideHint() {
+    if (hintHidden) return;
+    hintHidden = true;
+    hint.classList.add("hidden");
+  }
+  setTimeout(hideHint, 5000);
+
+  // ---- loop ----
+  function frame() {
+    const now = performance.now();
+    update(now);
+    draw(now);
+    requestAnimationFrame(frame);
+  }
+
+  // ---- events ----
+  window.addEventListener("resize", resize);
+
+  canvas.addEventListener("click", (e) => {
+    addStar(e.clientX, e.clientY);
+  });
+
+  window.addEventListener("pointermove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.inside = true;
+  });
+  window.addEventListener("pointerleave", () => {
+    mouse.inside = false;
+    mouse.x = mouse.y = -9999;
+  });
+
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
