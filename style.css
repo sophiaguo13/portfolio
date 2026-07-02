@@ -510,6 +510,68 @@ section { padding: 100px 48px; }
 .pi-bar.b2 { width: 75%; background: rgba(58,191,159,0.5); }
 .pi-bar.b3 { width: 50%; background: rgba(58,191,159,0.3); }
 
+/* ── Playground Invite ── */
+.playground-cta {
+  max-width: 1200px;
+  margin: 8px auto 96px;
+  padding: 0 48px;
+}
+.playground-cta-inner {
+  position: relative;
+  text-align: center;
+  padding: 68px 40px;
+  border-radius: 28px;
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(244,99,58,0.08) 0%, rgba(124,92,191,0.08) 50%, rgba(58,191,159,0.08) 100%),
+    var(--card-bg);
+}
+.pc-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.pc-title {
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 4.4vw, 52px);
+  line-height: 1.08;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+.pc-title em { font-style: italic; color: var(--accent); }
+.pc-desc {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 580px;
+  margin: 0 auto 32px;
+}
+.pc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: transform 0.25s var(--ease-spring), background 0.25s;
+}
+.pc-arrow { transition: transform 0.25s var(--ease-out); }
+.pc-btn:hover { background: var(--accent); transform: translateY(-2px); }
+.pc-btn:hover .pc-arrow { transform: translateX(5px); }
+
+@media (max-width: 720px) {
+  .playground-cta { padding: 0 24px; margin-bottom: 72px; }
+  .playground-cta-inner { padding: 48px 24px; border-radius: 22px; }
+}
+
 /* ── Skills Marquee ── */
 .skills-marquee {
   padding: 0;
