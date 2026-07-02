@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sophia’s digital art — digital portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1a2744;
+  --navy-dark:#16203a;
+  --cream:#f5f0e8;
+  --page:#faf8f4;
+  --bg:#e8e8e8;
+  --foil:#a9c7e8;  /* light-blue foil stamp */
+  /* woven book-cloth: fiber noise + 1px warp/weft threads + basket texture + linen slubs */
+  --cloth:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.42' numOctaves='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.09 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, rgba(6,10,20,.10) 1px 2px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, rgba(6,10,20,.10) 1px 2px),
+    repeating-linear-gradient(90deg, transparent 0 3px, rgba(255,255,255,.025) 3px 4px),
+    repeating-linear-gradient(0deg, transparent 0 9px, rgba(255,255,255,.02) 9px 11px);
+  --w:420px;   /* book width  */
+  --h:540px;   /* book height */
+  --d:46px;    /* book depth  */
+  --hd:23px;   /* half depth  */
+  --ease-book:cubic-bezier(.32,.72,0,1);
+  --s:1;       /* responsive scale */
+}
+@media (max-width:940px){:root{--s:.72}}
+@media (max-width:640px){:root{--s:.55}}
+@media (max-width:470px){:root{--s:.42}}
+@media (max-height:780px){:root{--s:.72}}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Cormorant Garamond',Georgia,serif}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+.stage{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);overflow:hidden;
+  perspective:1200px;
+  user-select:none;-webkit-user-select:none;
+}
+.scale{transform:scale(var(--s));transform-style:preserve-3d}
+.scene{position:relative;width:var(--w);height:var(--h);transform-style:preserve-3d}
+
+/* ---------- floating idle animation ---------- */
+.floaty{transform-style:preserve-3d;animation:bob 4s ease-in-out infinite}
+.stage.open .floaty{animation-play-state:paused}
+@keyframes bob{
+  0%,100%{transform:translateY(-8px) rotateZ(-.5deg)}
+  50%{transform:translateY(8px) rotateZ(.5deg)}
+}
+
+/* ---------- ground shadow ---------- */
+.shadowWrap{
+  position:absolute;left:50%;top:calc(100% + 80px);
+  width:440px;height:96px;
+  transform:translateX(-50%);
+  transition:transform .8s var(--ease-book);
+}
+.stage.open .shadowWrap{transform:translateX(calc(-50% + 210px)) scale(1.8,1)}
+.shadow{
+  width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(18,24,40,.42) 0%,rgba(18,24,40,.18) 45%,rgba(18,24,40,0) 72%);
+  filter:blur(9px);
+  animation:shadowbob 4s ease-in-out infinite;
+}
+.stage.open .shadow{animation-play-state:paused}
+@keyframes shadowbob{
+  0%,100%{transform:scale(.84);opacity:.55}
+  50%{transform:scale(1.02);opacity:.9}
+}
+
+/* ---------- the 3D book box ---------- */
+.book3d{
+  position:relative;width:var(--w);height:var(--h);
+  transform-style:preserve-3d;
+  /* screen-space Z tilt first so the jaunty float stays put while the book spins under it */
+  transform:translateX(0px) rotateZ(-12deg) rotateX(10deg) rotateY(22deg);
+  transition:transform .8s var(--ease-book);
+  touch-action:none;
+}
+.stage.open .book3d{transform:translateX(210px) rotateX(12deg) rotateY(0deg) rotateZ(0deg)}
+.book3d.orbiting{transition:none}
+.stage:not(.open) .cover{cursor:grab}
+.stage.orbit-drag,.stage.orbit-drag .cover{cursor:grabbing}
+
+.bf{position:absolute;backface-visibility:hidden}
+
+/* inside of the back cover (fills the hollow of the box) */
+.innerBase{inset:0;transform:translateZ(calc(-1 * var(--hd) + 4px));background:var(--navy-dark);border-radius:3px}
+/* outside of the back cover */
+.backF{
+  inset:0;transform:rotateY(180deg) translateZ(var(--hd));border-radius:3px;
+  background-color:var(--navy);background-image:var(--cloth);
+}
+
+/* spine — left face */
+.spineF{
+  width:var(--d);height:var(--h);left:calc(50% - var(--hd));top:0;
+  transform:rotateY(-90deg) translateZ(calc(var(--w) / 2));
+  background-color:var(--navy-dark);background-image:var(--cloth);
+}
+.spineTitle,.spineAuthor{
+  position:absolute;left:50%;
+  /* standard English spine: reads top-to-bottom, glyphs rotated sideways */
+  writing-mode:vertical-rl;text-orientation:sideways;
+  transform:translateX(-50%);
+  color:var(--foil);white-space:nowrap;
+  text-transform:uppercase;
+  text-shadow:0 1px 1px rgba(0,0,0,.3);
+}
+.spineTitle,.spineAuthor{font-family:'Archivo Black',Helvetica,Arial,sans-serif;font-weight:400}
+.spineTitle{top:28px;font-size:.8rem;letter-spacing:.12em}
+.spineAuthor{bottom:28px;font-size:.65rem;letter-spacing:.15em}
+
+/* stacked page edges — right / bottom / top faces */
+.edgeR{
+  width:var(--d);height:calc(var(--h) - 12px);left:calc(50% - var(--hd));top:6px;
+  transform:rotateY(90deg) translateZ(calc(var(--w) / 2 - 5px));
+  background:repeating-linear-gradient(90deg,var(--cream) 0 2px,#ddd5c4 2px 3px);
+}
+.edgeB,.edgeT{
+  width:calc(var(--w) - 8px);height:var(--d);left:4px;top:calc(50% - var(--hd));
+  background:repeating-linear-gradient(180deg,var(--cream) 0 2px,#ddd5c4 2px 3px);
+}
+.edgeB{transform:rotateX(-90deg) translateZ(calc(var(--h) / 2 - 5px))}
+.edgeT{transform:rotateX(90deg) translateZ(calc(var(--h) / 2 - 5px))}
+
+/* ---------- front cover (a real button) ---------- */
+.cover{
+  position:absolute;inset:0;border:0;padding:0;margin:0;
+  background:transparent;font:inherit;cursor:pointer;
+  transform-origin:left center;
+  transform:translateZ(var(--hd)) rotateY(0deg);
+  transform-style:preserve-3d;
+  transition:transform .8s var(--ease-book);
+}
+/* opened cover settles just below the page plane so the left page rests on it */
+.stage.open .cover{transform:translateZ(10px) rotateY(-180deg);pointer-events:none;cursor:default}
+.cover:focus-visible{outline:3px solid var(--navy);outline-offset:6px}
+
+.cover-face{position:absolute;inset:0;display:block;backface-visibility:hidden;border-radius:3px}
+.cover-front{
+  background-color:var(--navy);
+  background-image:var(--cloth);
+  box-shadow:inset 0 0 70px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.03);
+}
+.cover-back{
+  transform:rotateY(180deg);
+  background-color:var(--navy-dark);
+  background-image:var(--cloth);
+}
+
+/* fabric hinge groove — the shallow channel where the board flexes at the spine */
+.cover-front::before,.cover-back::before,.backF::before{
+  content:"";position:absolute;top:0;bottom:0;width:9px;
+  pointer-events:none;border-radius:2px;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.26) 32%,
+    rgba(0,0,0,.42) 50%,
+    rgba(0,0,0,.14) 72%,
+    rgba(255,255,255,.05) 88%,
+    rgba(0,0,0,0) 100%);
+}
+.cover-front::before{left:13px}
+/* these faces are mirrored by rotateY(180), so their spine side is the element's right */
+.cover-back::before,.backF::before{right:13px}
+
+/* weave threads over everything (including the stamped text) + raking sheen.
+   Painting the threads above the type makes the ink read as pressed into fabric. */
+.cover-front::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:3px;
+  background:
+    repeating-linear-gradient(0deg, rgba(13,20,36,.10) 0 1px, transparent 1px 2px),
+    repeating-linear-gradient(90deg, rgba(13,20,36,.08) 0 1px, transparent 1px 2px),
+    linear-gradient(115deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,0) 38%, rgba(0,0,0,0) 62%, rgba(0,0,0,.09) 100%);
+}
+
+/* cover typography — big stamped foil sans, poster-style, filling the boards */
+.titleblock{position:absolute;left:34px;right:34px;top:44px;display:block;text-align:left;color:var(--foil)}
+.t1,.t2,.t3{
+  display:block;
+  font-family:'Archivo Black',Helvetica,Arial,sans-serif;font-weight:400;
+  text-transform:uppercase;line-height:1.02;letter-spacing:-.01em;
+  color:var(--foil);
+  text-shadow:0 2px 2px rgba(5,10,22,.42);
+}
+/* each line sized to run the cover width with an even margin */
+.t1{font-size:4.4rem}    /* SOPHIA'S */
+.t2{font-size:5.05rem}   /* DIGITAL  */
+.t3{font-size:9.45rem}   /* ART      */
+.author{
+  position:absolute;right:28px;bottom:40px;display:block;text-align:right;
+  color:var(--foil);
+  font-family:'Archivo Black',Helvetica,Arial,sans-serif;font-weight:400;
+  font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;
+  text-shadow:0 1px 1px rgba(0,0,0,.32);
+}
+
+/* ---------- pages ---------- */
+.pages{
+  position:absolute;left:8px;top:8px;
+  width:calc(var(--w) - 16px);height:calc(var(--h) - 16px);
+  transform:translateZ(20px);
+  perspective:1400px;perspective-origin:0% 50%;
+  touch-action:none;
+}
+.sheet{
+  position:absolute;inset:0;
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  cursor:pointer;
+}
+.sheet.flipped{transform:rotateY(-180deg)}
+.sheet.anim{transition:transform .6s var(--ease-book),box-shadow .3s ease}
+/* elastic settle after a drag release — bezier overshoots the target slightly */
+.sheet.settle{transition:transform .5s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease}
+/* closing: pages tuck in just before the cover shuts */
+.sheet.opening{transition:transform .68s var(--ease-book)}
+.sheet.dragging{transition:none}
+.sheet.lifting{box-shadow:-26px 20px 46px rgba(20,22,34,.3)}
+
+.face{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  background:var(--page);
+  border-radius:1px;
+  overflow:hidden;
+}
+.face.back{transform:rotateY(180deg)}
+.face.blank{background:var(--cream)}
+
+/* title-note page — first thing seen when the cover opens */
+.face.note{display:flex;align-items:center;justify-content:center;padding:48px}
+.noteText{
+  margin:0;max-width:250px;text-align:center;
+  font-style:italic;font-weight:400;font-size:1.3rem;line-height:1.7;
+  letter-spacing:.02em;color:#3f4a60;
+}
+.noteText::after{
+  content:"";display:block;width:44px;height:1px;
+  background:#8aa9cc;margin:22px auto 0;
+}
+/* soft crease shading toward the spine */
+.face.front::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.07),rgba(0,0,0,0) 9%)}
+.face.back::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(-90deg,rgba(0,0,0,.07),rgba(0,0,0,0) 9%)}
+
+/* museum mat + artwork */
+.mat{
+  position:absolute;inset:32px;
+  background:#fff;padding:24px;
+  box-shadow:0 1px 5px rgba(0,0,0,.09);
+  display:flex;align-items:center;justify-content:center;
+}
+.mat img{
+  display:block;max-width:100%;max-height:100%;
+  box-shadow:0 0 0 1px rgba(0,0,0,.06);
+  -webkit-user-drag:none;user-select:none;
+}
+.pageno{
+  position:absolute;right:14px;bottom:9px;
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:.625rem;color:#6e6e6e;
+}
+
+/* ---------- close affordance ---------- */
+.closebtn{
+  position:absolute;top:-56px;right:-218px;
+  min-width:44px;min-height:44px;padding:10px 14px;
+  border:0;background:transparent;cursor:pointer;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.6875rem;letter-spacing:.08em;color:#595959;
+  opacity:0;visibility:hidden;
+  transition:opacity .3s ease .45s,visibility 0s .75s,color .15s ease;
+}
+.stage.open .closebtn{opacity:1;visibility:visible;transition:opacity .3s ease .45s,visibility 0s,color .15s ease}
+.closebtn:hover{color:var(--navy)}
+.closebtn:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+
+/* keyboard page nav — invisible until focused */
+.navbtn{
+  position:absolute;top:calc(100% + 150px);left:50%;
+  min-width:44px;min-height:44px;padding:10px 16px;
+  border:0;border-radius:4px;cursor:pointer;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.75rem;
+  background:var(--navy);color:#fff;
+  opacity:0;pointer-events:none;
+}
+.navbtn.prev{transform:translateX(calc(-100% - 8px))}
+.navbtn.next{transform:translateX(8px)}
+.navbtn:focus-visible{opacity:1;pointer-events:auto;outline:3px solid var(--navy);outline-offset:3px}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  .floaty,.shadow{animation:none}
+  .book3d,.cover,.sheet,.shadowWrap{transition-duration:.01s !important}
+}
+</style>
+</head>
+<body>
+<h1 class="sr-only">sophia’s digital art — an interactive portfolio book</h1>
+<p id="status" class="sr-only" role="status" aria-live="polite"></p>
+
+<main class="stage" id="stage">
+  <div class="scale">
+    <div class="scene">
+      <div class="shadowWrap" aria-hidden="true"><div class="shadow"></div></div>
+
+      <div class="floaty">
+        <div class="book3d" id="book">
+          <div class="bf innerBase" aria-hidden="true"></div>
+          <div class="bf backF" aria-hidden="true"></div>
+          <div class="bf spineF" aria-hidden="true">
+            <span class="spineTitle">sophia’s digital art</span>
+            <span class="spineAuthor">Sophia Guo</span>
+          </div>
+          <div class="bf edgeR" aria-hidden="true"></div>
+          <div class="bf edgeB" aria-hidden="true"></div>
+          <div class="bf edgeT" aria-hidden="true"></div>
+
+          <div class="pages" id="pages" role="group" aria-label="Portfolio pages"></div>
+
+          <button class="cover" id="coverBtn" aria-expanded="false"
+                  aria-label="Open the book: sophia’s digital art, by Sophia Guo">
+            <span class="cover-face cover-front" aria-hidden="true">
+              <span class="titleblock">
+                <span class="t1">sophia’s</span>
+                <span class="t2">digital</span>
+                <span class="t3">art</span>
+              </span>
+              <span class="author">Sophia Guo</span>
+            </span>
+            <span class="cover-face cover-back" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <button class="closebtn" id="closeBtn" aria-label="Close the book" disabled>&#10005; close</button>
+      <button class="navbtn prev" id="prevBtn" disabled>&#8592; previous spread</button>
+      <button class="navbtn next" id="nextBtn" disabled>next spread &#8594;</button>
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+"use strict";
+
+/* ============ artworks ============ */
+const ART = [
+  { src: 'pages/boat.jpg',         label: 'Illustration: aerial view of a lone rower in an orange boat crossing green water, leaving a rippled wake' },
+  { src: 'pages/pool.jpg',         label: 'Illustration: a woman in a striped swimsuit floating on her back in sparkling turquoise water' },
+  { src: 'pages/oranges.jpg',      label: 'Illustration: three oranges on a leafy branch against a cream background' },
+  { src: 'pages/orange-split.jpg', label: 'Illustration: a halved orange, the top half lifting away with trailing drops of juice, on deep burgundy' },
+  { src: 'pages/girls.jpg',        label: 'Illustration: three stylized portraits of women with green, purple, and red hair on pastel shapes' },
+  { src: 'pages/town.jpg',         label: 'Illustration: colorful townhouses among palm trees and plants under a peach sky' },
+  { src: 'pages/summer-pill.jpg',  label: 'Illustration: summer in a pill \u2014 a tiny woman on an inner tube floats inside a giant capsule, on pink' },
+  { src: 'pages/snowglobe.jpg',    label: 'Illustration: a snow globe holding a snowman in a top hat beside a Happy Xmas sign, on red' },
+  { src: 'pages/skydiving.jpg',    label: 'Painting: three skydivers in freefall high above a green patchwork landscape' },
+  { src: 'pages/cat.jpg',          label: 'Scratchboard drawing: close-up of a kitten\u2019s face in black and white' },
+];
+
+/* ============ build the sheets ============ */
+/* sheet 0: front = title note, back = page 1
+   sheet i (1–4): front = page 2i, back = page 2i+1
+   sheet 5: front = page 10, back = flyleaf
+   spread s: left = back of sheet s-1, right = front of sheet s.
+   spread 0 (right after opening): inside cover on the left, note page on the right —
+   the reader flips sheet 0 themselves to reach spread 1 (pages 1–2). */
+const stage    = document.getElementById('stage');
+const pagesEl  = document.getElementById('pages');
+const coverBtn = document.getElementById('coverBtn');
+const closeBtn = document.getElementById('closeBtn');
+const prevBtn  = document.getElementById('prevBtn');
+const nextBtn  = document.getElementById('nextBtn');
+const statusEl = document.getElementById('status');
+
+const N_SHEETS = 6, N_SPREADS = 5;
+const sheets = [];
+
+function fillFace(face, pageNo) {
+  if (pageNo == null) { face.classList.add('blank'); return; }
+  const art = ART[pageNo - 1];
+  const mat = document.createElement('div');
+  mat.className = 'mat';
+  const img = document.createElement('img');
+  img.src = art.src;
+  img.alt = art.label + ' — page ' + pageNo;
+  img.draggable = false;
+  mat.appendChild(img);
+  const num = document.createElement('div');
+  num.className = 'pageno';
+  num.textContent = pageNo;
+  face.appendChild(mat);
+  face.appendChild(num);
+}
+
+for (let i = 0; i < N_SHEETS; i++) {
+  const el = document.createElement('div');
+  el.className = 'sheet';
+  const front = document.createElement('div');
+  front.className = 'face front';
+  const back = document.createElement('div');
+  back.className = 'face back';
+  if (i === 0) {
+    front.classList.add('note');
+    const p = document.createElement('p');
+    p.className = 'noteText';
+    p.textContent = 'a collection of sophia’s artwork made in procreate and illustrator';
+    front.appendChild(p);
+  } else {
+    fillFace(front, 2 * i);
+  }
+  fillFace(back, i === N_SHEETS - 1 ? null : 2 * i + 1);
+  el.appendChild(front); el.appendChild(back);
+  pagesEl.appendChild(el);
+  sheets.push({ el, front, back });
+}
+
+/* ============ state & helpers ============ */
+let isOpen = false, spread = 0, busy = false;
+
+function announce(msg) { statusEl.textContent = msg; }
+
+function applyZ() {
+  sheets.forEach((s, i) => {
+    const flipped = s.el.classList.contains('flipped');
+    s.el.style.zIndex = flipped ? 10 + i : 30 - i;
+    s.front.setAttribute('aria-hidden', String(!(isOpen && i === spread)));
+    s.back.setAttribute('aria-hidden', String(!(isOpen && i === spread - 1)));
+  });
+  prevBtn.disabled = !isOpen || spread <= 0;
+  nextBtn.disabled = !isOpen || spread >= N_SPREADS;
+  closeBtn.disabled = !isOpen;
+}
+
+function afterTransition(el, cb, timeout) {
+  let done = false;
+  const fin = e => {
+    if (e && (e.target !== el || e.propertyName !== 'transform')) return;
+    if (done) return;
+    done = true;
+    el.removeEventListener('transitionend', fin);
+    cb();
+  };
+  el.addEventListener('transitionend', fin);
+  setTimeout(fin, timeout);
+}
+
+function announceSpread() {
+  if (spread === 0) {
+    announce('Title page: a collection of sophia’s artwork made in procreate and illustrator. Flip the page to see the artwork.');
+    return;
+  }
+  const l = 2 * spread - 1, r = 2 * spread;
+  announce(`Spread ${spread} of ${N_SPREADS}. Page ${l}: ${ART[l - 1].label}. Page ${r}: ${ART[r - 1].label}.`);
+}
+
+/* ============ open / close ============ */
+function openBook() {
+  if (isOpen || busy) return;
+  busy = true; isOpen = true;
+  /* hand the pose back to CSS so the open transition starts from wherever the orbit left it */
+  book3d.style.transform = '';
+  yaw = BASE_YAW; pitch = BASE_PITCH;
+  stage.classList.add('open');
+  coverBtn.setAttribute('aria-expanded', 'true');
+  coverBtn.style.willChange = 'transform';
+  afterTransition(coverBtn, () => {
+    coverBtn.style.willChange = '';
+    busy = false;
+    applyZ();
+    announceSpread();
+    closeBtn.focus({ preventScroll: true });
+  }, 1000);
+}
+
+function closeBook() {
+  if (!isOpen || busy) return;
+  busy = true; isOpen = false;
+  stage.classList.remove('open');
+  coverBtn.setAttribute('aria-expanded', 'false');
+  coverBtn.style.willChange = 'transform';
+  /* all flipped sheets swing shut together with the cover */
+  sheets.forEach(s => {
+    if (s.el.classList.contains('flipped')) {
+      s.el.classList.add('opening');
+      s.el.classList.remove('flipped');
+    }
+  });
+  afterTransition(coverBtn, () => {
+    coverBtn.style.willChange = '';
+    sheets.forEach(s => s.el.classList.remove('opening'));
+    spread = 0;
+    busy = false;
+    applyZ();
+    announce('Book closed. Press the cover to open it again.');
+    coverBtn.focus({ preventScroll: true });
+  }, 1000);
+}
+
+/* ============ page flips ============ */
+function finishFlip(sh, commit, fwd) {
+  afterTransition(sh.el, () => {
+    sh.el.classList.remove('anim', 'settle', 'lifting');
+    sh.el.style.willChange = '';
+    sh.el.style.boxShadow = '';
+    if (commit) spread += fwd ? 1 : -1;
+    busy = false;
+    applyZ();
+    announceSpread();
+  }, 800);
+}
+
+function flip(fwd) {
+  if (!isOpen || busy) return;
+  if (fwd && spread >= N_SPREADS) return;
+  if (!fwd && spread <= 0) return;
+  const sh = sheets[fwd ? spread : spread - 1];
+  busy = true;
+  sh.el.style.zIndex = 60;
+  sh.el.style.willChange = 'transform';
+  sh.el.classList.add('anim', 'lifting');
+  sh.el.classList.toggle('flipped', fwd);
+  setTimeout(() => sh.el.classList.remove('lifting'), 320);
+  finishFlip(sh, true, fwd);
+}
+
+/* click + drag on the spread */
+let drag = null;
+
+pagesEl.addEventListener('pointerdown', e => {
+  if (!isOpen || busy) return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  const rect = pagesEl.getBoundingClientRect();
+  const x = e.clientX - rect.left;          /* negative = left page */
+  const fwd = x >= 0;
+  if (fwd && spread >= N_SPREADS) return;
+  if (!fwd && spread <= 0) return;
+  drag = {
+    sh: sheets[fwd ? spread : spread - 1],
+    fwd, startX: e.clientX, pw: rect.width, moved: false, progress: 0,
+  };
+  try { pagesEl.setPointerCapture(e.pointerId); } catch (_) {}
+});
+
+pagesEl.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.startX;
+  if (!drag.moved) {
+    if (Math.abs(dx) < 8) return;
+    drag.moved = true;
+    drag.sh.el.classList.add('dragging');
+    drag.sh.el.style.zIndex = 60;
+    drag.sh.el.style.willChange = 'transform';
+  }
+  const p = Math.min(1, Math.max(0, (drag.fwd ? -dx : dx) / drag.pw));
+  drag.progress = p;
+  const eff = p * .7;   /* 0.3 drag resistance — the page pulls against the cursor */
+  const ang = drag.fwd ? -180 * eff : -180 + 180 * eff;
+  drag.sh.el.style.transform = `rotateY(${ang}deg)`;
+  const lift = Math.sin(p * Math.PI);
+  drag.sh.el.style.boxShadow =
+    `${-30 * lift}px ${20 * lift}px ${48 * lift}px rgba(20,22,34,${.32 * lift})`;
+});
+
+function endDrag(e) {
+  if (!drag) return;
+  const d = drag;
+  drag = null;
+  if (pagesEl.hasPointerCapture(e.pointerId)) pagesEl.releasePointerCapture(e.pointerId);
+  if (!d.moved) { flip(d.fwd); return; }             /* it was a click */
+  busy = true;
+  const commit = d.progress > .3;
+  const willBeFlipped = d.fwd ? commit : !commit;
+  d.sh.el.classList.remove('dragging');
+  d.sh.el.classList.add('settle');
+  d.sh.el.style.transform = '';
+  d.sh.el.style.boxShadow = '';
+  d.sh.el.classList.toggle('flipped', willBeFlipped);
+  finishFlip(d.sh, commit, d.fwd);
+}
+pagesEl.addEventListener('pointerup', endDrag);
+pagesEl.addEventListener('pointercancel', endDrag);
+
+/* ============ 360° orbit view (closed book) ============ */
+const book3d = document.getElementById('book');
+const BASE_YAW = 22, BASE_PITCH = 10;
+let yaw = BASE_YAW, pitch = BASE_PITCH;
+let orbit = null;
+
+function applyOrbit() {
+  book3d.style.transform =
+    `translateX(0px) rotateZ(-12deg) rotateX(${pitch}deg) rotateY(${yaw}deg)`;
+}
+
+stage.addEventListener('pointerdown', e => {
+  if (isOpen || busy) return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  if (!e.target.closest('.book3d')) return;
+  orbit = {
+    x: e.clientX, y: e.clientY, moved: false,
+    onCover: !!e.target.closest('.cover'),
+  };
+  try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+});
+
+stage.addEventListener('pointermove', e => {
+  if (!orbit) return;
+  const dx = e.clientX - orbit.x, dy = e.clientY - orbit.y;
+  if (!orbit.moved) {
+    if (Math.hypot(dx, dy) < 6) return;
+    orbit.moved = true;
+    book3d.classList.add('orbiting');
+    stage.classList.add('orbit-drag');
+    book3d.style.willChange = 'transform';
+  }
+  yaw += dx * .45;
+  pitch = Math.min(78, Math.max(-78, pitch - dy * .3));
+  orbit.x = e.clientX; orbit.y = e.clientY;
+  applyOrbit();
+});
+
+function endOrbit(e) {
+  if (!orbit) return;
+  const o = orbit;
+  orbit = null;
+  try {
+    if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+  } catch (_) {}
+  book3d.classList.remove('orbiting');
+  stage.classList.remove('orbit-drag');
+  book3d.style.willChange = '';
+  /* a press on the cover that never became a drag is a click — open the book.
+     (pointer capture retargets the native click to the stage, so we do it here) */
+  if (!o.moved && o.onCover) openBook();
+}
+stage.addEventListener('pointerup', endOrbit);
+stage.addEventListener('pointercancel', endOrbit);
+
+/* ============ wiring ============ */
+coverBtn.addEventListener('click', openBook);
+closeBtn.addEventListener('click', closeBook);
+prevBtn.addEventListener('click', () => flip(false));
+nextBtn.addEventListener('click', () => flip(true));
+
+document.addEventListener('keydown', e => {
+  if (!isOpen) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); flip(true); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); flip(false); }
+  else if (e.key === 'Escape') closeBook();
+});
+
+applyZ();
+announce('Book closed. Press the cover to open it.');
+})();
+</script>
+</body>
+</html>
