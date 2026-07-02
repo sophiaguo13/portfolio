@@ -13,7 +13,7 @@
   --muted: #7a7470;
   --card-bg: #ffffff;
   --card-border: rgba(26,23,20,0.08);
-  --font-serif: 'DM Serif Display', Georgia, serif;
+  --font-serif: 'Funnel Display', system-ui, sans-serif;
   --font-sans: 'DM Sans', system-ui, sans-serif;
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
