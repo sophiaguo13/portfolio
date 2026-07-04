@@ -179,19 +179,19 @@
 
 /* ── Callout Box ── */
 .cs-callout {
+  --cs-accent: var(--accent);
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-left: 4px solid var(--accent);
-  border-radius: 12px;
-  padding: 28px 32px;
+  border: 1.5px solid color-mix(in srgb, var(--cs-accent) 55%, transparent);
+  border-radius: 14px;
+  padding: 26px 30px;
   margin: 32px 0;
 }
 .cs-callout-label {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--cs-accent);
   margin-bottom: 10px;
 }
 .cs-callout p {
@@ -199,10 +199,8 @@
   line-height: 1.7;
   color: var(--fg);
 }
-.cs-callout.accent2 { border-left-color: var(--accent2); }
-.cs-callout.accent2 .cs-callout-label { color: var(--accent2); }
-.cs-callout.accent3 { border-left-color: var(--accent3); }
-.cs-callout.accent3 .cs-callout-label { color: var(--accent3); }
+.cs-callout.accent2 { --cs-accent: var(--accent2); }
+.cs-callout.accent3 { --cs-accent: var(--accent3); }
 
 /* ── Impact List ── */
 .cs-impact-list {
@@ -767,8 +765,7 @@
 .cs-verdict-ruling p strong { color: var(--fg); font-weight: 500; }
 
 /* ── KEEP / CUT helper ── */
-.cs-callout.keep { border-left-color: var(--accent3); }
-.cs-callout.keep .cs-callout-label { color: var(--accent3); }
+.cs-callout.keep { --cs-accent: var(--accent3); }
 .cs-pill-list {
   list-style: none;
   margin: 12px 0 0;
