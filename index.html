@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=7" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
 
@@ -27,45 +27,43 @@
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <div class="hero-greeting reveal-fade">
-        <span class="greeting-text">Hi there, I'm Sophia!</span>
+  <!-- Scroll progress -->
+  <div class="ed-progress" aria-hidden="true"><span class="ed-progress-bar"></span></div>
+
+  <!-- Hero — editorial masthead -->
+  <section class="hero ed-hero" id="hero">
+    <div class="ed-hero-inner">
+      <div class="ed-masthead reveal-fade">
+        <span class="ed-label">Portfolio — 2026</span>
+        <span class="ed-label ed-status" data-cursor="link"><span class="ed-dot"></span>Open to new roles</span>
       </div>
-      <h1 class="hero-title">
-        <span class="hero-subtitle reveal-word">A UX designer</span>
-        <span class="hero-subtitle reveal-word">who starts with</span>
-        <span class="hero-subtitle reveal-word"><em>people,</em> not pixels.</span>
+      <h1 class="ed-title spotlight-target">
+        <span class="reveal-word"><span class="ed-line">Sophia Guo designs</span></span>
+        <span class="reveal-word"><span class="ed-line">products with intention —</span></span>
+        <span class="reveal-word"><span class="ed-line">and real <em>impact</em>.</span></span>
       </h1>
-      <p class="hero-descriptor reveal-fade">
-        Design @ Oracle &nbsp;·&nbsp; Cognitive Science, UC Berkeley
-      </p>
-      <p class="hero-bio reveal-fade">
-        Experienced across <span class="highlight">enterprise software, B2B SaaS, and consumer product</span> — bringing rigor and craft from early research to final delivery.
-      </p>
-      <div class="hero-tags reveal-fade">
-        <span class="tag">UX Research</span>
-        <span class="tag">Product Design</span>
-        <span class="tag">Design Systems</span>
-        <span class="tag">Mobile UX</span>
-        <span class="tag">B2B SaaS</span>
+      <div class="ed-meta reveal-fade">
+        <div class="ed-meta-item">
+          <span class="ed-meta-k">Currently</span>
+          <span class="ed-meta-v">Product Design @ Oracle</span>
+        </div>
+        <div class="ed-meta-item">
+          <span class="ed-meta-k">Background</span>
+          <span class="ed-meta-v">Cognitive Science, UC Berkeley</span>
+        </div>
+        <div class="ed-meta-item">
+          <span class="ed-meta-k">Focus</span>
+          <span class="ed-meta-v">Enterprise UX · Design Systems</span>
+        </div>
       </div>
-    </div>
-    <div class="hero-scroll-hint">
-      <div class="scroll-line"></div>
-    </div>
-    <div class="hero-deco">
-      <div class="deco-blob blob-1"></div>
-      <div class="deco-blob blob-2"></div>
-      <div class="deco-blob blob-3"></div>
+      <a class="ed-scrollcue reveal-fade" href="#work" data-cursor="link">Selected work <span class="ed-scrollcue-arrow">↓</span></a>
     </div>
   </section>
 
   <!-- Work Section -->
   <section class="work" id="work">
     <div class="section-header">
-      <h2 class="section-title">case studies ✦</h2>
+      <h2 class="section-title spotlight-target">case studies ✦</h2>
     </div>
 
     <div class="projects-grid">
@@ -250,7 +248,7 @@
       <div class="about-text">
         <div class="section-header left">
           <span class="section-label">About Me</span>
-          <h2 class="section-title">the person<br/>behind the pixels ☆</h2>
+          <h2 class="section-title spotlight-target">the person<br/>behind the pixels ☆</h2>
         </div>
         <p class="about-para">
           I'm a UX designer based in the Bay Area with a B.A. in <strong>Cognitive Science</strong> (+ CS minor) from UC Berkeley. I discovered design in college and haven't looked back — it's the perfect blend of art, empathy, and problem-solving.
@@ -434,5 +432,7 @@
 
   <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
   <script src="main.js?v=3"></script>
+  <script src="editorial-scroll.js?v=1"></script>
+  <script src="hero-spotlight.js?v=1"></script>
 </body>
 </html>
