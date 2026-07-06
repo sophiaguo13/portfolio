@@ -73,7 +73,7 @@
       <div class="cs-cols-ratio cs-reveal" style="grid-template-columns: 2fr 3fr;">
         <div>
           <p class="cs-body">Oracle's <strong>Operator Workbench (OWB)</strong> is a comprehensive desktop application that lets operators report operation completions, issue and return materials, and report scrap. Powerful — but entirely stationary.</p>
-          <p class="cs-body" style="margin-top:16px;">This created a real business gap: <strong>30% of industrial manufacturers</strong> deploy mobile devices for production reporting. Operators were commuting to terminals between every task, breaking their workflow and introducing latency into the production record.</p>
+          <p class="cs-body" style="margin-top:16px;">This created a real business gap: a growing share of industrial manufacturers now run production reporting on mobile and handheld devices, yet OWB kept operators tethered. They were commuting to terminals between every task, breaking their workflow and introducing latency into the production record.</p>
         </div>
         <div>
           <div class="cs-img-block sharp cs-reveal" style="margin:0;">
@@ -82,7 +82,16 @@
           </div>
         </div>
       </div>
-      <div class="cs-callout cs-reveal" style="margin-top:40px;">
+      <div class="cs-callout accent2 cs-reveal" style="margin-top:40px;">
+        <div class="cs-callout-label">Rooted in real customer pain points</div>
+        <p style="margin-bottom:24px;">This wasn't a technology-led feature. Oracle's own readiness documentation frames it around observed shop-floor conditions — operators who aren't tied to a fixed workstation and need to report as work happens:</p>
+        <div style="border-left:3px solid var(--cs-accent);padding:2px 0 2px 20px;margin-bottom:20px;">
+          <p style="font-family:var(--font-serif);font-size:18px;line-height:1.5;color:var(--fg);">"In manufacturing environments with fast-paced operations where multiple components are used in an operation, it is common to use industrial handheld mobile devices to report production activities."</p>
+          <p style="font-size:12.5px;letter-spacing:0.02em;color:var(--muted);margin-top:12px;">Oracle Readiness documentation · Mobile Material Issue &amp; Return</p>
+        </div>
+        <p style="margin-bottom:0;">Customer research and ongoing feedback surfaced the same pattern: operators often lacked access to fixed workstations, leading to delayed transaction reporting and manual data entry — the exact workflow this mobile, barcode-driven experience set out to replace.</p>
+      </div>
+      <div class="cs-callout cs-reveal" style="margin-top:24px;">
         <div class="cs-callout-label">The Goal</div>
         <p>Empower factory operators to report material consumption in real-time at the point of work — eliminating the "commute" to a stationary desktop terminal entirely.</p>
       </div>
@@ -361,25 +370,34 @@
   <!-- 08 Impact -->
   <section class="cs-section">
     <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">08 — Projected Impact</p>
-      <h2 class="cs-heading cs-reveal">The Projected Payoff</h2>
-      <p class="cs-body cs-reveal" style="margin-bottom:48px;">By navigating initial stakeholder misalignment and the hardware pivot, the team delivered a product built for the factory floor — not adapted for it. These are the outcomes the design is projected to deliver once deployed — targets I'd confirm through the operator testing and production metrics outlined next.</p>
-      <div class="cs-stats cs-reveal">
-        <div class="cs-stat">
-          <div class="cs-stat-num">~½</div>
-          <div class="cs-stat-label">Transaction Time</div>
-          <div class="cs-stat-desc">Eliminating the desktop commute is projected to cut transaction completion time roughly in half</div>
-        </div>
-        <div class="cs-stat">
-          <div class="cs-stat-num">0</div>
-          <div class="cs-stat-label">Training Errors</div>
-          <div class="cs-stat-desc">Scan-to-Reveal logic is designed so new operators can complete complex transactions with zero errors — no training required</div>
-        </div>
-        <div class="cs-stat">
-          <div class="cs-stat-num">RT</div>
-          <div class="cs-stat-label">Real-time Data</div>
-          <div class="cs-stat-desc">Exceptions surface at the assembly station instead of hours later at a desktop terminal — by design</div>
-        </div>
+      <p class="cs-eyebrow cs-reveal">08 — Impact</p>
+      <h2 class="cs-heading cs-reveal">Changing how the work gets done</h2>
+      <p class="cs-body cs-reveal" style="margin-bottom:48px;">The point was never a nicer screen — it was moving production reporting off the shared desktop and onto the floor, at the moment work actually happens. Concretely, the design shifts:</p>
+      <div class="cs-cols-2 cs-reveal" style="gap:16px;">
+        <ul class="cs-impact-list" style="margin-top:0;">
+          <li>
+            <strong>Where it's reported — desk → point of work</strong>
+            Operators report from a rugged handheld at the assembly station instead of walking to a shared desktop terminal between tasks.
+          </li>
+          <li>
+            <strong>Getting the work order in — typing → scanning</strong>
+            Manually keyed work-order and material numbers give way to barcode scanning, which drives the UI and selects the next field automatically.
+          </li>
+        </ul>
+        <ul class="cs-impact-list" style="margin-top:0;">
+          <li>
+            <strong>When the record is created — batched → real-time</strong>
+            Transactions are logged as work happens rather than delayed and batch-entered later, so exceptions can surface at the station, not hours afterward.
+          </li>
+          <li>
+            <strong>Devices supported — desktop-only → industrial handhelds</strong>
+            Reporting extends from the desktop-only Operator Workbench to Zebra/Honeywell rugged scanners built for gloves, low light, and noise.
+          </li>
+        </ul>
+      </div>
+      <div class="cs-callout cs-reveal" style="margin-top:40px;">
+        <div class="cs-callout-label">Part of a bigger shift</div>
+        <p>The Material Issue flow shown here is one piece of a broader Oracle move to the floor: the Redwood Production Reporting release brought barcode-enabled mobile support to six core transaction types — Material Issue, Material Return, Operation Completion, Scrap, Rejects, and Product Outputs — replacing paper forms, fixed workstations, and delayed entry with point-of-work reporting.</p>
       </div>
       <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
         <div class="cs-callout-label">Stakeholder Reaction · Lead Manufacturing Engineer</div>
@@ -422,7 +440,7 @@
     <div class="cs-wrap">
       <p class="cs-eyebrow cs-reveal">10 — What's Next</p>
       <h2 class="cs-heading cs-reveal">Validation &amp; What I'd Measure</h2>
-      <p class="cs-body cs-reveal">The results above came from internal pilots and stakeholder review. The honest gap in this project: as an enterprise feature handed to engineering, I never had direct access to the factory floor to test with real operators before handoff. That's the first thing I'd close — and I'd hold the design to measurable outcomes, not assertions.</p>
+      <p class="cs-body cs-reveal">The impact above describes what the design changes about the workflow — not measured field results. The honest gap in this project: as an enterprise feature handed to engineering, I never had direct access to the factory floor to test with real operators before handoff. That's the first thing I'd close — and I'd hold the design to measurable outcomes, not assertions.</p>
 
       <div class="cs-cols-2 cs-reveal" style="margin-top:40px;gap:32px;align-items:start;">
         <div>
