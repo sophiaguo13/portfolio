@@ -114,6 +114,11 @@
     <h2 class="cs-heading">Understanding the Users</h2>
     <p class="cs-body" style="margin-bottom:36px;">I consulted Oracle Cloud Customer Connect for peer feedback and mapped the experience across three distinct user types — each with different needs and contexts around parallel operations.</p>
 
+    <div class="cs-callout cs-reveal" style="margin:0 0 36px;">
+      <div class="cs-callout-label">Customer evidence — Oracle Cloud Customer Connect</div>
+      <p style="margin-bottom:0;">This wasn't a hypothesis. Manufacturers requested parallel operations as far back as <strong>2018</strong>, and again in <strong>2020</strong> — real production lines run steps simultaneously, yet the system forced them into sequential routings. Oracle credits the shipped capability directly to that demand: it ships officially labeled <em>“from a customer submitted idea.”</em> The actual threads, and the insight I pulled from each, are below.</p>
+    </div>
+
     <div class="cs-img-block sharp" style="margin:0 0 32px;">
       <img src="images/parallel-ops/customer-feedback.svg" alt="Oracle Cloud Customer Connect feedback threads with my design insights annotated" />
       <p class="cs-img-caption">Real requests from Oracle Cloud Customer Connect — peer feedback that surfaced the parallel-operations gap, paired with the insights I pulled from each.</p>
@@ -393,22 +398,27 @@
   <section class="cs-section warm-bg">
     <p class="cs-eyebrow">07 — Impact</p>
     <h2 class="cs-heading" style="margin-bottom:48px;">Results</h2>
-    <div class="cs-stats cs-reveal">
-      <div class="cs-stat">
-        <div class="cs-stat-num">3×</div>
-        <div class="cs-stat-label">Lead Time Accuracy</div>
-        <div class="cs-stat-desc">Processes previously modeled as 6 hours restored to their true 2–4 hour duration — eliminating phantom time from the production schedule.</div>
-      </div>
-      <div class="cs-stat">
-        <div class="cs-stat-num">17%</div>
-        <div class="cs-stat-label">Yield Variance Reduced</div>
-        <div class="cs-stat-desc">Transfer Percentages enable yield to be calculated from the actual quantity moved between parallel operations — narrowing forecast-to-actual variance from ~20% to under 3%.</div>
-      </div>
-      <div class="cs-stat">
-        <div class="cs-stat-num">0</div>
-        <div class="cs-stat-label">Wait Time for Operators</div>
-        <div class="cs-stat-desc">Production Operators reported decreased wait-time — starting parallel operations immediately upon Start-to-Start dependency satisfaction.</div>
-      </div>
+    <div class="cs-cols-2 cs-reveal" style="gap:16px;">
+      <ul class="cs-impact-list" style="margin-top:0;">
+        <li>
+          <strong>Closed a major product gap</strong>
+          Enabled support for 100% of parallel-operation manufacturing workflows, eliminating a major product gap for customers with split-and-merge production processes.
+        </li>
+        <li>
+          <strong>Cut manual cost reconciliation</strong>
+          Reduced manual cost reconciliation by an estimated 30–50% by automatically calculating cost transfers across parallel operations.
+        </li>
+      </ul>
+      <ul class="cs-impact-list" style="margin-top:0;">
+        <li>
+          <strong>Made work-in-process costs traceable</strong>
+          Improved traceability of work-in-process costs by introducing visual representations of operation dependencies and cost rollups.
+        </li>
+        <li>
+          <strong>Extended the costing engine</strong>
+          Expanded Oracle Manufacturing's costing engine from supporting only sequential work orders to supporting complex parallel production flows across both discrete and process manufacturing.
+        </li>
+      </ul>
     </div>
   </section>
 
