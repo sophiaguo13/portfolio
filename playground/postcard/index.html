@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wish you were here</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4eee0;
+    --ink: #2e3a5c;
+    --cream: #efe7d4;
+  }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    background:
+      radial-gradient(120% 100% at 50% 0%, #37312a 0%, #262119 72%, #1c1813 100%);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  /* desk grain */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.14; mix-blend-mode: overlay;
+  }
+
+  /* ---------- search ---------- */
+  #sf {
+    position: fixed; top: 36px; left: 50%; transform: translateX(-50%);
+    z-index: 40; text-align: center; color: var(--cream);
+  }
+  #title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.55em;
+    text-indent: 0.55em; /* optical centering: cancel trailing letter-space */
+    text-transform: uppercase; opacity: 0.85; margin-bottom: 16px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  }
+  #pill {
+    display: flex; align-items: center;
+    width: 350px; margin: 0 auto; padding: 11px 20px;
+    background: rgba(244,238,224,0.95);
+    border-radius: 999px;
+    border: 2px dashed transparent;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.15), 0 6px 18px -6px rgba(0,0,0,0.55);
+    transition: border-color 0.3s ease;
+  }
+  #pill:focus-within { border-color: rgba(182,72,60,0.6); }
+  #q {
+    flex: 1; font: inherit; font-size: 13px; letter-spacing: 0.12em;
+    text-indent: 0.12em; text-align: center;
+    background: transparent; border: none; outline: none;
+    color: #2c2a24; text-transform: lowercase;
+  }
+  #q::placeholder { color: #2c2a24; opacity: 0.45; }
+  #msg {
+    font-size: 9px; letter-spacing: 0.3em; text-indent: 0.3em;
+    text-transform: uppercase;
+    margin-top: 14px; min-height: 12px; opacity: 0.8;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  }
+  #credit {
+    position: fixed; right: 28px; bottom: 22px; z-index: 40;
+    font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.5; pointer-events: none;
+  }
+  #collectBtn {
+    position: fixed; left: 28px; bottom: 18px; z-index: 40;
+    font: inherit; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.7; background: none; border: none;
+    cursor: pointer; padding: 6px 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  }
+  #collectBtn:hover { opacity: 1; }
+
+  /* ---------- collection album ---------- */
+  #album {
+    position: fixed; inset: 0; z-index: 60; display: none;
+    background: rgba(22,18,14,0.88); backdrop-filter: blur(7px);
+    overflow-y: auto;
+  }
+  #album.open { display: block; }
+  #albumHead {
+    text-align: center; margin: 52px 0 8px; color: var(--cream);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.55em; text-transform: uppercase;
+    opacity: 0.85;
+  }
+  #albumSub {
+    text-align: center; color: var(--cream); opacity: 0.5;
+    font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 34px;
+  }
+  #albumInner {
+    display: flex; flex-wrap: wrap; gap: 30px 26px;
+    justify-content: center; align-items: flex-start;
+    padding: 0 60px 90px; max-width: 1200px; margin: 0 auto;
+  }
+  #albumClose {
+    position: fixed; top: 24px; right: 34px; z-index: 61;
+    font: inherit; font-size: 20px; color: var(--cream); opacity: 0.7;
+    background: none; border: none; cursor: pointer;
+  }
+  #albumClose:hover { opacity: 1; }
+  .mini {
+    background: var(--paper); padding: 8px 8px 3px;
+    box-shadow: 0 12px 28px -10px rgba(0,0,0,0.75);
+    cursor: pointer; transform: rotate(var(--mr, 0deg));
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 2px;
+  }
+  .mini:hover {
+    transform: rotate(0deg) scale(1.07);
+    box-shadow: 0 18px 38px -10px rgba(0,0,0,0.85);
+  }
+  .mini img { width: 236px; display: block; image-rendering: pixelated; }
+  .mini .mcap {
+    font-family: 'Nanum Pen Script', cursive; color: var(--ink);
+    font-size: 17px; padding: 3px 2px 3px; line-height: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 236px;
+  }
+  #albumEmpty {
+    text-align: center; color: var(--cream); opacity: 0.55;
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    padding: 60px 0;
+  }
+
+  /* ---------- postcard ---------- */
+  #scene {
+    position: fixed; inset: 0; display: block;
+    perspective: 1400px;
+  }
+  .cardWrap {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(calc(-50% + var(--px, 0px)), calc(-44% + var(--py, 0px))) scale(var(--sc, 1));
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.3, 1), filter 0.9s ease, opacity 0.5s ease;
+  }
+  .cardWrap.pile { filter: brightness(0.9) saturate(0.88); }
+  .cardWrap.gone { opacity: 0; }
+  .card {
+    width: 560px; padding: 16px 16px 0; box-sizing: border-box;
+    background:
+      radial-gradient(140% 120% at 8% 4%, rgba(255,255,255,0.5), transparent 42%),
+      linear-gradient(112deg, #f7f2e6 0%, #f2ecdc 55%, #e9e0c9 100%);
+    border-radius: 3px 5px 3px 6px;
+    position: relative;
+    transform: rotate(var(--rz, -1.4deg));
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.35),
+      0 22px 48px -16px rgba(0,0,0,0.65),
+      0 40px 70px -30px rgba(0,0,0,0.5);
+    animation: arrive 0.8s cubic-bezier(0.2, 0.85, 0.25, 1.1) both;
+  }
+  @keyframes arrive {
+    from { opacity: 0; transform: rotate(calc(var(--rz, -1.4deg) + 5deg)) translateY(52px) scale(0.94); }
+    to   { opacity: 1; transform: rotate(var(--rz, -1.4deg)) translateY(0) scale(1); }
+  }
+  /* paper texture */
+  .card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+    border-radius: inherit;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23p)' opacity='0.6'/%3E%3C/svg%3E");
+    opacity: 0.16; mix-blend-mode: multiply;
+  }
+  .photo {
+    position: relative; background: #0d0e11; cursor: pointer;
+    line-height: 0;
+    outline: 1px solid rgba(60,50,30,0.12); outline-offset: -1px;
+  }
+  .photo canvas, .photo img.frozen {
+    width: 528px; height: 321px; display: block;
+    image-rendering: pixelated;
+  }
+  .caption {
+    padding: 5px 10px 17px; line-height: 1.05;
+    font-family: 'Nanum Pen Script', cursive; color: var(--ink);
+    transform: rotate(-0.9deg);
+  }
+  .caption .line1 { display: block; font-size: 32px; }
+  .caption .line2 { display: block; font-size: 19px; opacity: 0.78; margin-top: -2px; }
+
+  .stamp {
+    position: absolute; top: 25px; right: 27px; z-index: 8;
+    width: 62px; line-height: 0;
+    transform: rotate(2.5deg);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+  }
+  .stamp canvas, .stamp img.frozen { width: 62px; height: 74px; display: block; }
+
+  .postmark {
+    position: absolute; top: 16px; right: 58px; z-index: 9;
+    width: 170px; height: 106px; pointer-events: none;
+    transform: rotate(-7deg);
+    opacity: 0.72; mix-blend-mode: multiply;
+  }
+  .postmark.light { mix-blend-mode: screen; opacity: 0.75; }
+</style>
+</head>
+<body>
+<form id="sf" autocomplete="off">
+  <div id="title">Wish You Were Here</div>
+  <div id="pill">
+    <input id="q" placeholder="type a city" autofocus autocomplete="off" spellcheck="false">
+  </div>
+  <div id="msg">press enter &middot; try kyoto, amalfi, reykjavik</div>
+</form>
+<div id="scene"></div>
+<div id="credit">postcards from anywhere &middot; open-meteo &middot; photos: wikipedia</div>
+<button id="collectBtn">collection &middot; 0</button>
+<div id="album">
+  <button id="albumClose">&#10005;</button>
+  <div id="albumHead">The Collection</div>
+  <div id="albumSub">every card you've developed &middot; click one to bring it back</div>
+  <div id="albumInner"></div>
+</div>
+
+<script>
+'use strict';
+
+// ---------- tiny utils ----------
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp  = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, x) => { x = clamp((x - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); };
+const mix3 = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+
+function hashStr(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const SLUT = new Float32Array(1024);
+for (let i = 0; i < 1024; i++) SLUT[i] = Math.sin(i / 1024 * Math.PI * 2);
+function qsin(a) {
+  let i = (a * (1024 / (Math.PI * 2))) | 0;
+  return SLUT[((i % 1024) + 1024) % 1024];
+}
+function pick(rng, pairs) {
+  let r = rng(), acc = 0;
+  for (const [v, w] of pairs) { acc += w; if (r < acc) return v; }
+  return pairs[pairs.length - 1][0];
+}
+
+// ---------- 8x8 Bayer ----------
+const BAYER = new Float32Array([
+   0,32, 8,40, 2,34,10,42,
+  48,16,56,24,50,18,58,26,
+  12,44, 4,36,14,46, 6,38,
+  60,28,52,20,62,30,54,22,
+   3,35,11,43, 1,33, 9,41,
+  51,19,59,27,49,17,57,25,
+  15,47, 7,39,13,45, 5,37,
+  63,31,55,23,61,29,53,21
+].map(v => (v + 0.5) / 64));
+
+// ---------- tileable fbm value noise ----------
+const TEXS = 256;
+const noiseTex = new Float32Array(TEXS * TEXS);
+(function () {
+  const rng = mulberry32(1337);
+  const octs = [8, 16, 32, 64], amps = [0.5, 0.26, 0.15, 0.09];
+  const lat = octs.map(c => {
+    const g = new Float32Array(c * c);
+    for (let i = 0; i < g.length; i++) g[i] = rng();
+    return g;
+  });
+  for (let y = 0; y < TEXS; y++) for (let x = 0; x < TEXS; x++) {
+    let v = 0;
+    for (let o = 0; o < octs.length; o++) {
+      const c = octs[o], g = lat[o];
+      const fx = x / TEXS * c, fy = y / TEXS * c;
+      const ix = fx | 0, iy = fy | 0;
+      let tx = fx - ix, ty = fy - iy;
+      tx = tx * tx * (3 - 2 * tx); ty = ty * ty * (3 - 2 * ty);
+      const x1 = (ix + 1) % c, y1 = (iy + 1) % c;
+      v += lerp(lerp(g[iy * c + ix], g[iy * c + x1], tx),
+                lerp(g[y1 * c + ix], g[y1 * c + x1], tx), ty) * amps[o];
+    }
+    noiseTex[y * TEXS + x] = v;
+  }
+})();
+function snoise(u, v) {
+  u = ((u % 1) + 1) % 1 * TEXS; v = ((v % 1) + 1) % 1 * TEXS;
+  const ix = u | 0, iy = v | 0, tx = u - ix, ty = v - iy;
+  const x1 = (ix + 1) & 255, y1 = (iy + 1) & 255;
+  return lerp(lerp(noiseTex[iy * TEXS + ix], noiseTex[iy * TEXS + x1], tx),
+              lerp(noiseTex[y1 * TEXS + ix], noiseTex[y1 * TEXS + x1], tx), ty);
+}
+
+// 1D ridged / smooth fbm from a random table
+function ridged1D(tbl, x) {
+  let v = 0, amp = 0.5, f = 1;
+  for (let o = 0; o < 4; o++) {
+    const fx = x * f, i = fx | 0, t0 = fx - i;
+    const t = t0 * t0 * (3 - 2 * t0);
+    v += lerp(tbl[i & 255], tbl[(i + 1) & 255], t) * amp;
+    amp *= 0.5; f *= 2.1;
+  }
+  const sharp = 1 - Math.abs(2 * v - 1);
+  return 0.62 * sharp * sharp + 0.38 * v;
+}
+function smooth1D(tbl, x) {
+  let v = 0, amp = 0.55, f = 1;
+  for (let o = 0; o < 3; o++) {
+    const fx = x * f, i = fx | 0, t0 = fx - i;
+    const t = t0 * t0 * (3 - 2 * t0);
+    v += lerp(tbl[i & 255], tbl[(i + 1) & 255], t) * amp;
+    amp *= 0.45; f *= 2.3;
+  }
+  return v;
+}
+function mkTbl(rng) {
+  const t = new Float32Array(256);
+  for (let i = 0; i < 256; i++) t[i] = rng();
+  return t;
+}
+
+// ---------- postcard scene buffer ----------
+const PX = 3, W = 176, H = 107;
+const CW = W * PX, CH = H * PX;           // 528 x 321 canvas
+const off = document.createElement('canvas');
+off.width = W; off.height = H;
+const octx = off.getContext('2d');
+const img = octx.createImageData(W, H);
+const data = img.data;
+const DEV_DUR = 3.4;                       // seconds to "develop"
+const PAPER = [243, 237, 224];
+
+// static per-pixel dither wobble phase + speckle + develop grain
+const ditherPhase = new Float32Array(W * H);
+const speckle = new Float32Array(W * H);
+const devGrain = new Float32Array(W * H);
+{
+  const rng = mulberry32(99);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    ditherPhase[y * W + x] = x * 0.055 + y * 0.034 + rng() * 0.5;
+  }
+  for (let i = 0; i < W * H; i++) { speckle[i] = (rng() - 0.5) * 9; devGrain[i] = rng(); }
+}
+const birdA = new Float32Array(W * H);
+const birdTouched = new Int32Array(W * H);
+let birdN = 0;
+
+// ---------- palettes ----------
+const TIMES = {
+  golden: {
+    skyTop: [96,132,198], skyHor: [255,192,122], sun: [255,246,208],
+    cloudLo: [255,228,198], cloudHi: [220,158,148],
+    land: [88,60,88], glow: 0.85, sunAmt: 1, moonAmt: 0, starAmt: 0, spark: 1
+  },
+  day: {
+    skyTop: [86,148,208], skyHor: [216,234,240], sun: [255,252,235],
+    cloudLo: [250,252,255], cloudHi: [168,182,198],
+    land: [58,86,72], glow: 0.4, sunAmt: 1, moonAmt: 0, starAmt: 0, spark: 0.65
+  },
+  dusk: {
+    skyTop: [70,54,116], skyHor: [244,134,118], sun: [255,214,182],
+    cloudLo: [238,162,158], cloudHi: [122,84,128],
+    land: [46,36,70], glow: 0.7, sunAmt: 1, moonAmt: 0, starAmt: 0.35, spark: 0.8
+  },
+  night: {
+    skyTop: [10,16,42], skyHor: [58,74,110], sun: [236,240,248],
+    cloudLo: [70,80,106], cloudHi: [38,44,64],
+    land: [17,21,37], glow: 0.32, sunAmt: 0, moonAmt: 1, starAmt: 1, spark: 0.9
+  }
+};
+
+function makePalette(time, climate, type) {
+  const t = TIMES[time];
+  const p = {
+    skyTop: t.skyTop.slice(), skyHor: t.skyHor.slice(), sun: t.sun.slice(),
+    cloudLo: t.cloudLo.slice(), cloudHi: t.cloudHi.slice(),
+    glow: t.glow, sunAmt: t.sunAmt, moonAmt: t.moonAmt, starAmt: t.starAmt, spark: t.spark
+  };
+  let land = t.land.slice();
+  if (type === 'dunes') land = mix3([196,152,100], p.skyHor, 0.22);
+  // near -> far layer colors, far fades into the horizon sky
+  p.layerCols = [
+    land,
+    mix3(land, p.skyHor, 0.35),
+    mix3(land, p.skyHor, 0.62)
+  ];
+  p.meadow = type === 'dunes' ? mix3(land, [60,40,20], 0.25)
+           : mix3(land, [8,10,8], 0.32);
+  if (climate === 'cold' && type !== 'dunes') {
+    p.meadow = mix3([224,229,238], p.skyHor, 0.2);              // snowfield
+    p.layerCols[2] = mix3(p.layerCols[2], [235,240,246], 0.4);  // snowy far peaks
+  }
+  p.sand = mix3([216,196,158], p.skyHor, 0.22);
+  p.seaFar = mix3(p.skyHor, [26,44,78], 0.38);
+  p.seaNear = mix3(p.skyTop, [10,22,44], 0.5);
+  if (climate === 'tropical') {
+    p.seaFar = mix3(p.seaFar, [28,152,148], 0.45);
+    p.seaNear = mix3(p.seaNear, [8,112,118], 0.45);
+  }
+  return p;
+}
+
+// ---------- scene builder ----------
+function buildScene(placeName, lat, visit) {
+  const seed = (hashStr(placeName.toLowerCase() + (lat != null ? lat.toFixed(1) : '')) + visit * 7919) >>> 0;
+  const rng = mulberry32(seed);
+  const alat = lat == null ? 15 + rng() * 50 : Math.abs(lat);
+  const climate = alat < 23.5 ? 'tropical' : alat < 38 ? 'warm' : alat < 55 ? 'temperate' : 'cold';
+  const time = pick(rng, [['golden', 0.35], ['day', 0.25], ['dusk', 0.25], ['night', 0.15]]);
+  const type = pick(rng, {
+    tropical: [['coast', 0.5], ['hills', 0.25], ['peaks', 0.25]],
+    warm: [['coast', 0.3], ['dunes', 0.22], ['hills', 0.24], ['peaks', 0.24]],
+    temperate: [['peaks', 0.35], ['hills', 0.35], ['coast', 0.3]],
+    cold: [['peaks', 0.5], ['coast', 0.25], ['hills', 0.25]]
+  }[climate]);
+  const pal = makePalette(time, climate, type);
+  const horizonY = Math.floor(H * { peaks: 0.58, hills: 0.62, coast: 0.52, dunes: 0.48 }[type]);
+
+  const sc = {
+    seed, rng, climate, time, type, pal, horizonY,
+    cover: 0, sea: false, layers: [], stars: [], starMap: null, birds: [],
+    sunX: 0, sunY: 0, sunR: 0
+  };
+
+  // sun / moon placement
+  sc.sunX = W * (0.18 + rng() * 0.64);
+  const lowSun = time === 'golden' || time === 'dusk';
+  sc.sunY = horizonY * (lowSun ? 0.55 + rng() * 0.3 : 0.18 + rng() * 0.3);
+  sc.sunR = Math.max(3.5, H * (type === 'dunes' ? 0.075 : 0.055) * (lowSun ? 1.25 : 1));
+  sc.cover = type === 'dunes' ? rng() * 0.22 : 0.1 + rng() * (time === 'dusk' ? 0.55 : 0.45);
+
+  // ----- layers, near -> far; each covers y in [ys[x], clip) -----
+  const L = (ys, clip, col) => ({ ys, clip, col });
+  const mk = () => new Float32Array(W);
+
+  if (type === 'peaks') {
+    const params = [
+      { base: 0.005, amp: 0.08, freq: 4.8 },
+      { base: 0.05,  amp: 0.12, freq: 3.2 },
+      { base: 0.12,  amp: 0.17, freq: 2.1 }
+    ];
+    params.forEach((pm, i) => {
+      const tbl = mkTbl(rng), o = rng() * 100, ys = mk();
+      for (let x = 0; x < W; x++)
+        ys[x] = horizonY - (pm.base + pm.amp * ridged1D(tbl, o + x / W * pm.freq)) * H;
+      sc.layers.push(L(ys, horizonY, pal.layerCols[i]));
+    });
+    const my = mk();
+    for (let x = 0; x < W; x++) my[x] = horizonY;
+    sc.layers.unshift(L(my, H, pal.meadow));
+  }
+  else if (type === 'hills') {
+    const params = [
+      { base: -0.015, amp: 0.10, freq: 1.6 },
+      { base: 0.045,  amp: 0.09, freq: 2.4 },
+      { base: 0.105,  amp: 0.08, freq: 3.0 }
+    ];
+    params.forEach((pm, i) => {
+      const tbl = mkTbl(rng), o = rng() * 100, ys = mk();
+      for (let x = 0; x < W; x++)
+        ys[x] = horizonY - (pm.base + pm.amp * (smooth1D(tbl, o + x / W * pm.freq) - 0.3)) * H;
+      sc.layers.push(L(ys, H, pal.layerCols[i]));
+    });
+    // cypress-ish trees on the near hill
+    const near = sc.layers[0].ys;
+    const nT = 3 + (rng() * 5) | 0;
+    for (let t = 0; t < nT; t++) {
+      const cx = (4 + rng() * (W - 8)) | 0, w = 1.6 + rng() * 1.8, h = 7 + rng() * 9;
+      for (let x = Math.max(0, cx - 3); x <= Math.min(W - 1, cx + 3); x++) {
+        const d = Math.abs(x - cx) / w;
+        if (d < 1) near[x] = Math.min(near[x], near[cx] - h * Math.pow(1 - d, 1.7));
+      }
+    }
+  }
+  else if (type === 'coast') {
+    sc.sea = true;
+    const sand = mk();
+    const tbl0 = mkTbl(rng), o0 = rng() * 100;
+    for (let x = 0; x < W; x++) sand[x] = H * 0.88 + smooth1D(tbl0, o0 + x / W * 2) * 4 - 2;
+    sc.layers.push(L(sand, H, pal.sand));
+
+    const side = rng() < 0.5 ? 1 : -1;
+    const extent = 0.28 + rng() * 0.2;
+    const tbl = mkTbl(rng), o = rng() * 100, hy = mk();
+    const waterY = horizonY + H * 0.1;
+    for (let x = 0; x < W; x++) {
+      const t = side > 0 ? x / W : 1 - x / W;
+      const env = 1 - smooth(extent * 0.5, extent + 0.12, t);
+      const peak = horizonY - env * (0.07 + 0.11 * ridged1D(tbl, o + x / W * 3)) * H;
+      hy[x] = env < 0.02 ? H + 9 : peak + (1 - env) * 10;
+    }
+    sc.layers.push(L(hy, waterY, pal.layerCols[0]));
+
+    if (rng() < 0.75) { // distant island opposite the headland
+      const iy = mk();
+      const xi = side > 0 ? W * (0.12 + rng() * 0.18) : W * (0.7 + rng() * 0.18);
+      const wI = W * (0.045 + rng() * 0.05), tbl2 = mkTbl(rng), o2 = rng() * 100;
+      for (let x = 0; x < W; x++) {
+        const b = Math.exp(-((x - xi) * (x - xi)) / (wI * wI));
+        iy[x] = b < 0.04 ? H + 9
+          : horizonY + 1 - b * H * (0.04 + 0.035 * ridged1D(tbl2, o2 + x / W * 4));
+      }
+      sc.layers.push(L(iy, horizonY + 1, pal.layerCols[2]));
+    }
+  }
+  else { // dunes
+    const params = [
+      { y0: 0.80, amp: 0.10, freq: 1.3 },
+      { y0: 0.66, amp: 0.08, freq: 1.9 },
+      { y0: 0.54, amp: 0.06, freq: 2.6 }
+    ];
+    params.forEach((pm, i) => {
+      const tbl = mkTbl(rng), o = rng() * 100, ys = mk();
+      for (let x = 0; x < W; x++) {
+        ys[x] = Math.max(horizonY - 1,
+          H * pm.y0 - pm.amp * H * smooth1D(tbl, o + x / W * pm.freq));
+      }
+      sc.layers.push(L(ys, H, pal.layerCols[i]));
+    });
+  }
+
+  // stars
+  if (pal.starAmt > 0.01) {
+    const n = (W * horizonY / 620 * pal.starAmt) | 0;
+    sc.starMap = new Int16Array(W * horizonY).fill(-1);
+    for (let i = 0; i < n; i++) {
+      const x = (rng() * W) | 0, y = (rng() * horizonY * 0.92) | 0;
+      sc.stars.push({ ph: rng() * 6.28, b: 0.5 + rng() * 0.5 });
+      sc.starMap[y * W + x] = sc.stars.length - 1;
+    }
+  }
+
+  // birds (daytime-ish only)
+  if (pal.moonAmt < 0.5 && rng() < 0.75) {
+    const n = 2 + (rng() * 3) | 0;
+    for (let i = 0; i < n; i++) {
+      sc.birds.push({
+        x: rng() * W, y: horizonY * (0.15 + rng() * 0.45),
+        ph: rng() * 6.28, spd: (4 + rng() * 5) * (rng() < 0.5 ? -1 : 1)
+      });
+    }
+  }
+  return sc;
+}
+
+// ---------- render ----------
+const rowR = new Float32Array(H), rowG = new Float32Array(H), rowB = new Float32Array(H);
+let T = 0;
+
+// dithered real-photo mode (landmark postcards)
+function renderPhoto(pix, dev) {
+  const ox = (2.5 + 2.5 * qsin(T * 0.23)) | 0;
+  const oy = (2.5 + 2.5 * qsin(T * 0.31)) | 0;
+  const wobT = T * 1.6;
+  const steps = 4, stepUp = 255 / steps, inv255s = steps / 255;
+  let di = 0;
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++, di += 4) {
+      let r = pix[di], g = pix[di + 1], b = pix[di + 2];
+      const oi = y * W + x;
+      const bay = BAYER[(((y + oy) & 7) << 3) | ((x + ox) & 7)];
+      if (dev < 1) {
+        const dl = dev * 1.5 - devGrain[oi] * 0.18;
+        const appear = clamp((dl - bay * 0.8) * 3.2, 0, 1);
+        const tone = clamp(dl * 1.7 - 0.85, 0, 1);
+        const lum = 0.3 * r + 0.59 * g + 0.11 * b;
+        const sr = 96 + lum * 0.56, sg = 84 + lum * 0.5, sb = 68 + lum * 0.42;
+        r = lerp(PAPER[0], lerp(sr, r, tone), appear);
+        g = lerp(PAPER[1], lerp(sg, g, tone), appear);
+        b = lerp(PAPER[2], lerp(sb, b, tone), appear);
+      }
+      const thr = bay + 0.09 * qsin(wobT + ditherPhase[oi]);
+      let qr = (r * inv255s + thr) | 0; if (qr > steps) qr = steps; else if (qr < 0) qr = 0;
+      let qg = (g * inv255s + thr) | 0; if (qg > steps) qg = steps; else if (qg < 0) qg = 0;
+      let qb = (b * inv255s + thr) | 0; if (qb > steps) qb = steps; else if (qb < 0) qb = 0;
+      data[di] = qr * stepUp; data[di + 1] = qg * stepUp; data[di + 2] = qb * stepUp; data[di + 3] = 255;
+    }
+  }
+}
+
+function renderScene(sc, dev, dt) {
+  const p = sc.pal, horizonY = sc.horizonY;
+  const invHor = 1 / horizonY;
+  for (let y = 0; y < horizonY; y++) {
+    const g = Math.pow(y * invHor, 1.35);
+    rowR[y] = lerp(p.skyTop[0], p.skyHor[0], g);
+    rowG[y] = lerp(p.skyTop[1], p.skyHor[1], g);
+    rowB[y] = lerp(p.skyTop[2], p.skyHor[2], g);
+  }
+
+  // birds into sparse overlay
+  for (let n = 0; n < birdN; n++) birdA[birdTouched[n]] = 0;
+  birdN = 0;
+  const plotBird = (x, y, a) => {
+    x |= 0; y |= 0;
+    if (x < 0 || x >= W || y < 0 || y >= horizonY) return;
+    const i = y * W + x;
+    if (birdA[i] === 0) birdTouched[birdN++] = i;
+    if (a > birdA[i]) birdA[i] = a;
+  };
+  for (const b of sc.birds) {
+    b.x += b.spd * dt;
+    if (b.x < -4) b.x = W + 4; if (b.x > W + 4) b.x = -4;
+    const flap = qsin(T * 6 + b.ph) * 1.4;
+    plotBird(b.x, b.y, 0.9);
+    plotBird(b.x - 1, b.y - flap * 0.6, 0.8); plotBird(b.x + 1, b.y - flap * 0.6, 0.8);
+    plotBird(b.x - 2, b.y - flap, 0.55);      plotBird(b.x + 2, b.y - flap, 0.55);
+  }
+
+  const sunX = sc.sunX, sunY = sc.sunY, sunR = sc.sunR, sunR2 = sunR * sunR;
+  const cover = sc.cover, th = 1 - cover * 1.05;
+  const windDrift = T * 0.012, inDrift = T * 0.006;
+  const ox = (2.5 + 2.5 * qsin(T * 0.23)) | 0;
+  const oy = (2.5 + 2.5 * qsin(T * 0.31)) | 0;
+  const wobT = T * 1.6;
+  const steps = 4, stepUp = 255 / steps, inv255s = steps / 255;
+  const layers = sc.layers, nL = layers.length;
+  const seaTop = horizonY;
+  const glit0 = p.sunAmt + p.moonAmt;
+
+  let di = 0;
+  for (let y = 0; y < H; y++) {
+    const isSky = y < horizonY;
+    const horFade = isSky ? clamp((horizonY - y + 6) / (horizonY * 0.45), 0, 1) : 0;
+    const cloudV = y * 0.007 + inDrift;
+    const rowI = y * W;
+    const seaD = sc.sea && y >= seaTop ? (y - seaTop) / (H - seaTop) : 0;
+
+    for (let x = 0; x < W; x++, di += 4) {
+      let r, g, b;
+      const oi = rowI + x;
+
+      // nearest covering layer
+      let li = -1;
+      for (let k = 0; k < nL; k++) {
+        const Lr = layers[k];
+        if (y >= Lr.ys[x] && y < Lr.clip) { li = k; break; }
+      }
+
+      if (li >= 0) {
+        const Lr = layers[li], col = Lr.col;
+        const span = Math.max(4, (Lr.clip === H ? H : horizonY) - Lr.ys[x]);
+        const fade = 1 - clamp((y - Lr.ys[x]) / span, 0, 1) * 0.26;
+        const nz = speckle[oi] * 0.55;
+        r = col[0] * fade + nz; g = col[1] * fade + nz; b = col[2] * fade + nz;
+      } else if (isSky) {
+        r = rowR[y]; g = rowG[y]; b = rowB[y];
+        // sun / moon
+        if (glit0 > 0.01) {
+          const dx = x - sunX, dy = y - sunY, d2 = dx * dx + dy * dy;
+          if (d2 < sunR2 * (p.moonAmt > 0.5 ? 0.62 : 1)) {
+            let hit = 1;
+            if (p.moonAmt > 0.5) { // crescent bite
+              const bx = dx + sunR * 0.42, by = dy - sunR * 0.18;
+              if (bx * bx + by * by < sunR2 * 0.5) hit = 0;
+            }
+            if (hit) { r = p.sun[0]; g = p.sun[1]; b = p.sun[2]; }
+          } else if (d2 < sunR2 * 60 && p.glow > 0.01) {
+            const gl = p.glow * (p.sunAmt + p.moonAmt * 0.5) * Math.exp(-d2 / (sunR2 * 14)) * 0.65;
+            r += (p.sun[0] - r) * gl; g += (p.sun[1] - g) * gl; b += (p.sun[2] - b) * gl;
+          }
+        }
+        // clouds
+        let ca = 0;
+        if (cover > 0.02) {
+          const pu = x * 0.0045 + windDrift;
+          const n = snoise(pu, cloudV) * 0.68 + snoise(pu * 2.3 + 0.37, cloudV * 2.3 + 0.71) * 0.32;
+          ca = smooth(th, th + 0.28, n) * horFade;
+          if (ca > 0.004) {
+            const shade = smooth(th + 0.13, th + 0.48, n);
+            const cr = lerp(p.cloudLo[0], p.cloudHi[0], shade);
+            const cg = lerp(p.cloudLo[1], p.cloudHi[1], shade);
+            const cb = lerp(p.cloudLo[2], p.cloudHi[2], shade);
+            r += (cr - r) * ca; g += (cg - g) * ca; b += (cb - b) * ca;
+          }
+        }
+        // stars in clear gaps
+        if (sc.starMap && ca < 0.05 && y < horizonY) {
+          const id = sc.starMap[oi];
+          if (id >= 0) {
+            const st = sc.stars[id];
+            const tw = (0.7 + 0.3 * qsin(T * 2 + st.ph)) * st.b * p.starAmt * 225;
+            r = Math.min(255, r + tw); g = Math.min(255, g + tw); b = Math.min(255, b + tw * 1.06);
+          }
+        }
+      } else if (sc.sea) {
+        // open water
+        const dSm = seaD * seaD * (3 - 2 * seaD);
+        r = lerp(p.seaFar[0], p.seaNear[0], dSm);
+        g = lerp(p.seaFar[1], p.seaNear[1], dSm);
+        b = lerp(p.seaFar[2], p.seaNear[2], dSm);
+        if (y - seaTop < 2) { r = lerp(r, p.skyHor[0], 0.4); g = lerp(g, p.skyHor[1], 0.4); b = lerp(b, p.skyHor[2], 0.4); }
+        // sparkle + glitter path under sun/moon
+        const gx = (x - sunX) / (W * 0.07);
+        const glit = Math.exp(-gx * gx) * glit0;
+        const n = snoise(x * 0.05 + T * 0.02, y * 0.33 - T * 0.008);
+        const sTh = 0.6 - glit * 0.17;
+        const a = smooth(sTh, sTh + 0.17, n) * (0.22 + glit * 0.75) * p.spark;
+        if (a > 0.01) { r += (p.sun[0] - r) * a; g += (p.sun[1] - g) * a; b += (p.sun[2] - b) * a; }
+      } else {
+        r = p.skyHor[0]; g = p.skyHor[1]; b = p.skyHor[2];
+      }
+
+      // birds
+      const ba = birdA[oi];
+      if (ba > 0) { r += (38 - r) * ba; g += (32 - g) * ba; b += (44 - b) * ba; }
+
+      const bay = BAYER[(((y + oy) & 7) << 3) | ((x + ox) & 7)];
+
+      // ---- developing-photograph mix ----
+      if (dev < 1) {
+        const dl = dev * 1.5 - devGrain[oi] * 0.18;
+        const appear = clamp((dl - bay * 0.8) * 3.2, 0, 1);
+        const tone = clamp(dl * 1.7 - 0.85, 0, 1);
+        const lum = 0.3 * r + 0.59 * g + 0.11 * b;
+        const sr = 96 + lum * 0.56, sg = 84 + lum * 0.5, sb = 68 + lum * 0.42;
+        r = lerp(PAPER[0], lerp(sr, r, tone), appear);
+        g = lerp(PAPER[1], lerp(sg, g, tone), appear);
+        b = lerp(PAPER[2], lerp(sb, b, tone), appear);
+      }
+
+      // ---- animated ordered dither ----
+      const thr = bay + 0.09 * qsin(wobT + ditherPhase[oi]);
+      let qr = (r * inv255s + thr) | 0; if (qr > steps) qr = steps; else if (qr < 0) qr = 0;
+      let qg = (g * inv255s + thr) | 0; if (qg > steps) qg = steps; else if (qg < 0) qg = 0;
+      let qb = (b * inv255s + thr) | 0; if (qb > steps) qb = steps; else if (qb < 0) qb = 0;
+      data[di] = qr * stepUp; data[di + 1] = qg * stepUp; data[di + 2] = qb * stepUp; data[di + 3] = 255;
+    }
+  }
+}
+
+// ---------- landmark photos (wikipedia) ----------
+// famous places -> their postcard icon; guarded by country code so
+// e.g. amalfi, colombia doesn't get the italian coast
+const LANDMARKS = {
+  'kyoto': ['JP', 'Fushimi Inari-taisha', ['a thousand red gates and counting', 'got happily lost under the torii']],
+  'tokyo': ['JP', 'Sensō-ji', ['incense smoke for good luck', 'lanterns bigger than me']],
+  'osaka': ['JP', 'Osaka Castle', ['the castle floats above its moat', 'takoyaki by the castle walls']],
+  'paris': ['FR', 'Eiffel Tower', ['it sparkles on the hour', 'climbed 674 steps for this']],
+  'london': ['GB', 'Tower Bridge', ['watched it lift for a sailboat', 'fog, tea, and this view']],
+  'edinburgh': ['GB', 'Edinburgh Castle', ['a castle on a volcano, really', 'bagpipes echo up the royal mile']],
+  'new york': ['US', 'Statue of Liberty', ['she waved back, i swear', 'the ferry seats face the skyline']],
+  'san francisco': ['US', 'Golden Gate Bridge', ['the fog ate the bridge by noon', 'orange looks good on it']],
+  'seattle': ['US', 'Space Needle', ['coffee tastes better up here', 'the elevator ears popped']],
+  'chicago': ['US', 'Cloud Gate', ['found myself in the bean', 'the whole skyline fits in it']],
+  'los angeles': ['US', 'Hollywood Sign', ['hiked until the letters got huge', 'everyone here is almost famous']],
+  'honolulu': ['US', 'Diamond Head, Hawaii', ['sunrise from the crater rim', 'sand is still in my shoes']],
+  'rome': ['IT', 'Colosseum', ['two thousand years, still standing', 'gelato with a view of history']],
+  'venice': ['IT', 'Rialto Bridge', ['gondolas under the marble bridge', 'the canals glitter at dusk']],
+  'florence': ['IT', 'Florence Cathedral', ['climbed the dome before breakfast', 'the whole city is terracotta']],
+  'amalfi': ['IT', 'Amalfi Coast', ['lemons the size of my head', 'the road curls like ribbon']],
+  'pisa': ['IT', 'Leaning Tower of Pisa', ['held it up for the photo', 'it leans more in person']],
+  'barcelona': ['ES', 'Sagrada Família', ['still unfinished, still unreal', 'light pours in like confetti']],
+  'madrid': ['ES', 'Royal Palace of Madrid', ['chandeliers for days', 'churros after the palace tour']],
+  'lisbon': ['PT', 'Belém Tower', ['pastéis warm from the oven', 'the tower guards the river']],
+  'athens': ['GR', 'Acropolis of Athens', ['marble glowing at golden hour', "athena's owls are watching"]],
+  'istanbul': ['TR', 'Hagia Sophia', ['domes stacked on domes', 'two empires under one roof']],
+  'cairo': ['EG', 'Great Pyramid of Giza', ['older than old, bigger than big', 'camels photobomb everything']],
+  'giza': ['EG', 'Great Pyramid of Giza', ['older than old, bigger than big', 'camels photobomb everything']],
+  'marrakesh': ['MA', 'Jemaa el-Fnaa', ['the square wakes up at dusk', 'mint tea and snake charmers']],
+  'marrakech': ['MA', 'Jemaa el-Fnaa', ['the square wakes up at dusk', 'mint tea and snake charmers']],
+  'dubai': ['AE', 'Burj Khalifa', ['the top is above the clouds', 'got vertigo from the ground']],
+  'agra': ['IN', 'Taj Mahal', ['marble that changes color', 'worth every single mile']],
+  'jaipur': ['IN', 'Hawa Mahal', ['a palace made of windows', 'pink city, golden light']],
+  'beijing': ['CN', 'Great Wall of China', ['it really does go forever', 'climbed a mountain of stairs']],
+  'shanghai': ['CN', 'The Bund', ['the skyline switches on at eight', 'old stone, new neon, one river']],
+  'hong kong': ['HK', 'Victoria Harbour', ['the ferry costs less than gum', 'neon reflected in the bay']],
+  'seoul': ['KR', 'Gyeongbokgung', ['palace roofs curl like wings', 'guards in silk, tourists in awe']],
+  'bangkok': ['TH', 'Wat Arun', ['a porcelain temple at sunrise', 'the river taxi dropped me here']],
+  'siem reap': ['KH', 'Angkor Wat', ['sunrise behind the towers', 'the trees are eating the temples']],
+  'singapore': ['SG', 'Marina Bay Sands', ['a ship parked on three towers', 'the infinity pool is real']],
+  'sydney': ['AU', 'Sydney Opera House', ['sails made of a million tiles', 'the ferries curtsy as they pass']],
+  'rio de janeiro': ['BR', 'Christ the Redeemer', ['arms wide over the whole city', 'the clouds kept photobombing']],
+  'cusco': ['PE', 'Machu Picchu', ['llamas own this place', 'clouds below, stones above']],
+  'cuzco': ['PE', 'Machu Picchu', ['llamas own this place', 'clouds below, stones above']],
+  'mexico city': ['MX', 'Palacio de Bellas Artes', ['a marble palace, a golden dome', 'murals worth the whole trip']],
+  'moscow': ['RU', "Saint Basil's Cathedral", ['onion domes like candy', 'it looks painted by hand']],
+  'saint petersburg': ['RU', 'Church of the Savior on Blood', ['mosaics from floor to dome', 'candy domes over the canal']],
+  'prague': ['CZ', 'Charles Bridge', ['the statues watch you cross', 'crossed at dawn, had it to myself']],
+  'vienna': ['AT', 'Schönbrunn Palace', ['gardens with no visible end', 'strudel in the palace café']],
+  'budapest': ['HU', 'Hungarian Parliament Building', ['it glows gold on the danube', 'best seen from the water']],
+  'berlin': ['DE', 'Brandenburg Gate', ['history you can walk through', 'the quadriga rides at sunset']],
+  'amsterdam': ['NL', 'Canals of Amsterdam', ['the houses lean like old friends', 'bikes, bridges, and boat homes']],
+  'copenhagen': ['DK', 'Nyhavn', ['houses in crayon colors', 'harbor beers on the quay']],
+  'stockholm': ['SE', 'Gamla stan', ['cobblestones and cinnamon buns', 'the old town glows at dusk']],
+  'reykjavik': ['IS', 'Hallgrímskirkja', ['a church shaped like basalt', 'the sun barely bothers to set']],
+  'dublin': ['IE', "Ha'penny Bridge", ['paid the ha’penny toll in spirit', 'a pint on the far side']],
+  'toronto': ['CA', 'CN Tower', ['the glass floor tested my nerve', 'the whole lake from the top']],
+  'vancouver': ['CA', 'Capilano Suspension Bridge', ['the bridge sways, i swayed more', 'cedar air and canyon views']]
+};
+const normKey = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+// load an image, cover-crop into the W x H buffer, bake in a little
+// contrast + saturation (the dither likes punchy input)
+async function loadPix(url, contain) {
+  try {
+    const blob = await fetch(url).then(r => r.ok ? r.blob() : null);
+    if (!blob) return null;
+    const bmp = await createImageBitmap(blob);
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const cx = c.getContext('2d');
+    const cover = Math.max(W / bmp.width, H / bmp.height);
+    if (contain) {
+      // portrait rescue: blurred cover fill behind, whole image contained on top
+      try { cx.filter = 'blur(4px)'; } catch (e) {}
+      const cw = bmp.width * cover * 1.12, ch = bmp.height * cover * 1.12;
+      cx.drawImage(bmp, (W - cw) / 2, (H - ch) / 2, cw, ch);
+      try { cx.filter = 'none'; } catch (e) {}
+      const s = Math.min(W / bmp.width, H / bmp.height);
+      cx.drawImage(bmp, (W - bmp.width * s) / 2, (H - bmp.height * s) / 2, bmp.width * s, bmp.height * s);
+    } else {
+      cx.drawImage(bmp, (W - bmp.width * cover) / 2, (H - bmp.height * cover) / 2, bmp.width * cover, bmp.height * cover);
+    }
+    const d = cx.getImageData(0, 0, W, H).data;
+    const out = new Uint8ClampedArray(d.length);
+    for (let i = 0; i < d.length; i += 4) {
+      const r = d[i], g = d[i + 1], b = d[i + 2];
+      const lum = 0.3 * r + 0.59 * g + 0.11 * b;
+      out[i]     = (lum + (r - lum) * 1.3 - 128) * 1.08 + 128;
+      out[i + 1] = (lum + (g - lum) * 1.3 - 128) * 1.08 + 128;
+      out[i + 2] = (lum + (b - lum) * 1.3 - 128) * 1.08 + 128;
+      out[i + 3] = 255;
+    }
+    return out;
+  } catch (e) { return null; }
+}
+
+// look through a page's other images for a landscape-oriented photo
+async function findLandscapeOnPage(title) {
+  const ml = await fetch('https://en.wikipedia.org/api/rest_v1/page/media-list/'
+    + encodeURIComponent(title)).then(r => r.ok ? r.json() : null).catch(() => null);
+  if (!ml || !ml.items) return null;
+  const files = ml.items
+    .filter(it => it.type === 'image' && it.title
+      && /\.(jpe?g|png)$/i.test(it.title)
+      && !/map|logo|flag|coat|seal|crest|icon|emblem|montage|collage/i.test(it.title))
+    .slice(0, 12).map(it => it.title);
+  if (!files.length) return null;
+  const q = await fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*'
+    + '&prop=imageinfo&iiprop=size%7Curl&iiurlwidth=560&titles='
+    + encodeURIComponent(files.join('|'))).then(r => r.ok ? r.json() : null).catch(() => null);
+  if (!q || !q.query || !q.query.pages) return null;
+  let best = null, bestScore = 1e9;
+  for (const pg of Object.values(q.query.pages)) {
+    const ii = pg.imageinfo && pg.imageinfo[0];
+    if (!ii || !ii.width || ii.width < 400) continue;
+    const a = ii.width / ii.height;
+    if (a < 1.25 || a > 4) continue;
+    const score = Math.abs(a - 1.7);          // postcard photo is ~1.64:1
+    if (score < bestScore) { bestScore = score; best = ii.thumburl || ii.url; }
+  }
+  return best;
+}
+
+async function fetchSummaryPix(title) {
+  const s = await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'
+    + encodeURIComponent(title)).then(r => r.ok ? r.json() : null).catch(() => null);
+  if (!s || (s.type && s.type !== 'standard') || !s.thumbnail) return null;
+  const ow = (s.originalimage && s.originalimage.width) || s.thumbnail.width;
+  const oh = (s.originalimage && s.originalimage.height) || s.thumbnail.height;
+  if (ow / oh >= 1.2) return loadPix(s.thumbnail.source);
+  // lead image is portrait: prefer a landscape photo from the same page,
+  // else fit the portrait full-height with blurred sides
+  const alt = await findLandscapeOnPage(s.title || title);
+  if (alt) {
+    const pix = await loadPix(alt);
+    if (pix) return pix;
+  }
+  return loadPix(s.thumbnail.source, true);
+}
+
+async function findPhoto(name, country, admin1, code) {
+  const lm = LANDMARKS[normKey(name)];
+  const candidates = [];
+  if (lm && lm[0] === code) candidates.push([lm[1], lm[1], lm[2]]); // [wiki title, caption label, quotes]
+  if (admin1 && admin1 !== name) candidates.push([`${name}, ${admin1}`, null, null]);
+  if (country) candidates.push([`${name}, ${country}`, null, null]);
+  candidates.push([name, null, null]);
+  const timeout = new Promise(r => setTimeout(() => r('timeout'), 6000));
+  for (const [title, label, quotes] of candidates) {
+    const pix = await Promise.race([fetchSummaryPix(title), timeout]);
+    if (pix === 'timeout') return null;
+    if (pix) return { pix, landmark: label, quotes };
+  }
+  return null;
+}
+
+// ---------- stamp ----------
+const STAMP_INKS = [
+  [176, 52, 58], [52, 66, 142], [42, 94, 70], [110, 52, 96], [128, 84, 44]
+];
+function drawStamp(canvas, rng, code) {
+  const SW = 31, SH = 37, S = 4;             // buffer, scale -> 124x148
+  canvas.width = SW * S; canvas.height = SH * S;
+  const ink = STAMP_INKS[(rng() * STAMP_INKS.length) | 0];
+  const sPaper = [238, 230, 208];
+  const buf = document.createElement('canvas');
+  buf.width = SW; buf.height = SH;
+  const bctx = buf.getContext('2d');
+  const bimg = bctx.createImageData(SW, SH);
+
+  const tbl = mkTbl(rng), o = rng() * 100;
+  const hor = SH * 0.62;
+  const sx = SW * (0.3 + rng() * 0.4), sy = SH * (0.24 + rng() * 0.14), sr = SH * (0.1 + rng() * 0.05);
+  const M = 2; // white perforation margin
+
+  for (let y = 0; y < SH; y++) for (let x = 0; x < SW; x++) {
+    let a; // ink coverage 0..1
+    const inFrame = x >= M && x < SW - M && y >= M && y < SH - M;
+    const onFrame = inFrame && (x === M || x === SW - M - 1 || y === M || y === SH - M - 1);
+    if (!inFrame) a = 0;
+    else if (onFrame) a = 1;
+    else {
+      const ry = hor - ridged1D(tbl, o + x / SW * 2.4) * SH * 0.22;
+      if (y >= ry) a = 0.8 + snoise(x * 0.1, y * 0.1) * 0.2;          // hills
+      else {
+        const dx = x - sx, dy = y - sy;
+        a = dx * dx + dy * dy < sr * sr ? 1 : (y / hor) * 0.3;        // sun + sky gradient
+      }
+    }
+    const bay = BAYER[((y & 7) << 3) | (x & 7)];
+    const on = a > bay;
+    const i = (y * SW + x) * 4;
+    bimg.data[i] = on ? ink[0] : sPaper[0];
+    bimg.data[i + 1] = on ? ink[1] : sPaper[1];
+    bimg.data[i + 2] = on ? ink[2] : sPaper[2];
+    bimg.data[i + 3] = 255;
+  }
+  bctx.putImageData(bimg, 0, 0);
+
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(buf, 0, 0, SW, SH, 0, 0, SW * S, SH * S);
+
+  // punch perforations along the edges
+  ctx.globalCompositeOperation = 'destination-out';
+  const holeR = 4.6, step = 13;
+  for (let x = step / 2; x < SW * S; x += step) {
+    ctx.beginPath(); ctx.arc(x, 0, holeR, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(x, SH * S, holeR, 0, 7); ctx.fill();
+  }
+  for (let y = step / 2; y < SH * S; y += step) {
+    ctx.beginPath(); ctx.arc(0, y, holeR, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(SW * S, y, holeR, 0, 7); ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // denomination + country code
+  const inkCss = `rgb(${ink[0]},${ink[1]},${ink[2]})`;
+  const paperCss = `rgb(${sPaper[0]},${sPaper[1]},${sPaper[2]})`;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.font = '700 15px ui-monospace, Menlo, monospace';
+  const denom = 5 + ((rng() * 90) | 0);
+  ctx.lineWidth = 3; ctx.strokeStyle = paperCss; ctx.lineJoin = 'round';
+  ctx.strokeText(denom, 14, 27); ctx.fillStyle = inkCss; ctx.fillText(denom, 14, 27);
+  if (code) {
+    ctx.textAlign = 'center';
+    ctx.font = '700 11px ui-monospace, Menlo, monospace';
+    ctx.strokeText(code, SW * S / 2, SH * S - 14);
+    ctx.fillText(code, SW * S / 2, SH * S - 14);
+  }
+  return ink;
+}
+
+// ---------- postmark svg ----------
+let pmSeq = 0;
+function postmarkSVG(place, dateStr, light) {
+  const id = 'pmArc' + (++pmSeq);
+  const name = place.toUpperCase().slice(0, 14);
+  const ink = light ? '#e9e2cf' : '#3a3450';
+  return `<svg class="postmark${light ? ' light' : ''}" viewBox="0 0 170 106" xmlns="http://www.w3.org/2000/svg">
+    <defs><path id="${id}" d="M 85 53 m -27 0 a 27 27 0 1 1 54 0"/></defs>
+    <g stroke="${ink}" fill="none" stroke-width="1.6">
+      <circle cx="113" cy="53" r="36"/>
+      <circle cx="113" cy="53" r="27.5"/>
+      <path d="M 2 40 q 12 -7 24 0 t 24 0 t 24 0" stroke-width="2"/>
+      <path d="M 2 53 q 12 -7 24 0 t 24 0 t 24 0" stroke-width="2"/>
+      <path d="M 2 66 q 12 -7 24 0 t 24 0 t 24 0" stroke-width="2"/>
+    </g>
+    <g fill="${ink}" font-family="ui-monospace, Menlo, monospace" font-weight="700" text-anchor="middle" transform="translate(28 0)">
+      <text font-size="8.5" letter-spacing="1.5"><textPath href="#${id}" startOffset="50%">${name}</textPath></text>
+      <text x="85" y="51" font-size="9">${dateStr}</text>
+      <text x="85" y="62" font-size="7" letter-spacing="1">PAR AVION</text>
+    </g>
+  </svg>`;
+}
+
+// ---------- card assembly ----------
+const scene = document.getElementById('scene');
+const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+const MONTHS_S = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const PHRASES = [
+  'wish you were here', 'the light is different here', 'you would love it here',
+  'come see this for yourself', 'sending you this view', 'it looked just like this',
+  'still thinking about this place', 'saving you a seat', 'the air is sweeter here',
+  'one day we go together'
+];
+// flavor by climate band when we don't know the exact attraction
+const CLIMATE_PHRASES = {
+  tropical: ['salt air and slow afternoons', 'the sea is bathwater warm',
+             'sunburnt and not sorry', 'everything grows louder here'],
+  warm: ['golden hours last longer here', 'siestas are mandatory',
+         'dust, sun, and good bread', 'the evenings smell like jasmine'],
+  temperate: ['green in every direction', 'rain, then rainbows, repeat',
+              'sweater weather, my favorite', 'the cafés are always warm'],
+  cold: ['my breath froze mid-hello', 'the light here is pale silver',
+         'wool socks were a good call', 'the quiet here is enormous']
+};
+
+let active = null;        // { el, canvas, ctx, sc, devStart }
+let zTop = 10;
+const pile = [];
+const visits = new Map();
+
+function freezeCanvas(cv) {
+  const im = document.createElement('img');
+  im.className = 'frozen';
+  im.src = cv.toDataURL();
+  cv.replaceWith(im);
+}
+
+function retireActive() {
+  if (!active) return;
+  if (active.canvas) freezeCanvas(active.canvas);
+  const el = active.el;
+  el.classList.add('pile');
+  el.style.setProperty('--px', (Math.random() * 90 - 45) + 'px');
+  el.style.setProperty('--py', (Math.random() * 50 - 25) + 'px');
+  el.style.setProperty('--sc', '0.965');
+  pile.push(el);
+  if (pile.length > 4) {
+    const gone = pile.shift();
+    gone.classList.add('gone');
+    setTimeout(() => gone.remove(), 600);
+  }
+  active = null;
+}
+
+function addTilt(card, wrap) {
+  card.addEventListener('mousemove', e => {
+    if (active && active.el === wrap) {
+      const rct = card.getBoundingClientRect();
+      const mx = (e.clientX - rct.left) / rct.width - 0.5;
+      const my = (e.clientY - rct.top) / rct.height - 0.5;
+      card.style.transform =
+        `rotateX(${(-my * 4).toFixed(2)}deg) rotateY(${(mx * 4).toFixed(2)}deg) rotate(var(--rz))`;
+    }
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+}
+
+// ---------- collection (localStorage) ----------
+const COLKEY = 'wywh-collection';
+let collection = [];
+try { collection = JSON.parse(localStorage.getItem(COLKEY)) || []; } catch (e) {}
+const collectBtn = document.getElementById('collectBtn');
+const album = document.getElementById('album');
+const albumInner = document.getElementById('albumInner');
+
+function updateCollectBtn() { collectBtn.textContent = 'collection · ' + collection.length; }
+function saveCollection() {
+  for (let tries = 0; tries < 4; tries++) {
+    try { localStorage.setItem(COLKEY, JSON.stringify(collection)); return; }
+    catch (e) { collection.shift(); } // quota: drop oldest and retry
+  }
+}
+
+function collectActive() {
+  if (!active || !active.canvas) return;
+  const el = active.el;
+  const stampCv = el.querySelector('.stamp canvas');
+  collection.push({
+    l1: el.querySelector('.line1').textContent,
+    l2: el.querySelector('.line2').textContent,
+    img: active.canvas.toDataURL('image/jpeg', 0.82),
+    stamp: stampCv ? stampCv.toDataURL() : '',
+    pm: el.querySelector('.postmark').outerHTML,
+    rz: el.querySelector('.card').style.getPropertyValue('--rz') || '-1.2deg'
+  });
+  while (collection.length > 60) collection.shift();
+  saveCollection();
+  updateCollectBtn();
+}
+
+// rebuild a collected card on the desk
+function recallCard(item) {
+  album.classList.remove('open');
+  retireActive();
+  const wrap = document.createElement('div');
+  wrap.className = 'cardWrap';
+  wrap.style.zIndex = ++zTop;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.setProperty('--rz', item.rz);
+
+  const photo = document.createElement('div');
+  photo.className = 'photo';
+  const im = document.createElement('img');
+  im.className = 'frozen';
+  im.src = item.img;
+  photo.appendChild(im);
+
+  const caption = document.createElement('div');
+  caption.className = 'caption';
+  const l1 = document.createElement('span'); l1.className = 'line1'; l1.textContent = item.l1;
+  const l2 = document.createElement('span'); l2.className = 'line2'; l2.textContent = item.l2;
+  caption.append(l1, l2);
+
+  const stamp = document.createElement('div');
+  stamp.className = 'stamp';
+  if (item.stamp) {
+    const si = document.createElement('img');
+    si.className = 'frozen';
+    si.src = item.stamp;
+    stamp.appendChild(si);
+  }
+
+  card.append(photo, caption, stamp);
+  card.insertAdjacentHTML('beforeend', item.pm);
+  addTilt(card, wrap);
+  wrap.appendChild(card);
+  scene.appendChild(wrap);
+  active = { el: wrap, canvas: null, sc: null, devStart: 0, collected: true };
+}
+
+function openAlbum() {
+  albumInner.innerHTML = '';
+  if (!collection.length) {
+    const d = document.createElement('div');
+    d.id = 'albumEmpty';
+    d.textContent = 'no cards yet · go somewhere';
+    albumInner.appendChild(d);
+  } else {
+    collection.slice().reverse().forEach((item, i) => {
+      const d = document.createElement('div');
+      d.className = 'mini';
+      d.style.setProperty('--mr', (((i * 37) % 7) - 3) + 'deg');
+      const im = document.createElement('img');
+      im.src = item.img;
+      const cap = document.createElement('div');
+      cap.className = 'mcap';
+      cap.textContent = item.l1;
+      d.append(im, cap);
+      d.addEventListener('click', () => recallCard(item));
+      albumInner.appendChild(d);
+    });
+  }
+  album.classList.add('open');
+}
+collectBtn.addEventListener('click', openAlbum);
+document.getElementById('albumClose').addEventListener('click', () => album.classList.remove('open'));
+album.addEventListener('click', e => { if (e.target === album) album.classList.remove('open'); });
+updateCollectBtn();
+
+function makeCard(name, country, code, lat, admin1) {
+  const key = name.toLowerCase();
+  const visit = visits.get(key) || 0;
+  visits.set(key, visit + 1);
+
+  retireActive();
+
+  const sc = buildScene(name, lat, visit);
+  const rng = mulberry32(sc.seed ^ 0xC0FFEE);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'cardWrap';
+  wrap.style.zIndex = ++zTop;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.setProperty('--rz', (Math.random() * 3.2 - 1.6).toFixed(2) + 'deg');
+
+  const photo = document.createElement('div');
+  photo.className = 'photo';
+  const cv = document.createElement('canvas');
+  cv.width = CW; cv.height = CH;
+  photo.appendChild(cv);
+
+  const now = new Date();
+  const pool = (CLIMATE_PHRASES[sc.climate] || []).concat(PHRASES);
+  const phrase = pool[(rng() * pool.length) | 0];
+  const caption = document.createElement('div');
+  caption.className = 'caption';
+  const sub = country ? `${country} · ${MONTHS[now.getMonth()]} '${String(now.getFullYear()).slice(2)}`
+                      : `somewhere far away · ${MONTHS[now.getMonth()]} '${String(now.getFullYear()).slice(2)}`;
+  caption.innerHTML =
+    `<span class="line1">greetings from ${name.toLowerCase()}</span>` +
+    `<span class="line2">${sub} — “${phrase}”</span>`;
+
+  const stamp = document.createElement('div');
+  stamp.className = 'stamp';
+  const scv = document.createElement('canvas');
+  stamp.appendChild(scv);
+  drawStamp(scv, rng, code || name.slice(0, 3).toUpperCase());
+
+  card.appendChild(photo);
+  card.appendChild(caption);
+  card.appendChild(stamp);
+  const skyLum = 0.3 * sc.pal.skyTop[0] + 0.59 * sc.pal.skyTop[1] + 0.11 * sc.pal.skyTop[2];
+  card.insertAdjacentHTML('beforeend',
+    postmarkSVG(code || name, `${MONTHS_S[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`, skyLum < 110));
+  wrap.appendChild(card);
+  scene.appendChild(wrap);
+
+  // gentle mouse tilt on the active card
+  addTilt(card, wrap);
+  photo.addEventListener('click', () => {
+    if (active && active.el === wrap) active.devStart = T; // re-develop
+  });
+  photo.title = 'click to re-develop';
+
+  // hold the develop until we know whether a real landmark photo exists;
+  // blank photo paper (with live dither grain) covers the fetch latency
+  active = { el: wrap, canvas: cv, ctx: cv.getContext('2d'), sc, devStart: Infinity };
+  const token = active;
+  const startDev = () => { if (active === token) token.devStart = T + 0.2; };
+  if (lat == null) { startDev(); return; }
+  findPhoto(name, country, admin1, code).then(ph => {
+    if (active !== token) return;
+    if (ph) {
+      sc.photoPix = ph.pix;
+      if (ph.landmark) {
+        const q = ph.quotes ? ph.quotes[sc.seed % ph.quotes.length] : phrase;
+        caption.querySelector('.line2').textContent =
+          `${ph.landmark.toLowerCase()} · ${sub} — “${q}”`;
+      }
+    }
+    startDev();
+  });
+}
+
+// ---------- main loop ----------
+function renderActive(dt) {
+  if (!active || !active.canvas) return;
+  T += dt;
+  const dev = active.devStart === Infinity ? 0 : clamp((T - active.devStart) / DEV_DUR, 0, 1);
+  const e = dev * dev * (3 - 2 * dev);
+  if (active.sc.photoPix) renderPhoto(active.sc.photoPix, e);
+  else renderScene(active.sc, e, dt);
+  octx.putImageData(img, 0, 0);
+  active.ctx.imageSmoothingEnabled = false;
+  active.ctx.drawImage(off, 0, 0, W, H, 0, 0, CW, CH);
+  if (dev >= 1 && !active.collected) { active.collected = true; collectActive(); }
+}
+let last = performance.now();
+function frame(now) {
+  const dt = clamp((now - last) / 1000, 0.001, 0.05);
+  last = now;
+  renderActive(dt);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ---------- search ----------
+const $ = id => document.getElementById(id);
+const sf = $('sf'), q = $('q'), msg = $('msg');
+let seq = 0;
+
+sf.addEventListener('submit', e => { e.preventDefault(); go(q.value.trim()); });
+addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  if (e.key === 'Escape') album.classList.remove('open');
+});
+
+async function go(query) {
+  if (!query) return;
+  const my = ++seq;
+  msg.textContent = 'finding ' + query + '…';
+  const [qName, qHint] = query.split(',').map(s => s.trim());
+  try {
+    const geo = await fetch('https://geocoding-api.open-meteo.com/v1/search?name='
+      + encodeURIComponent(qName) + '&count=10&language=en&format=json').then(r => r.json());
+    if (my !== seq) return;
+    if (!geo.results || !geo.results.length) { msg.textContent = 'no such place found'; return; }
+    let best = geo.results[0];
+    if (qHint) {
+      const h = qHint.toLowerCase();
+      best = geo.results.find(r =>
+        (r.country || '').toLowerCase().includes(h) ||
+        (r.country_code || '').toLowerCase() === h ||
+        (r.admin1 || '').toLowerCase().includes(h)) || best;
+    }
+    const { latitude, name, country, country_code, admin1 } = best;
+    makeCard(name, country || '', (country_code || '').toUpperCase(), latitude, admin1 || '');
+    msg.textContent = 'click the photo to re-develop · search again for another';
+    q.select();
+  } catch (err) {
+    if (my !== seq) return;
+    // offline: imagine it instead
+    const pretty = query.replace(/\b\w/g, c => c.toUpperCase());
+    makeCard(pretty, '', '', null);
+    msg.textContent = 'post office unreachable · imagined it instead';
+    console.error(err);
+  }
+}
+
+// debug hooks for the hidden preview (rAF suspends there)
+window.__go = go;
+window.__pump = (n = 60) => { for (let i = 0; i < n; i++) renderActive(1 / 60); };
+window.__dev = f => { if (active) active.devStart = T - f * DEV_DUR; };
+window.__state = () => active && { photo: !!active.sc.photoPix, holding: active.devStart === Infinity };
+window.__inject = pix => { if (active) active.sc.photoPix = pix; };
+</script>
+</body>
+</html>

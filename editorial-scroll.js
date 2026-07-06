@@ -31,7 +31,7 @@
         const r = o.m.getBoundingClientRect();
         if (r.bottom < -120 || r.top > vh + 120) continue;
         const delta = ((r.top + r.height / 2) - vh / 2) / vh; // -1 .. 1
-        o.img.style.transform = "translateY(" + (delta * 28).toFixed(1) + "px) scale(1.12)";
+        o.img.style.transform = "translateY(" + (delta * 8).toFixed(1) + "px) scale(1.05)";
       }
     }
     ticking = false;
