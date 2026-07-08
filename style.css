@@ -1163,6 +1163,58 @@ section { padding: 100px 48px; }
   font-size: 12px;
   color: rgba(250,248,244,0.3);
 }
+/* ── Footer wandering critters ── */
+.footer-critters {
+  position: relative;
+  height: 190px;
+  margin: 8px 0 28px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.critter {
+  position: absolute;
+  left: -8%;
+  font-size: 20px;
+  white-space: nowrap;
+  will-change: left;
+}
+.critter .hop {
+  display: inline-block;
+  animation: critterHop 0.55s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes critterHop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes critterWalkR {
+  0% { left:-8%; } 24% { left:32%; } 34% { left:32%; } 66% { left:72%; } 74% { left:72%; } 100% { left:114%; } }
+@keyframes critterWalkR2 {
+  0% { left:-10%; } 44% { left:48%; } 56% { left:48%; } 100% { left:116%; } }
+@keyframes critterWalkL {
+  0% { left:114%; } 30% { left:66%; } 40% { left:66%; } 72% { left:24%; } 80% { left:24%; } 100% { left:-10%; } }
+.c1 { top:12%; color:#e8c84a; animation: critterWalkR 18s linear infinite -2s; }
+.c2 { top:62%; color:#ff5da2; animation: critterWalkR2 25s linear infinite -8s; }
+.c3 { top:36%; color:#3abf9f; transform: scaleX(-1); animation: critterWalkL 21s linear infinite -5s; }
+.c4 { top:80%; color:#f4633a; font-size:18px; animation: critterWalkR 15s linear infinite -11s; }
+.c5 { top:48%; color:#5b8def; font-size:17px; animation: critterWalkR2 31s linear infinite -15s; }
+.c6 { top:22%; color:#c08bff; transform: scaleX(-1); animation: critterWalkL 27s linear infinite -12s; }
+.c7 { top:52%; color:#6fd66f; font-size:18px; animation: critterWalkR 23s linear infinite -18s; }
+.c8 { top:30%; color:#ff9e5e; transform: scaleX(-1); animation: critterWalkL 19s linear infinite -9s; }
+.c9 { top:70%; color:#a0d8ff; font-size:17px; animation: critterWalkR2 28s linear infinite -6s; }
+.c2 .hop { animation-duration: 0.62s; }
+.c3 .hop { animation-duration: 0.48s; }
+.c5 .hop { animation-duration: 0.70s; }
+.c6 .hop { animation-duration: 0.50s; }
+.c7 .hop { animation-duration: 0.58s; }
+.c8 .hop { animation-duration: 0.52s; }
+.c9 .hop { animation-duration: 0.66s; }
+@media (max-width: 640px) {
+  .footer-critters { height: 160px; }
+  .critter { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .critter, .critter .hop { animation: none; }
+  .c1 { left:6%; } .c2 { left:18%; } .c3 { left:30%; } .c4 { left:42%; } .c5 { left:54%; }
+  .c6 { left:66%; } .c7 { left:78%; } .c8 { left:88%; } .c9 { left:96%; }
+}
 /* ── Reveal Animations ── */
 .reveal-word {
   opacity: 0;
