@@ -34,7 +34,7 @@
   <section class="hero ed-hero" id="hero">
     <div class="ed-hero-inner">
       <div class="ed-masthead reveal-fade">
-        <span class="ed-label">Portfolio — 2026</span>
+        <span class="ed-label ed-live"><span id="hdrClock">—:—</span> in Seattle · <span id="hdrStatus">probably designing</span></span>
         <span class="ed-label ed-status" data-cursor="link"><span class="ed-dot"></span>Open to new roles</span>
       </div>
       <h1 class="ed-title spotlight-target">
@@ -329,6 +329,21 @@
   </footer>
 
   <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script>
+  (function(){
+    function tick(){
+      try{
+        var now=new Date();
+        var t=now.toLocaleTimeString('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',minute:'2-digit'});
+        var h=parseInt(now.toLocaleString('en-US',{timeZone:'America/Los_Angeles',hour:'2-digit',hour12:false}),10)%24;
+        var s=h<6?'asleep (hopefully)':h<9?'caffeinating':h<18?'probably designing':h<22?'still designing':'should be asleep';
+        var c=document.getElementById('hdrClock'); if(c) c.textContent=t;
+        var st=document.getElementById('hdrStatus'); if(st) st.textContent=s;
+      }catch(e){}
+    }
+    tick(); setInterval(tick,30000);
+  })();
+  </script>
   <script src="main.js?v=3"></script>
   <script src="editorial-scroll.js?v=2"></script>
   <script src="hero-spotlight.js?v=1"></script>
