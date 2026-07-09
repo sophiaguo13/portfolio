@@ -117,11 +117,9 @@
   border-top: 1px solid var(--card-border);
 }
 .cs-section.warm-bg {
-  background: var(--warm);
-  border-top: none;
-  border-bottom: none;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 88px 48px;
-  margin: 0;
 }
 
 /* ── Section Labels & Headings ── */
@@ -573,6 +571,7 @@
   overflow-x: auto;
   border: 1px solid var(--card-border);
   border-radius: 14px;
+  background: var(--card-bg);
 }
 .cs-table {
   width: 100%;
@@ -588,7 +587,7 @@
   text-transform: uppercase;
   color: var(--muted);
   padding: 16px 20px;
-  background: var(--warm);
+  background: #f4f2ec;
   border-bottom: 1px solid var(--card-border);
 }
 .cs-table td {
@@ -604,7 +603,7 @@
 .cs-table code {
   font-family: 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
   font-size: 12.5px;
-  background: var(--warm);
+  background: #f1efe9;
   padding: 2px 7px;
   border-radius: 6px;
   color: var(--fg);
@@ -711,13 +710,9 @@
 .cs-verdict-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-left: 4px solid var(--muted);
   border-radius: 12px;
   padding: 22px 26px;
 }
-.cs-verdict-card.reject { border-left-color: #d8472d; }
-.cs-verdict-card.refine { border-left-color: var(--accent); }
-.cs-verdict-card.accept { border-left-color: var(--accent3); }
 .cs-verdict-tag {
   display: inline-block;
   font-size: 10.5px;
