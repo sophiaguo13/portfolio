@@ -284,7 +284,7 @@
 .cs-solution-num {
   font-family: var(--font-serif);
   font-size: 64px;
-  color: rgba(244,99,58,0.1);
+  color: rgba(222,47,123,0.1);
   line-height: 1;
   margin-bottom: -16px;
 }
@@ -609,7 +609,7 @@
   border-radius: 6px;
   color: var(--fg);
 }
-.cs-table tr.cs-table-total td { background: rgba(244,99,58,0.05); }
+.cs-table tr.cs-table-total td { background: rgba(222,47,123,0.05); }
 .cs-table.cs-table-lighthead th { background: var(--card-bg); }
 .cs-table tr.cs-table-total td strong { color: var(--accent); }
 
@@ -754,7 +754,7 @@
   white-space: nowrap;
 }
 .cs-verdict-card.reject .cs-verdict-badge { background: rgba(216,71,45,0.1); color: #c43b22; }
-.cs-verdict-card.refine .cs-verdict-badge { background: rgba(244,99,58,0.1); color: var(--accent); }
+.cs-verdict-card.refine .cs-verdict-badge { background: rgba(222,47,123,0.1); color: var(--accent); }
 .cs-verdict-card.accept .cs-verdict-badge { background: rgba(58,191,159,0.14); color: #2a9d80; }
 .cs-verdict-ruling p {
   font-size: 14px;

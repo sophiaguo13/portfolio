@@ -6,7 +6,7 @@
 :root {
   --bg: #faf8f4;
   --fg: #1a1714;
-  --accent: #f4633a;
+  --accent: #DE2F7B;
   --accent2: #7c5cbf;
   --accent3: #3abf9f;
   --warm: #f9e8d0;
@@ -87,7 +87,7 @@ img { display: block; max-width: 100%; }
 }
 .cursor.hovered {
   width: 64px; height: 64px;
-  background: rgba(244,99,58,0.08);
+  background: rgba(222,47,123,0.08);
   border-color: var(--accent);
 }
 .cursor.view-cursor {
@@ -250,7 +250,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.01em;
 }
 .highlight {
-  background: linear-gradient(120deg, var(--accent) 0%, #f4a23a 100%);
+  background: linear-gradient(120deg, var(--accent) 0%, #ff6fa5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1193,7 +1193,7 @@ section { padding: 100px 48px; }
 .c1 { top:12%; color:#e8c84a; animation: critterWalkR 18s linear infinite -2s; }
 .c2 { top:62%; color:#ff5da2; animation: critterWalkR2 25s linear infinite -8s; }
 .c3 { top:36%; color:#3abf9f; transform: scaleX(-1); animation: critterWalkL 21s linear infinite -5s; }
-.c4 { top:80%; color:#f4633a; font-size:18px; animation: critterWalkR 15s linear infinite -11s; }
+.c4 { top:80%; color:#DE2F7B; font-size:18px; animation: critterWalkR 15s linear infinite -11s; }
 .c5 { top:48%; color:#5b8def; font-size:17px; animation: critterWalkR2 31s linear infinite -15s; }
 .c6 { top:22%; color:#c08bff; transform: scaleX(-1); animation: critterWalkL 27s linear infinite -12s; }
 .c7 { top:52%; color:#6fd66f; font-size:18px; animation: critterWalkR 23s linear infinite -18s; }
