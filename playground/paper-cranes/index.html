@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>paper cranes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #37424c;
+    --sky: #cbe1f3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: var(--sky); }
+  body { cursor: none; font-family: 'New Tegomin', Georgia, serif; }
+  body.touch { cursor: auto; }
+  canvas { display: block; }
+
+  .title {
+    position: fixed;
+    top: 28px;
+    left: 32px;
+    color: var(--ink);
+    font-family: 'New Tegomin', Georgia, serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadein 1.2s ease 0.4s forwards;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hint {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ink);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    opacity: 0;
+    animation: fadein 1.2s ease 1.2s forwards;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .hint.dim { opacity: 0.28 !important; }
+  .hint span { opacity: 0.25; margin: 0 12px; font-weight: 300; }
+  @keyframes fadein { to { opacity: 0.75; } }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="title">paper cranes</div>
+<div class="hint" id="hint">drift slowly<span>|</span>dart to scatter<span>|</span>hold still to let them land</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('sky');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let W = 0, H = 0, DPR = 1;
+  let bgCanvas = null;
+
+  // ---- washi paper palette: [hue, sat%, light%] ----
+  const PALETTE = [
+    [6,  72, 62],   // persimmon
+    [346, 64, 70],  // sakura pink
+    [188, 45, 52],  // teal
+    [42,  78, 60],  // mustard
+    [262, 38, 68],  // wisteria
+    [152, 32, 55],  // matcha
+    [216, 48, 62],  // asagi blue
+    [24,  70, 58],  // apricot
+  ];
+  const hsl = (h, s, l, a = 1) => `hsla(${h},${s}%,${l}%,${a})`;
+
+  // ---- pointer state ----
+  // simNow is the simulation clock: tracks rAF timestamps, but can also be
+  // advanced manually via the __cranes debug hook (e.g. in throttled tabs)
+  let simNow = performance.now();
+  const mouse = { x: innerWidth / 2, y: innerHeight * 0.42, has: false };
+  let lastMoveAt = simNow;
+  let firstMove = false;
+  let mouseSpeed = 0;          // smoothed px/s
+  let pendingDist = 0;
+  let panicUntil = 0;
+  const cursorDot = { x: mouse.x, y: mouse.y };
+
+  addEventListener('pointermove', (e) => {
+    const dx = e.clientX - mouse.x, dy = e.clientY - mouse.y;
+    const d = Math.hypot(dx, dy);
+    if (d < 1) return;
+    pendingDist += d;
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.has = true;
+    firstMove = true;
+    lastMoveAt = simNow;
+    document.getElementById('hint').classList.add('dim');
+  }, { passive: true });
+
+  addEventListener('touchstart', () => document.body.classList.add('touch'), { passive: true });
+
+  // ---- cranes ----
+  const STATES = { FLY: 0, LAND: 1, FOLD: 2, SIT: 3, RISE: 4 };
+  let cranes = [];
+
+  function makeCrane(i, n) {
+    const [h, s, l] = PALETTE[i % PALETTE.length];
+    const a = (i / n) * Math.PI * 2;
+    return {
+      x: W / 2 + Math.cos(a) * (120 + Math.random() * 160),
+      y: H * 0.42 + Math.sin(a) * (90 + Math.random() * 120),
+      vx: (Math.random() - 0.5) * 120,
+      vy: (Math.random() - 0.5) * 120,
+      size: 0.8 + Math.random() * 0.5,
+      hue: h, sat: s, light: l,
+      heading: Math.random() * Math.PI * 2,
+      flap: Math.random() * Math.PI * 2,
+      state: STATES.FLY,
+      foldT: 0,
+      // loose formation: each crane orbits its own drifting offset around the cursor
+      orbitR: 45 + Math.random() * 130,
+      orbitA: Math.random() * Math.PI * 2,
+      orbitSpeed: (0.15 + Math.random() * 0.35) * (Math.random() < 0.5 ? -1 : 1),
+      landAt: 0, riseAt: 0,
+      tx: 0, ty: 0,
+      jitter: Math.random() * 1000,
+    };
+  }
+
+  function resize() {
+    if (!innerWidth || !innerHeight) return; // window not materialized yet
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    paintBackground();
+    const n = Math.max(14, Math.min(reduceMotion ? 16 : 30, Math.round((W * H) / 42000)));
+    if (cranes.length !== n) cranes = Array.from({ length: n }, (_, i) => makeCrane(i, n));
+  }
+
+  // cream sky with soft pastel washes + paper grain, cached
+  function paintBackground() {
+    bgCanvas = document.createElement('canvas');
+    bgCanvas.width = W; bgCanvas.height = H;
+    const b = bgCanvas.getContext('2d');
+    b.fillStyle = '#cbe1f3';
+    b.fillRect(0, 0, W, H);
+    const blobs = [
+      [0.22, 0.25, 0.38, 'hsla(28, 80%, 84%, 0.35)'],  // warm peach sunrise
+      [0.8, 0.2, 0.45, 'hsla(212, 75%, 72%, 0.5)'],    // deeper sky blue
+      [0.6, 0.85, 0.42, 'hsla(340, 55%, 84%, 0.35)'],  // blush
+      [0.92, 0.78, 0.4, 'hsla(272, 50%, 82%, 0.4)'],   // lavender
+    ];
+    for (const [px, py, pr, col] of blobs) {
+      const r = Math.max(W, H) * pr;
+      const g = b.createRadialGradient(W * px, H * py, 0, W * px, H * py, r);
+      g.addColorStop(0, col);
+      g.addColorStop(1, 'hsla(0,0%,100%,0)');
+      b.fillStyle = g;
+      b.fillRect(0, 0, W, H);
+    }
+    // paper grain
+    const g = document.createElement('canvas');
+    g.width = g.height = 128;
+    const gc = g.getContext('2d');
+    const img = gc.createImageData(128, 128);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = 110 + Math.random() * 90;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 14;
+    }
+    gc.putImageData(img, 0, 0);
+    b.fillStyle = b.createPattern(g, 'repeat');
+    b.fillRect(0, 0, W, H);
+  }
+
+  // ---- landing choreography ----
+  let landingScheduled = false;
+
+  function scheduleLanding(now) {
+    landingScheduled = true;
+    const order = [...cranes].sort(() => Math.random() - 0.5);
+    const taken = [];
+    order.forEach((c, i) => {
+      c.landAt = now + i * (reduceMotion ? 200 : 320) + Math.random() * 150;
+      // pick a floor spot roughly below the crane, spaced from others
+      let tx = 0, ty = 0;
+      for (let tries = 0; tries < 12; tries++) {
+        tx = Math.max(40, Math.min(W - 40, c.x + (Math.random() - 0.5) * 260));
+        ty = H * (0.7 + Math.random() * 0.22);
+        if (taken.every(p => Math.abs(p[0] - tx) > 34 || Math.abs(p[1] - ty) > 26)) break;
+      }
+      taken.push([tx, ty]);
+      c.tx = tx; c.ty = ty;
+    });
+  }
+
+  function scheduleTakeoff(now) {
+    landingScheduled = false;
+    let i = 0;
+    for (const c of cranes) {
+      if (c.state !== STATES.FLY && c.state !== STATES.RISE) {
+        c.riseAt = now + i * 70 + Math.random() * 100;
+        i++;
+      }
+      c.landAt = 0;
+    }
+  }
+
+  // ---- simulation ----
+  function step(now, dt) {
+    // smoothed cursor speed (px/s)
+    const inst = pendingDist / dt;
+    pendingDist = 0;
+    mouseSpeed += (inst - mouseSpeed) * Math.min(1, dt * 10);
+    if (!reduceMotion && mouseSpeed > 1400) panicUntil = now + 900;
+    const panic = now < panicUntil;
+    const regroup = !panic && now < panicUntil + 1800;
+
+    const idleFor = now - lastMoveAt;
+    const idleNeeded = firstMove ? 2400 : 4500;
+    if (!landingScheduled && idleFor > idleNeeded) scheduleLanding(now);
+    if (landingScheduled && idleFor < 120) scheduleTakeoff(now);
+
+    const target = mouse.has ? mouse : { x: W / 2, y: H * 0.42 };
+    const maxSpd = (panic ? 520 : 280);
+    const minSpd = 80;
+
+    for (const c of cranes) {
+      if (c.state === STATES.SIT || c.state === STATES.FOLD || c.state === STATES.LAND) {
+        if (c.riseAt && now >= c.riseAt) { c.state = STATES.RISE; c.riseAt = 0; }
+      }
+
+      if (c.state === STATES.FLY) {
+        if (c.landAt && now >= c.landAt && landingScheduled) { c.state = STATES.LAND; c.landAt = 0; }
+
+        let ax = 0, ay = 0;
+        // flock: separation / alignment / cohesion
+        let sx = 0, sy = 0, alx = 0, aly = 0, cx = 0, cy = 0, nAl = 0, nCo = 0;
+        for (const o of cranes) {
+          if (o === c || o.state === STATES.SIT || o.state === STATES.FOLD) continue;
+          const dx = c.x - o.x, dy = c.y - o.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 34 * 34 && d2 > 0.01) {
+            const d = Math.sqrt(d2);
+            sx += (dx / d) * (34 - d); sy += (dy / d) * (34 - d);
+          }
+          if (d2 < 95 * 95) {
+            alx += o.vx; aly += o.vy; nAl++;
+            cx += o.x; cy += o.y; nCo++;
+          }
+        }
+        ax += sx * 14; ay += sy * 14;
+        if (nAl) { ax += (alx / nAl - c.vx) * (panic ? 0.6 : 2.2); ay += (aly / nAl - c.vy) * (panic ? 0.6 : 2.2); }
+        if (nCo) {
+          const cw = (panic ? 0.3 : regroup ? 3.2 : 1.3);
+          ax += (cx / nCo - c.x) * cw; ay += (cy / nCo - c.y) * cw;
+        }
+
+        // seek a drifting personal offset around the cursor → loose murmuration
+        c.orbitA += c.orbitSpeed * dt;
+        const gx = Math.max(60, Math.min(W - 60, target.x + Math.cos(c.orbitA) * c.orbitR));
+        const gy = Math.max(60, Math.min(H - 60, target.y + Math.sin(c.orbitA) * c.orbitR * 0.7));
+        ax += (gx - c.x) * 1.6; ay += (gy - c.y) * 1.6;
+
+        // scatter: flee hard from the cursor
+        if (panic) {
+          const dx = c.x - mouse.x, dy = c.y - mouse.y;
+          const d = Math.hypot(dx, dy) || 1;
+          const f = 2600 * Math.exp(-d / 240) + 500;
+          ax += (dx / d) * f + (Math.random() - 0.5) * 800;
+          ay += (dy / d) * f + (Math.random() - 0.5) * 800;
+        }
+
+        // gentle wander so gliding never looks frozen
+        ax += Math.sin(now / 730 + c.jitter) * 30;
+        ay += Math.cos(now / 610 + c.jitter) * 30;
+
+        // stay on screen
+        const m = 70;
+        if (c.x < m) ax += (m - c.x) * 24;
+        if (c.x > W - m) ax -= (c.x - (W - m)) * 24;
+        if (c.y < m) ay += (m - c.y) * 24;
+        if (c.y > H - m) ay -= (c.y - (H - m)) * 24;
+
+        const aMax = panic ? 3200 : 1100;
+        const aMag = Math.hypot(ax, ay);
+        if (aMag > aMax) { ax = ax / aMag * aMax; ay = ay / aMag * aMax; }
+        c.vx += ax * dt; c.vy += ay * dt;
+
+      } else if (c.state === STATES.LAND) {
+        // arrive: glide down to the spot, decelerating
+        const dx = c.tx - c.x, dy = c.ty - c.y;
+        const d = Math.hypot(dx, dy) || 1;
+        const want = Math.min(230, d * 2.6);
+        c.vx += ((dx / d) * want - c.vx) * Math.min(1, dt * 3.2);
+        c.vy += ((dy / d) * want - c.vy) * Math.min(1, dt * 3.2);
+        if (d < 9 && Math.hypot(c.vx, c.vy) < 46) { c.state = STATES.FOLD; c.vx = c.vy = 0; }
+
+      } else if (c.state === STATES.FOLD) {
+        c.foldT = Math.min(1, c.foldT + dt / 0.75);
+        if (c.foldT >= 1) c.state = STATES.SIT;
+
+      } else if (c.state === STATES.RISE) {
+        c.foldT = Math.max(0, c.foldT - dt / 0.32);
+        if (c.foldT <= 0) {
+          const dx = target.x - c.x, dy = target.y - c.y;
+          const d = Math.hypot(dx, dy) || 1;
+          c.vx = (dx / d) * 160 + (Math.random() - 0.5) * 80;
+          c.vy = (dy / d) * 160 - 170;
+          c.state = STATES.FLY;
+        }
+      }
+
+      // shared velocity integration for airborne states
+      if (c.state === STATES.FLY || c.state === STATES.LAND) {
+        const spd = Math.hypot(c.vx, c.vy);
+        if (spd > maxSpd) { c.vx = c.vx / spd * maxSpd; c.vy = c.vy / spd * maxSpd; }
+        else if (spd < minSpd && c.state === STATES.FLY && spd > 0.01) { c.vx = c.vx / spd * minSpd; c.vy = c.vy / spd * minSpd; }
+        c.x += c.vx * dt; c.y += c.vy * dt;
+
+        // heading eases toward velocity
+        const want = Math.atan2(c.vy, c.vx);
+        let dh = want - c.heading;
+        while (dh > Math.PI) dh -= Math.PI * 2;
+        while (dh < -Math.PI) dh += Math.PI * 2;
+        c.heading += dh * Math.min(1, dt * 7);
+
+        // flap: faster when moving fast or panicking, lazy when gliding
+        const rate = (reduceMotion ? 4 : 5.5) + spd / 45 + (panic ? 9 : 0);
+        c.flap += rate * dt;
+      }
+    }
+
+    // cursor dot easing
+    cursorDot.x += (mouse.x - cursorDot.x) * Math.min(1, dt * 14);
+    cursorDot.y += (mouse.y - cursorDot.y) * Math.min(1, dt * 14);
+  }
+
+  // ---- drawing ----
+  function drawCrane(c, now) {
+    const s = c.size;
+    ctx.save();
+    ctx.translate(c.x, c.y);
+
+    const fold = c.foldT;
+    const spread = 1 - fold;
+    const settle = 1 - 0.08 * Math.sin(fold * Math.PI); // tiny squash while folding
+
+    // soft shadow while landing / sitting — in screen space, before rotation
+    if (c.state !== STATES.FLY) {
+      let sh = fold;
+      if (c.state === STATES.LAND) {
+        const d = Math.hypot(c.tx - c.x, c.ty - c.y);
+        sh = Math.max(0, 1 - d / 160) * 0.6;
+      }
+      if (sh > 0.02) {
+        ctx.fillStyle = `rgba(55,66,76,${0.13 * sh})`;
+        ctx.beginPath();
+        ctx.ellipse(2 * s, 6 * s, 14 * s, 6 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    ctx.rotate(c.heading);
+    ctx.scale(s * settle, s * settle);
+
+    // faint drop shadow lifts airborne paper off the background
+    // (shadow offsets/blur live in device space, so scale by DPR by hand)
+    const lift = 0.08 * (1 - fold);
+    ctx.shadowOffsetX = 1 * DPR;
+    ctx.shadowOffsetY = 2 * DPR;
+    ctx.shadowBlur = 4 * DPR;
+    const paperShadow = lift > 0.005 ? `rgba(0,0,0,${lift})` : 'transparent';
+
+    const flapC = Math.cos(c.flap);
+    const wingF = 0.42 + 0.58 * (0.5 + 0.5 * flapC);   // foreshortened wing length
+    const wingLen = 17 * wingF * spread;
+    const wingLight = c.light + 9 * flapC;              // underside catches light
+
+    // wings (behind body)
+    for (const side of [-1, 1]) {
+      ctx.shadowColor = paperShadow;
+      ctx.fillStyle = hsl(c.hue, c.sat, wingLight);
+      ctx.beginPath();
+      ctx.moveTo(4.5, side * 2.2);
+      ctx.lineTo(-2 - 4 * wingF, side * (2.2 + wingLen));
+      ctx.lineTo(-5.5, side * 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowColor = 'transparent';
+      // crease on wing
+      ctx.strokeStyle = hsl(c.hue, c.sat, c.light - 16, 0.5 * spread);
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(0, side * 2.1);
+      ctx.lineTo(-2 - 4 * wingF, side * (2.2 + wingLen));
+      ctx.stroke();
+    }
+
+    // folded wings lying over the back (fade in as it folds flat)
+    if (fold > 0.01) {
+      ctx.fillStyle = hsl(c.hue, c.sat, c.light - 8, fold);
+      for (const side of [-1, 1]) {
+        ctx.beginPath();
+        ctx.moveTo(4, side * 1.2);
+        ctx.lineTo(-7, side * 5 * fold);
+        ctx.lineTo(-10, 0);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    // body: slim origami diamond, nose forward
+    const bodyW = 3.2;
+    ctx.shadowColor = paperShadow;
+    ctx.fillStyle = hsl(c.hue, c.sat, c.light);
+    ctx.beginPath();
+    ctx.moveTo(14, 0);          // beak
+    ctx.lineTo(3.5, -bodyW);
+    ctx.lineTo(-12, 0);         // tail point
+    ctx.lineTo(3.5, bodyW);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+
+    // center crease: exactly 1px on screen regardless of crane size
+    ctx.strokeStyle = hsl(c.hue, c.sat, c.light - 20, 0.45);
+    ctx.lineWidth = 1 / (s * settle);
+    ctx.beginPath();
+    ctx.moveTo(14, 0);
+    ctx.lineTo(-12, 0);
+    ctx.stroke();
+
+    // beak fold
+    ctx.fillStyle = hsl(c.hue, c.sat, c.light - 14);
+    ctx.beginPath();
+    ctx.moveTo(14, 0);
+    ctx.lineTo(10.2, -1.15);
+    ctx.lineTo(10.2, 1.15);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawCursor(now) {
+    if (!mouse.has || document.body.classList.contains('touch')) return;
+    const idle = now - lastMoveAt;
+    const a = Math.max(0, 1 - Math.max(0, idle - 1500) / 1000) * 0.55;
+    if (a <= 0) return;
+    ctx.strokeStyle = `rgba(55,66,76,${a})`;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(cursorDot.x, cursorDot.y, 9, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = `rgba(55,66,76,${a})`;
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // ---- loop ----
+  function ensureSize() {
+    if (W !== innerWidth || H !== innerHeight) resize();
+    return W > 0 && H > 0;
+  }
+
+  function render(now) {
+    if (!bgCanvas) return;
+    ctx.drawImage(bgCanvas, 0, 0);
+    // grounded cranes first so flyers pass over them
+    for (const c of cranes) if (c.state === STATES.SIT || c.state === STATES.FOLD) drawCrane(c, now);
+    for (const c of cranes) if (c.state !== STATES.SIT && c.state !== STATES.FOLD) drawCrane(c, now);
+    drawCursor(now);
+  }
+
+  let lastT = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.033, Math.max(0.001, (now - lastT) / 1000));
+    lastT = now;
+    simNow = Math.max(simNow, now);
+    if (ensureSize()) {
+      step(simNow, dt);
+      render(simNow);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // debug hook: step the sim manually (rAF is throttled in hidden tabs)
+  window.__cranes = {
+    STATES,
+    list: () => cranes,
+    tick(frames = 60, dtMs = 16) {
+      if (!ensureSize()) return;
+      for (let i = 0; i < frames; i++) {
+        simNow += dtMs;
+        lastT = simNow;
+        step(simNow, dtMs / 1000);
+      }
+      render(simNow);
+    },
+  };
+
+  addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
