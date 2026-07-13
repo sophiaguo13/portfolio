@@ -40,6 +40,17 @@
 .cs-hero {
   padding: 56px 48px 72px;
 }
+.cs-hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 44px;
+}
+.cs-hero-meta .cs-back,
+.cs-hero-meta .cs-project-label {
+  margin-bottom: 0;
+}
 .cs-project-label {
   display: inline-flex;
   align-items: center;
@@ -224,6 +235,15 @@
   color: var(--fg);
   margin-bottom: 4px;
 }
+.cs-impact-list.is-row {
+  flex-direction: unset;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 0;
+}
+@media (max-width: 760px) {
+  .cs-impact-list.is-row { grid-template-columns: 1fr; }
+}
 
 /* ── Images ── */
 .cs-img-block {
@@ -251,6 +271,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin: 32px 0;
+}
+/* Break a block out wider than the 1000px text column */
+.cs-bleed {
+  width: min(1240px, calc(100vw - 48px));
+  margin-left: 50%;
+  transform: translateX(-50%);
+  max-width: none;
+}
+@media (max-width: 680px) {
+  .cs-bleed { width: 100%; margin-left: 0; transform: none; }
 }
 .cs-canvas-card {
   background: var(--card-bg);
@@ -298,6 +328,14 @@
   flex-direction: column;
   gap: 12px;
   margin-top: 16px;
+}
+.cs-constraint-list.is-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+@media (max-width: 680px) {
+  .cs-constraint-list.is-2col { grid-template-columns: 1fr; }
 }
 .cs-constraint-item {
   display: flex;
@@ -380,6 +418,7 @@
   gap: 20px;
   margin-top: 16px;
 }
+.cs-reflection-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
 .cs-reflection-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -794,7 +833,7 @@
   .cs-cols-2, .cs-cols-ratio { grid-template-columns: 1fr; gap: 40px; }
   .cs-cols-3 { grid-template-columns: 1fr; }
   .cs-stats { grid-template-columns: 1fr; }
-  .cs-reflection-grid { grid-template-columns: 1fr; }
+  .cs-reflection-grid, .cs-reflection-grid.cols-3 { grid-template-columns: 1fr; }
   .cs-canvas-grid { grid-template-columns: 1fr; }
   .cs-meta-strip { flex-direction: column; gap: 24px; }
   .cs-section.warm-bg { padding: 72px 24px; }

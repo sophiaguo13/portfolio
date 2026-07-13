@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=11" />
-  <link rel="stylesheet" href="case-study.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="case-study.css?v=14" />
 </head>
 <body class="cs-page">
 
@@ -31,14 +31,14 @@
   <!-- Hero -->
   <section class="cs-hero">
     <div class="cs-wrap">
-      <a href="index.html#work" class="cs-back" data-cursor="link">
+      <div class="cs-hero-meta"><a href="index.html#work" class="cs-back" data-cursor="link">
         <span class="cs-back-arrow">←</span>
         Back to work
       </a>
       <div class="cs-project-label">
         <span class="cs-project-label-dot"></span>
         Oracle SCM Manufacturing
-      </div>
+      </div></div>
       <h1 class="cs-title">Parallel Operations<br/>in Work Definition</h1>
       <p class="cs-lead">A visual modeling tool enabling manufacturers to define parallel operations — turning complex manufacturing logic into something anyone on the floor could understand.</p>
       <div class="cs-meta-strip">
@@ -64,7 +64,7 @@
 
   <!-- Cover Image -->
   <div class="cs-cover-wrap">
-    <img src="images/parallel-ops/cover.png?v=4" alt="Parallel Operations — Operation Dependencies Datagrid and Diagram" />
+    <img src="images/parallel-ops/cover.png?v=5" alt="Parallel Operations — Operation Dependencies Datagrid and Diagram" />
   </div>
 
   <!-- 00 Why this matters — plain-language intro -->
@@ -73,7 +73,7 @@
       <p class="cs-eyebrow cs-reveal">Why this matters</p>
       <h2 class="cs-heading cs-reveal">Think of it like cooking dinner</h2>
       <p class="cs-body cs-reveal" style="max-width:720px;">When you make a meal, you don't wait for the rice to finish before you start chopping vegetables or heating the pan — you run those tasks <strong>at the same time</strong>. That's the only way dinner lands on the table on time.</p>
-      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">A factory floor works the same way: many operations can run <strong>in parallel</strong>. But Oracle's manufacturing software could only describe work as a single-file line — finish one step, then start the next — like a kitchen that forces you to cook one dish at a time. The result was overstated timelines, idle machines, and engineers inventing workarounds to trick the system into matching what their floor already did.</p>
+      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">A factory floor works the same way — many operations can run <strong>in parallel</strong> — but Oracle's software could only describe work as a single-file line, like a kitchen forced to cook one dish at a time. The result: overstated timelines, idle machines, and engineers hacking workarounds to match what their floor already did.</p>
       <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">My job: let manufacturers describe parallel work honestly — and make that tangled logic simple enough to read at a glance.</p>
     </div>
   </section>
@@ -81,37 +81,31 @@
   <!-- 01 The Challenge -->
   <section class="cs-section">
     <div class="cs-wrap">
-      <div class="cs-cols-ratio cs-reveal">
-        <div>
-          <p class="cs-eyebrow">01 — The Challenge</p>
-          <h2 class="cs-heading">Breaking the Sequential Bottleneck</h2>
-          <p class="cs-body">Manufacturing in electronics, furniture, and packaging requires the ability to run certain tasks in parallel — to fully utilize labor and equipment with minimal downtime. But Oracle's Work Definition only modeled operations <strong>sequentially</strong>, forcing engineers into workarounds that distorted their data and inflated their timelines.</p>
-          <p class="cs-body" style="margin-top:16px;">Users were setting "one-minute lead times" to trick the software into allowing parallel starts — a sign the product had a real gap to close.</p>
+      <p class="cs-eyebrow cs-reveal">01 — The Challenge</p>
+      <h2 class="cs-heading cs-reveal">Breaking the Sequential Bottleneck</h2>
+      <p class="cs-body cs-reveal" style="max-width:760px;">In electronics, furniture, and packaging, many operations should run in parallel — but Oracle's Work Definition modeled everything <strong>sequentially</strong>, forcing workarounds that distorted data and inflated timelines.</p>
+      <p class="cs-body cs-reveal" style="max-width:760px;margin-top:16px;">Users were setting "one-minute lead times" to trick the software into allowing parallel starts — a sign the product had a real gap to close.</p>
 
-          <div class="cs-img-block sharp" style="margin-top:32px;">
-            <img src="images/parallel-ops/sequential-vs-parallel.svg" alt="Sequential Execution vs Parallel Execution diagram" />
-            <p class="cs-img-caption">Sequential vs. parallel execution — the same operations take significantly longer when forced to run one at a time.</p>
-          </div>
-
-        </div>
-        <div>
-          <p class="cs-eyebrow" style="margin-bottom:16px;">Business Impact</p>
-          <ul class="cs-impact-list">
-            <li>
-              <strong>Inflated Lead Times</strong>
-              Parallel tasks modeled sequentially artificially extended production — a 2-hour process showed as 6 hours.
-            </li>
-            <li>
-              <strong>Resource Inefficiency</strong>
-              Labor and equipment sat idle during "sequential" steps that could run simultaneously.
-            </li>
-            <li>
-              <strong>Clunky Workarounds</strong>
-              Users set "one-minute lead times" to trick software into allowing parallel starts — a signal the model was fundamentally broken.
-            </li>
-          </ul>
-        </div>
+      <div class="cs-img-block sharp cs-reveal" style="margin-top:40px;">
+        <img src="images/parallel-ops/sequential-vs-parallel.svg" alt="Sequential Execution vs Parallel Execution diagram" />
+        <p class="cs-img-caption">Sequential vs. parallel execution — the same operations take significantly longer when forced to run one at a time.</p>
       </div>
+
+      <p class="cs-eyebrow cs-reveal" style="margin-top:56px;margin-bottom:20px;">Business Impact</p>
+      <ul class="cs-impact-list is-row cs-reveal">
+        <li>
+          <strong>Inflated Lead Times</strong>
+          Parallel tasks modeled sequentially artificially extended production — a 2-hour process showed as 6 hours.
+        </li>
+        <li>
+          <strong>Resource Inefficiency</strong>
+          Labor and equipment sat idle during "sequential" steps that could run simultaneously.
+        </li>
+        <li>
+          <strong>Clunky Workarounds</strong>
+          Users set "one-minute lead times" to trick software into allowing parallel starts — a signal the model was fundamentally broken.
+        </li>
+      </ul>
       <div class="cs-callout cs-reveal" style="margin-top:32px;">
         <div class="cs-callout-label">The Goal</div>
         <p>Design a solution allowing manufacturing engineers to specify which operations run in parallel — based on dependency relationships between operation start and completion — without compromising data integrity or established workflows.</p>
@@ -135,24 +129,9 @@
       <p class="cs-img-caption">Real requests from Oracle Cloud Customer Connect — peer feedback that surfaced the parallel-operations gap, paired with the insights I pulled from each.</p>
     </div>
 
-    <div class="cs-img-block no-border" style="margin:0 0 32px;">
+    <div class="cs-img-block no-border" style="margin:0;">
       <img src="images/parallel-ops/users.png?v=2" alt="Three user types: Planning, Scheduling, and Execution" />
-      <p class="cs-img-caption">The parallel operations experience spans three roles — from planning to floor execution.</p>
-    </div>
-
-    <div class="cs-cols-3" style="margin-top:40px;">
-      <div class="cs-callout" style="margin:0;">
-        <div class="cs-callout-label">The Planner</div>
-        <p><strong>Manufacturing Engineer</strong><br/>Defines complex dependency relationships (Finish-to-Start vs. Start-to-Start) to minimize overall lead time. Needs a way to author and validate parallel logic without leaving their authoring context.</p>
-      </div>
-      <div class="cs-callout accent2" style="margin:0;">
-        <div class="cs-callout-label">The Manager</div>
-        <p><strong>Production Supervisor</strong><br/>Monitors real-time progress and intervenes if bottlenecks appear. Needs to see which parallel operations are running and approve changes without disrupting the floor.</p>
-      </div>
-      <div class="cs-callout accent3" style="margin:0;">
-        <div class="cs-callout-label">The Doer</div>
-        <p><strong>Production Operator</strong><br/>Needs to know exactly which operation to start — right now. Parallel logic needs to be surfaced clearly so they can act immediately when a Start-to-Start dependency is satisfied.</p>
-      </div>
+      <p class="cs-img-caption">The parallel operations experience spans three roles — from the engineer authoring Finish-to-Start vs. Start-to-Start dependencies, to the supervisor monitoring parallel branches, to the operator who needs the next startable operation surfaced instantly.</p>
     </div>
   </section>
 
@@ -163,7 +142,7 @@
         <p class="cs-eyebrow">03 — Design Principles</p>
         <h2 class="cs-heading">Four anchors before sketching a single frame</h2>
         <p class="cs-body">Before exploring any solutions, I established four guiding principles to keep every design decision tethered to real user needs.</p>
-        <div class="cs-constraint-list" style="margin-top:24px;max-width:640px;">
+        <div class="cs-constraint-list is-2col" style="margin-top:24px;">
           <div class="cs-constraint-item">
             <div class="cs-constraint-num">1</div>
             <div class="cs-constraint-text">
@@ -217,6 +196,17 @@
         <div style="font-size:14px;color:var(--muted);line-height:1.6;">The percentage of completed quantity that moves to the next operation — enabling accurate yield calculations across parallel branches.</div>
       </div>
     </div>
+
+    <div class="cs-cols-2 cs-bleed" style="margin-top:44px;gap:24px;align-items:start;">
+      <div class="cs-img-block sharp no-border" style="margin:0;">
+        <img src="images/parallel-ops/deps-tab.png?v=1" alt="The Operation Dependencies tab — a datagrid for authoring parallel relationships" />
+        <p class="cs-img-caption">A new Operation Dependencies tab in Work Definition — each row authors one dependency between two operations, with its type, transfer percentage, and dates.</p>
+      </div>
+      <div class="cs-img-block sharp no-border" style="margin:0;">
+        <img src="images/parallel-ops/dependency-types.png?v=1" alt="Finish-to-Start vs. Start-to-Start dependency comparison" />
+        <p class="cs-img-caption">Finish-to-Start keeps operations sequential and moves completed quantity forward; Start-to-Start is a scheduling link that lets the next operation begin in parallel, with no quantity movement.</p>
+      </div>
+    </div>
   </section>
 
   <!-- 05 Navigating Constraints -->
@@ -228,12 +218,12 @@
 
       <p class="cs-body cs-reveal" style="margin-top:16px;">I explored four low-fidelity architectural options, each representing a different tradeoff between authoring power and visual clarity:</p>
 
-      <div class="cs-img-block cs-reveal">
+      <div class="cs-img-block cs-bleed">
         <img src="images/parallel-ops/wireframes.png" alt="Three wireframe options for visualizing operation dependencies" />
         <p class="cs-img-caption">Early wireframe exploration — three distinct approaches to surfacing the dependency diagram.</p>
       </div>
 
-      <div class="cs-canvas-grid cs-reveal">
+      <div class="cs-canvas-grid cs-bleed">
         <div class="cs-canvas-card">
           <img src="images/parallel-ops/canvas-1.png" alt="Option 1: Diagram + Bottom Drawer" />
           <div class="cs-canvas-card-body">
@@ -302,7 +292,7 @@
   <section class="cs-section warm-bg">
     <p class="cs-eyebrow">06 — The Solution</p>
     <h2 class="cs-heading">Bridging Data and Visualization</h2>
-    <p class="cs-body" style="margin-bottom:64px;">The final design pairs two complementary surfaces: a structured datagrid for precise authoring, and a dedicated canvas page for visual validation — connected by a strict save flow that protects data integrity.</p>
+    <p class="cs-body" style="margin-bottom:64px;">The final design pairs two complementary surfaces: a structured datagrid for precise authoring, and a dedicated canvas page for visual validation.</p>
 
     <!-- Solution 1: Datagrid -->
     <div class="cs-solution-section">
@@ -385,7 +375,7 @@
       <h2 class="cs-heading cs-reveal">Designing for the Entire Ecosystem</h2>
       <p class="cs-body cs-reveal">The project didn't end at Work Definition. Parallel dependency data is only useful if it's visible to the people executing the plan — so I worked with each downstream team to surface it in their own workbench, in the format their role actually needs.</p>
 
-      <div class="cs-cols-3 cs-reveal" style="margin-top:40px;gap:20px;">
+      <div class="cs-cols-3 cs-bleed" style="margin-top:40px;gap:20px;">
         <div class="cs-img-block sharp" style="margin:0;">
           <img src="images/parallel-ops/wom.png" alt="Work Orders Management showing parallel operations" />
           <p class="cs-img-caption" style="font-weight:500;color:var(--fg);margin-bottom:4px;">Work Orders — Accurate Scheduling</p>
@@ -427,7 +417,7 @@
         </li>
         <li>
           <strong>Extended the costing engine</strong>
-          Expanded Oracle Manufacturing's costing engine from supporting only sequential work orders to supporting complex parallel production flows across both discrete and process manufacturing.
+          Extended Oracle's costing engine from sequential-only to complex parallel flows, across both discrete and process manufacturing.
         </li>
       </ul>
     </div>
@@ -438,26 +428,21 @@
     <div class="cs-wrap">
       <p class="cs-eyebrow cs-reveal">08 — Reflection</p>
       <h2 class="cs-heading cs-reveal">What I learned</h2>
-      <div class="cs-reflection-grid cs-reveal">
+      <div class="cs-reflection-grid cols-3 cs-reveal">
         <div class="cs-reflection-card">
           <div class="cs-reflection-num">01</div>
           <div class="cs-reflection-title">Innovation Through Constraints</div>
-          <div class="cs-reflection-body">Working within the Redwood Design System revealed that constraints filter better decision-making. The desire for interactive side-by-side editing shifted toward a streamlined "validation-first" strategy — and the result was cleaner and more focused than the original idea.</div>
+          <div class="cs-reflection-body">Redwood's constraints filtered better decisions. The push for interactive side-by-side editing gave way to a streamlined "validation-first" approach — cleaner and more focused than the original idea.</div>
         </div>
         <div class="cs-reflection-card">
           <div class="cs-reflection-num">02</div>
-          <div class="cs-reflection-title">Bridging the "Reality Gap" with Data</div>
-          <div class="cs-reflection-body">The project highlighted a massive disconnect between legacy software logic and actual shop floor reality. Sequential modeling inflating a two-hour process to six hours demonstrated why UX matters deeply in SCM — restoring flexibility eliminated inefficient workarounds and gave engineers back their time.</div>
+          <div class="cs-reflection-title">Bridging the "Reality Gap"</div>
+          <div class="cs-reflection-body">Sequential modeling turned a 2-hour process into 6 — a vivid reminder that in SCM, UX accuracy is operational accuracy. Restoring parallelism killed the workarounds and gave engineers their time back.</div>
         </div>
         <div class="cs-reflection-card">
           <div class="cs-reflection-num">03</div>
-          <div class="cs-reflection-title">Visualization as a Form of Validation</div>
-          <div class="cs-reflection-body">Complex logic benefits from a visual "error-checker." Focusing the diagram on validation gave manufacturing engineers a sanity check for catching circular dependencies or multiple last operations — impossible to spot in a standard data grid. Good UI allows data entry while helping users recognize and recover from modeling errors.</div>
-        </div>
-        <div class="cs-reflection-card">
-          <div class="cs-reflection-num">04</div>
-          <div class="cs-reflection-title">Designing for the Entire Ecosystem</div>
-          <div class="cs-reflection-body">The core work in Work Definition only succeeded because the data flowed into Supervisor and Operator Workbenches. Ensuring Production Operators know exactly which operation they can start — based on parallel constraints — is what translates "Plan" into actual floor "Action."</div>
+          <div class="cs-reflection-title">Visualization as Validation</div>
+          <div class="cs-reflection-body">Complex logic needs a visual error-checker. Reframing the diagram as validation let engineers catch circular dependencies and multiple last operations — impossible to spot in a raw data grid.</div>
         </div>
       </div>
     </div>
