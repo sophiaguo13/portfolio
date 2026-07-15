@@ -8,6 +8,41 @@
   padding-top: 80px;
 }
 
+/* ── Sticky table of contents ── */
+.cs-toc {
+  position: fixed;
+  top: 50%;
+  left: 24px;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: none; /* revealed only where the left margin has room (see media query) */
+  flex-direction: column;
+  gap: 12px;
+  width: 168px;
+}
+.cs-toc-link {
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--muted);
+  opacity: 0.5;
+  letter-spacing: 0.01em;
+  padding-left: 12px;
+  border-left: 2px solid transparent;
+  transition: color 0.2s, opacity 0.2s, border-color 0.2s;
+}
+.cs-toc-link:hover { opacity: 1; color: var(--accent); }
+.cs-toc-link.active {
+  opacity: 1;
+  color: var(--fg);
+  font-weight: 500;
+  border-left-color: var(--accent);
+}
+@media (min-width: 1440px) {
+  .cs-toc { display: flex; }
+}
+/* keep anchored section titles clear of the fixed top nav */
+.cs-section, .cs-section.warm-bg { scroll-margin-top: 100px; }
+
 /* ── Layout Containers ── */
 .cs-wrap {
   max-width: 1000px;
@@ -185,6 +220,8 @@
   gap: 72px;
   align-items: start;
 }
+/* wider media column variant (keeps 2-col; collapses on mobile via the query below) */
+.cs-cols-ratio.media-lg { grid-template-columns: 3fr 1fr; gap: 40px; }
 
 /* ── Callout Box ── */
 .cs-callout {
@@ -830,7 +867,7 @@
 @media (max-width: 900px) {
   .cs-hero, .cs-cover-wrap { padding-left: 24px; padding-right: 24px; }
   .cs-wrap, .cs-wide { padding: 0 24px; }
-  .cs-cols-2, .cs-cols-ratio { grid-template-columns: 1fr; gap: 40px; }
+  .cs-cols-2, .cs-cols-ratio, .cs-cols-ratio.media-lg { grid-template-columns: 1fr; gap: 40px; }
   .cs-cols-3 { grid-template-columns: 1fr; }
   .cs-stats { grid-template-columns: 1fr; }
   .cs-reflection-grid, .cs-reflection-grid.cols-3 { grid-template-columns: 1fr; }

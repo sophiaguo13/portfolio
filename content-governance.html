@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="case-study.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="case-study.css?v=16" />
 </head>
 <body class="cs-page">
 
@@ -39,7 +39,7 @@
         <span class="cs-project-label-dot"></span>
         Oracle CX Marketing · Internship
       </div></div>
-      <h1 class="cs-title">Governance Solution<br/>in Fusion Marketing</h1>
+      <h1 class="cs-title spotlight-target">Governance Solution<br/>in Fusion Marketing</h1>
       <p class="cs-lead">A granular governance system that balances enterprise guardrails with AI-empowered creative freedom — so marketing teams can move fast without breaking the brand.</p>
       <div class="cs-meta-strip">
         <div class="cs-meta-item">
@@ -63,8 +63,8 @@
   </section>
 
   <!-- Cover Image -->
-  <div class="cs-cover-wrap">
-    <img src="images/governance/cover.png?v=2" alt="Governance Solution in Fusion Marketing — Email Template Editor" />
+  <div class="cs-cover-wrap" style="max-width:1120px;margin:0 auto;">
+    <img src="images/governance/cover.jpg?v=1" alt="Governance Solution in Fusion Marketing — Email Template Editor" />
   </div>
 
   <!-- 01 The Challenge -->
@@ -74,8 +74,8 @@
         <div>
           <p class="cs-eyebrow">01 — The Challenge</p>
           <h2 class="cs-heading">A Brand at Risk</h2>
-          <p class="cs-body">In large-scale B2B marketing, maintaining brand consistency is a constant battle. Senior Marketers must guarantee all communications align with brand standards — but the tools gave them no real enforcement mechanism.</p>
-          <p class="cs-body" style="margin-top:16px;">Meanwhile, Junior Marketers were overwhelmed by complex tooling, often creating off-brand content or abandoning the platform entirely. Internal Oracle marketing teams had even started building proprietary tools because Fusion Marketing's governance features were inadequate.</p>
+          <p class="cs-body">In large-scale B2B marketing, maintaining brand consistency is a constant battle. Senior Marketers must guarantee all communications align with brand standards — but <strong>the tools gave them no real enforcement mechanism.</strong></p>
+          <p class="cs-body" style="margin-top:16px;">Meanwhile, Junior Marketers were overwhelmed by complex tooling, often <strong>creating off-brand content or abandoning the platform entirely.</strong> Internal Oracle marketing teams had even started building proprietary tools because Fusion Marketing's governance features were inadequate.</p>
 
         </div>
         <div>
@@ -228,7 +228,7 @@
     <h2 class="cs-heading">Designing for Context,<br/>Not Trends</h2>
     <p class="cs-body" style="margin-bottom:32px;">At week 7, I presented the high-fidelity "Unlocked by Default" prototype to stakeholders. The feedback was a turning point.</p>
 
-    <div class="cs-cols-2 cs-reveal" style="gap:40px;align-items:start;">
+    <div class="cs-reveal" style="display:flex;flex-direction:column;gap:20px;">
       <div class="cs-callout" style="margin:0;background:var(--card-bg);">
         <div class="cs-callout-label">The Reality Check</div>
         <p>Stakeholders pointed out that in an enterprise context, a Junior Marketer's <strong>primary goal is speed and compliance — not total creative freedom.</strong> Junior Marketers rarely needed structural changes. Open templates meant Senior Marketers had to lock every element individually — an enormous manual burden.</p>
@@ -239,7 +239,7 @@
       </div>
     </div>
 
-    <div class="cs-cols-3 cs-reveal" style="margin-top:40px;gap:20px;">
+    <div class="cs-cols-2 cs-reveal" style="gap:24px;margin-top:40px;">
       <div class="cs-img-block sharp" style="margin:0;">
         <img src="images/governance/canvas-audit.png" alt="Before: Open canvas with no constraints" />
         <p class="cs-img-caption">Before — open canvas, no governance.</p>
@@ -248,10 +248,10 @@
         <img src="images/governance/canvas-constraints.png" alt="V1: Unlocked by default with manual locking" />
         <p class="cs-img-caption">V1 — unlocked by default, sidebar locking.</p>
       </div>
-      <div class="cs-img-block sharp" style="margin:0;">
-        <img src="images/governance/canvas-locked.png" alt="Final: Locked by default with allowed editing" />
-        <p class="cs-img-caption">Final — locked by default, senior allows editing.</p>
-      </div>
+    </div>
+    <div class="cs-img-block sharp cs-reveal" style="margin:24px 0 0;">
+      <img src="images/governance/canvas-locked.png" alt="Final: Locked by default with allowed editing" />
+      <p class="cs-img-caption">Final — locked by default, senior allows editing.</p>
     </div>
   </section>
 
@@ -265,10 +265,13 @@
 
     <!-- Solution 1: Save as Template -->
     <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;">
           <div class="cs-img-block sharp" style="margin:0;">
-            <img src="images/governance/gif-save-template.gif" alt="Saving an email as a constrained template" />
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Saving an email as a constrained template">
+              <source src="images/governance/save-template.webm?v=2" type="video/webm" />
+              <source src="images/governance/save-template.mp4?v=2" type="video/mp4" />
+            </video>
             <p class="cs-img-caption">Senior Marketers save any email as a template, triggering the constraint configuration flow.</p>
           </div>
           <div>
@@ -282,10 +285,13 @@
 
     <!-- Solution 2: Setting Constraints -->
     <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;direction:rtl;">
           <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
-            <img src="images/governance/gif-setting-constraints.gif" alt="Setting high-level and granular constraints on a template" />
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Setting high-level and granular constraints on a template">
+              <source src="images/governance/setting-constraints.webm" type="video/webm" />
+              <source src="images/governance/setting-constraints.mp4" type="video/mp4" />
+            </video>
             <p class="cs-img-caption">High-level category toggles first, then granular per-element locks for surgical control.</p>
           </div>
           <div style="direction:ltr;">
@@ -303,10 +309,13 @@
 
     <!-- Solution 3: Junior Marketer Flow -->
     <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;">
           <div class="cs-img-block sharp" style="margin:0;">
-            <img src="images/governance/gif-using-template.gif" alt="Junior Marketer selecting a template and editing within constraints" />
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Junior Marketer selecting a template and editing within constraints">
+              <source src="images/governance/using-template.webm" type="video/webm" />
+              <source src="images/governance/using-template.mp4" type="video/mp4" />
+            </video>
             <p class="cs-img-caption">Junior Marketers see a simplified canvas — only the elements they're permitted to edit are interactive.</p>
           </div>
           <div>
@@ -318,33 +327,37 @@
       </div>
     </div>
 
-    <!-- Solution 4: AI Generation -->
+    <!-- Solution 4: GenAI -->
     <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+      <div class="cs-wide">
+        <div class="cs-solution-num">04</div>
+        <h3 class="cs-subheading">GenAI Within Guardrails</h3>
+        <p class="cs-body" style="max-width:760px;">A left-panel GenAI assistant lets Field Marketers generate copy and swap images — but only within the boundaries the Senior Marketer has defined. On-brand AI generation pulls from an approved asset library, so creativity never comes at the cost of compliance.</p>
+
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;margin-top:44px;">
+          <div class="cs-img-block sharp" style="margin:0;">
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="AI copy generation for on-brand content">
+              <source src="images/governance/ai-generate-text.webm" type="video/webm" />
+              <source src="images/governance/ai-generate-text.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div>
+            <div style="font-weight:600;color:var(--fg);font-size:17px;margin-bottom:8px;">AI Generate Text</div>
+            <p class="cs-body">Junior Marketers use this to create on-brand content tailored for a specific industry or customer.</p>
+          </div>
+        </div>
+
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;direction:rtl;margin-top:44px;">
           <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
-            <img src="images/governance/gif-image-selection.gif" alt="AI-powered on-brand image selection for Junior Marketers" />
-            <p class="cs-img-caption">Junior Marketers choose from a pre-approved batch of on-brand images — curated by the Senior Marketer.</p>
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="AI on-brand image generation with guardrails">
+              <source src="images/governance/ai-generate-image.webm" type="video/webm" />
+              <source src="images/governance/ai-generate-image.mp4" type="video/mp4" />
+            </video>
           </div>
           <div style="direction:ltr;">
-            <div class="cs-solution-num">04</div>
-            <h3 class="cs-subheading">GenAI Within Guardrails</h3>
-            <p class="cs-body">A left-panel GenAI assistant lets Field Marketers generate copy and swap images — but only within the boundaries the Senior Marketer has defined. On-brand AI image generation pulls from an approved asset library, so creativity never comes at the cost of compliance.</p>
+            <div style="font-weight:600;color:var(--fg);font-size:17px;margin-bottom:8px;">AI Generate Image</div>
+            <p class="cs-body">Senior Marketers select on-brand images, let the AI create similarly on-brand images, and set guardrails for which images Junior Marketers can use.</p>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI Generate screens -->
-    <div class="cs-wrap" style="margin-top:48px;">
-      <div class="cs-cols-2 cs-reveal" style="gap:20px;">
-        <div class="cs-img-block sharp" style="margin:0;">
-          <img src="images/governance/ai-generate.png" alt="AI Generate content panel" style="aspect-ratio:1920/1080;object-fit:cover;width:100%;" />
-          <p class="cs-img-caption">GenAI copy generation — prompt-based content creation within the canvas.</p>
-        </div>
-        <div class="cs-img-block sharp" style="margin:0;">
-          <img src="images/governance/ai-generate-1.png?v=2" alt="AI image replacement with brand-approved assets" style="aspect-ratio:1920/1080;object-fit:cover;width:100%;" />
-          <p class="cs-img-caption">AI image replacement — pulling from the Senior Marketer's approved asset library.</p>
         </div>
       </div>
     </div>
@@ -359,22 +372,22 @@
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">01</div>
         <div class="cs-reflection-title">Clarity of Purpose</div>
-        <div class="cs-reflection-body">Always design for the specific user's use case — even if it contradicts industry-standard trends. The 81% "Unlocked by Default" benchmark was accurate for the market, but wrong for Oracle's enterprise context where compliance matters more than creative freedom. Data informs, but context decides.</div>
+        <div class="cs-reflection-body">Design for the user's context, even when it contradicts industry trends. The 81% "Unlocked by Default" benchmark fit the market but not Oracle's enterprise, where compliance beats creative freedom. Data informs; context decides.</div>
       </div>
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">02</div>
         <div class="cs-reflection-title">Zoom Out</div>
-        <div class="cs-reflection-body">It's easy to get lost in the details of a sidebar UI. Regularly stepping back to look at the full "Hero's Journey" — the marketer's end-to-end workflow — was essential. The pivot to "Locked by Default" only became obvious when I stopped obsessing over individual lock icons and looked at what each user actually needed to accomplish.</div>
+        <div class="cs-reflection-body">It's easy to get lost in a sidebar UI. Stepping back to the marketer's end-to-end workflow was essential — the "Locked by Default" pivot only became obvious once I stopped obsessing over lock icons and asked what each user needed to accomplish.</div>
       </div>
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">03</div>
         <div class="cs-reflection-title">Constraints Enable Creativity</div>
-        <div class="cs-reflection-body">Counterintuitively, a tighter system made Junior Marketers more creative — not less. By removing the anxiety of "what can I break?" the constrained canvas let them focus entirely on crafting the message. Good governance isn't a cage; it's a foundation.</div>
+        <div class="cs-reflection-body">A tighter system made Junior Marketers more creative, not less. Removing the anxiety of "what can I break?" let them focus on the message. Good governance isn't a cage; it's a foundation.</div>
       </div>
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">04</div>
         <div class="cs-reflection-title">Stakeholder Feedback as a Feature</div>
-        <div class="cs-reflection-body">The week 7 pivot was uncomfortable — significant hi-fi work needed rethinking. But the reversal ultimately produced a stronger, more grounded solution. Learning to treat late-stage feedback as course correction rather than failure made me a more resilient designer.</div>
+        <div class="cs-reflection-body">The week 7 pivot was uncomfortable — significant hi-fi work had to be rethought. But it produced a stronger, more grounded solution. Treating late-stage feedback as course correction, not failure, made me a more resilient designer.</div>
       </div>
     </div>
   </section>
@@ -422,5 +435,6 @@
 
   <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
   <script src="cs-main.js"></script>
+  <script src="hero-spotlight.js?v=1"></script>
 </body>
 </html>

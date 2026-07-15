@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="case-study.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="case-study.css?v=16" />
 </head>
 <body class="cs-page">
 
@@ -39,7 +39,7 @@
         <span class="cs-project-label-dot"></span>
         Oracle SCM Manufacturing
       </div></div>
-      <h1 class="cs-title">Parallel Operations<br/>in Work Definition</h1>
+      <h1 class="cs-title spotlight-target">Parallel Operations<br/>in Work Definition</h1>
       <p class="cs-lead">A visual modeling tool enabling manufacturers to define parallel operations — turning complex manufacturing logic into something anyone on the floor could understand.</p>
       <div class="cs-meta-strip">
         <div class="cs-meta-item">
@@ -73,8 +73,27 @@
       <p class="cs-eyebrow cs-reveal">Why this matters</p>
       <h2 class="cs-heading cs-reveal">Think of it like cooking dinner</h2>
       <p class="cs-body cs-reveal" style="max-width:720px;">When you make a meal, you don't wait for the rice to finish before you start chopping vegetables or heating the pan — you run those tasks <strong>at the same time</strong>. That's the only way dinner lands on the table on time.</p>
-      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">A factory floor works the same way — many operations can run <strong>in parallel</strong> — but Oracle's software could only describe work as a single-file line, like a kitchen forced to cook one dish at a time. The result: overstated timelines, idle machines, and engineers hacking workarounds to match what their floor already did.</p>
+      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">A factory floor works the same way — many operations can run <strong>in parallel</strong> — but Oracle's software could only describe work as a single-file line, like a kitchen forced to cook one dish at a time. <strong>The result: overstated timelines, idle machines, and engineers hacking workarounds to match what their floor already did.</strong></p>
       <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">My job: let manufacturers describe parallel work honestly — and make that tangled logic simple enough to read at a glance.</p>
+
+      <div class="cs-reveal" style="max-width:720px;margin-top:40px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:26px 30px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">First, a quick primer</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 20px;max-width:none;">A few terms in plain English — skip ahead if you know the domain.</p>
+        <dl style="margin:0;display:flex;flex-direction:column;gap:16px;">
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Work Definition</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">The template that defines how a product is manufactured — the operations, items, and resources required to build it.</dd>
+          </div>
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Operation</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">A single step in a Work Definition — cut, weld, paint, package. The thing that can run one at a time or in parallel.</dd>
+          </div>
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Manufacturing Engineer</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">My primary user — responsible for creating and managing the exact steps, materials, and resources required to manufacture an item or batch.</dd>
+          </div>
+        </dl>
+      </div>
     </div>
   </section>
 
@@ -218,7 +237,7 @@
 
       <p class="cs-body cs-reveal" style="margin-top:16px;">I explored four low-fidelity architectural options, each representing a different tradeoff between authoring power and visual clarity:</p>
 
-      <div class="cs-img-block cs-bleed">
+      <div class="cs-img-block cs-bleed no-border">
         <img src="images/parallel-ops/wireframes.png" alt="Three wireframe options for visualizing operation dependencies" />
         <p class="cs-img-caption">Early wireframe exploration — three distinct approaches to surfacing the dependency diagram.</p>
       </div>
@@ -296,74 +315,66 @@
 
     <!-- Solution 1: Datagrid -->
     <div class="cs-solution-section">
-      <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-        <div class="cs-img-block sharp" style="margin:0;">
-          <img src="images/parallel-ops/datagrid.svg" alt="Operation Dependencies datagrid in Work Definition" />
-          <p class="cs-img-caption">The Operation Dependencies tab — structured authoring of parallel relationships in a datagrid.</p>
+      <div class="cs-reveal">
+        <div class="cs-solution-num" style="margin-bottom:8px;">01</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: Context Awareness</span>
+          <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: Wayfinding</span>
         </div>
-        <div>
-          <div class="cs-solution-num">01</div>
-          <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;">Principle: Context Awareness</span>
-            <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;">Principle: Wayfinding</span>
-          </div>
-          <h3 class="cs-subheading">The Datagrid: Precise Authoring</h3>
-          <p class="cs-body">A new "Operation Dependencies" tab in Work Definition gives manufacturing engineers a structured space to author complex relationships. Each row defines a dependency between two operations, including:</p>
-          <ul style="margin-top:16px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
-            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Finish-to-Start (sequential) and Start-to-Start (parallel) relationships</li>
-            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Transfer Percent — the quantity moving between operations</li>
-            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Initialize and Validate actions for batch setup and error checking</li>
-          </ul>
-        </div>
+        <h3 class="cs-subheading">The Datagrid: Precise Authoring</h3>
+        <p class="cs-body" style="max-width:760px;">A new "Operation Dependencies" tab in Work Definition gives manufacturing engineers a structured space to author complex relationships. Each row defines a dependency between two operations, including:</p>
+        <ul style="margin-top:16px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Finish-to-Start (sequential) and Start-to-Start (parallel) relationships</li>
+          <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Transfer Percent — the quantity moving between operations</li>
+          <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);">Initialize and Validate actions for batch setup and error checking</li>
+        </ul>
+      </div>
+      <div class="cs-img-block sharp cs-reveal" style="margin-top:36px;">
+        <img src="images/parallel-ops/datagrid.svg" alt="Operation Dependencies datagrid in Work Definition" />
+        <p class="cs-img-caption">The Operation Dependencies tab — structured authoring of parallel relationships in a datagrid.</p>
       </div>
     </div>
 
     <!-- Solution 2: Diagram -->
     <div class="cs-solution-section">
-      <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
-        <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
-          <img src="images/parallel-ops/diagram.svg" alt="Operation Dependencies Diagram canvas page" />
-          <p class="cs-img-caption">The Dependencies Diagram — a dedicated canvas page for visual validation of the authored flow.</p>
-        </div>
-        <div style="direction:ltr;">
-          <div class="cs-solution-num">02</div>
-          <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;margin-bottom:12px;">Principle: Clear Workflow Visualization</span>
-          <h3 class="cs-subheading">The Visualization Page: A Mental Model Map</h3>
-          <p class="cs-body">From the datagrid, engineers navigate to a dedicated Canvas Page to view their Operation Dependency Diagram. Rather than a duplicate authoring surface, the diagram functions as a <strong>read-only validation tool</strong> — letting engineers confirm that what they entered in the grid matches their actual shop floor mental model before execution begins.</p>
-          <p class="cs-body" style="margin-top:16px;">The Redwood Diagram Node component represents each operation visually, with arrows and transfer percentages showing exactly how work flows between parallel branches.</p>
-        </div>
+      <div class="cs-reveal">
+        <div class="cs-solution-num" style="margin-bottom:8px;">02</div>
+        <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;margin-bottom:12px;">Principle: Clear Workflow Visualization</span>
+        <h3 class="cs-subheading">The Visualization Page: A Mental Model Map</h3>
+        <p class="cs-body" style="max-width:760px;">From the datagrid, engineers navigate to a dedicated Canvas Page to view their Operation Dependency Diagram. Rather than a duplicate authoring surface, the diagram functions as a <strong>read-only validation tool</strong> — letting engineers confirm that what they entered in the grid matches their actual shop floor mental model before execution begins.</p>
+        <p class="cs-body" style="margin-top:16px;max-width:760px;">The Redwood Diagram Node component represents each operation visually, with arrows and transfer percentages showing exactly how work flows between parallel branches.</p>
+      </div>
+      <div class="cs-img-block sharp cs-reveal" style="margin-top:36px;">
+        <img src="images/parallel-ops/diagram.svg" alt="Operation Dependencies Diagram canvas page" />
+        <p class="cs-img-caption">The Dependencies Diagram — a dedicated canvas page for visual validation of the authored flow.</p>
       </div>
     </div>
 
     <!-- Solution 3: Save Behavior -->
     <div class="cs-solution-section">
-      <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-        <div class="cs-img-block sharp" style="margin:0;">
-          <img src="images/parallel-ops/flow.svg" alt="Two-page flow: datagrid and diagram synced via save behavior" />
-          <p class="cs-img-caption">The two-page flow — datagrid and diagram stay in sync via a strict save behavior.</p>
-        </div>
-        <div>
-          <div class="cs-solution-num">03</div>
-          <h3 class="cs-subheading">Save Behavior: Protecting Data Integrity</h3>
-          <p class="cs-body">Since the diagram opens in a separate browser window, I designed a strict save flow to handle the state between views. When a user edits the datagrid after opening the diagram, the diagram is flagged as stale and must be refreshed — ensuring engineers always validate against the latest authored data, never a cached snapshot.</p>
-        </div>
+      <div class="cs-reveal">
+        <div class="cs-solution-num" style="margin-bottom:8px;">03</div>
+        <h3 class="cs-subheading">Save Behavior: Protecting Data Integrity</h3>
+        <p class="cs-body" style="max-width:760px;">Since the diagram opens in a separate browser window, I designed a strict save flow to handle the state between views. When a user edits the datagrid after opening the diagram, the diagram is flagged as stale and must be refreshed — ensuring engineers always validate against the latest authored data, never a cached snapshot.</p>
+      </div>
+      <div class="cs-img-block sharp cs-reveal" style="margin-top:36px;">
+        <img src="images/parallel-ops/flow.svg" alt="Two-page flow: datagrid and diagram synced via save behavior" />
+        <p class="cs-img-caption">The two-page flow — datagrid and diagram stay in sync via a strict save behavior.</p>
       </div>
     </div>
 
     <!-- Solution 4: Error Handling -->
     <div class="cs-solution-section">
-      <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
-        <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
-          <img src="images/parallel-ops/error.svg" alt="Error state in the Dependencies Diagram showing invalid circular dependencies" />
-          <p class="cs-img-caption">Invalid dependency state — circular loops and bad transfer percentages surface clearly with recovery guidance.</p>
-        </div>
-        <div style="direction:ltr;">
-          <div class="cs-solution-num">04</div>
-          <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:var(--warm);border-radius:100px;padding:4px 10px;margin-bottom:12px;">Principle: System Validation & Error Handling</span>
-          <h3 class="cs-subheading">Proactive Error Validation</h3>
-          <p class="cs-body">Parallel logic introduces risks invisible in a standard grid — circular dependencies, multiple last operations, transfer percentages that don't sum to 100%. I collaborated with developers to categorize every client and server-side error, then designed banners and inline messages that explain exactly what's wrong and how to fix it.</p>
-          <p class="cs-body" style="margin-top:16px;">The diagram turns red for invalid nodes and renders the problematic edges in a distinct error color — making issues unmissable at a glance.</p>
-        </div>
+      <div class="cs-reveal">
+        <div class="cs-solution-num" style="margin-bottom:8px;">04</div>
+        <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;margin-bottom:12px;">Principle: System Validation & Error Handling</span>
+        <h3 class="cs-subheading">Proactive Error Validation</h3>
+        <p class="cs-body" style="max-width:760px;">Parallel logic introduces risks invisible in a standard grid — circular dependencies, multiple last operations, transfer percentages that don't sum to 100%. I collaborated with developers to categorize every client and server-side error, then designed banners and inline messages that explain exactly what's wrong and how to fix it.</p>
+        <p class="cs-body" style="margin-top:16px;max-width:760px;">The diagram turns red for invalid nodes and renders the problematic edges in a distinct error color — making issues unmissable at a glance.</p>
+      </div>
+      <div class="cs-img-block sharp cs-reveal" style="margin-top:36px;">
+        <img src="images/parallel-ops/error.svg" alt="Error state in the Dependencies Diagram showing invalid circular dependencies" />
+        <p class="cs-img-caption">Invalid dependency state — circular loops and bad transfer percentages surface clearly with recovery guidance.</p>
       </div>
     </div>
   </section>
@@ -491,5 +502,6 @@
 
   <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
   <script src="cs-main.js"></script>
+  <script src="hero-spotlight.js?v=1"></script>
 </body>
 </html>

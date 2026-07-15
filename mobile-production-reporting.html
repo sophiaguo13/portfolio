@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="case-study.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="case-study.css?v=16" />
 </head>
 <body class="cs-page">
 
@@ -38,7 +38,7 @@
       <span class="cs-project-label-dot"></span>
       Oracle SCM Smart Operations
     </p></div>
-    <h1 class="cs-title">Mobile Production<br/>Reporting</h1>
+    <h1 class="cs-title spotlight-target">Mobile Production<br/>Reporting</h1>
     <p class="cs-lead">Real-time material consumption reporting for factory operators — designed to work in gloves, in noise, in motion. No desktop required.</p>
     <div class="cs-meta-strip">
       <div class="cs-meta-item">
@@ -70,26 +70,21 @@
     <div class="cs-wrap">
       <p class="cs-eyebrow cs-reveal">01 — The Problem</p>
       <h2 class="cs-heading cs-reveal">Tethered to the Desk</h2>
-      <div class="cs-cols-ratio cs-reveal" style="grid-template-columns: 2fr 3fr;">
-        <div>
-          <p class="cs-body">Oracle's <strong>Operator Workbench (OWB)</strong> is a comprehensive desktop application that lets operators report operation completions, issue and return materials, and report scrap. Powerful — but entirely stationary.</p>
-          <p class="cs-body" style="margin-top:16px;">This created a real business gap: a growing share of industrial manufacturers now run production reporting on mobile and handheld devices, yet OWB kept operators tethered. They were commuting to terminals between every task, breaking their workflow and introducing latency into the production record.</p>
-        </div>
-        <div>
-          <div class="cs-img-block sharp cs-reveal" style="margin:0;">
-            <img src="images/mobile/production-operator.png" alt="Production Operator persona — Josefina Miranda" />
-            <p class="cs-img-caption">Production Operator persona — responsible for running equipment and reporting material transactions.</p>
-          </div>
-        </div>
+      <div class="cs-reveal">
+        <p class="cs-body" style="max-width:760px;">Oracle's <strong>Operator Workbench (OWB)</strong> is a comprehensive desktop application that lets operators report operation completions, issue and return materials, and report scrap. Powerful — but entirely stationary.</p>
+        <p class="cs-body" style="max-width:760px;margin-top:16px;">This created a real business gap: a growing share of manufacturers now run production reporting on handheld devices, yet OWB kept operators tethered — commuting to terminals between every task and adding latency to the production record.</p>
+      </div>
+      <div class="cs-img-block sharp no-border cs-reveal" style="margin-top:40px;">
+        <img src="images/mobile/production-operator.png" alt="Production Operator persona — Josefina Miranda" />
+        <p class="cs-img-caption">Production Operator persona — responsible for running equipment and reporting material transactions.</p>
       </div>
       <div class="cs-callout accent2 cs-reveal" style="margin-top:40px;">
         <div class="cs-callout-label">Rooted in real customer pain points</div>
-        <p style="margin-bottom:24px;">This wasn't a technology-led feature. Oracle's own readiness documentation frames it around observed shop-floor conditions — operators who aren't tied to a fixed workstation and need to report as work happens:</p>
-        <div style="border-left:3px solid var(--cs-accent);padding:2px 0 2px 20px;margin-bottom:20px;">
+        <p style="margin-bottom:20px;">This wasn't a technology-led feature — it's grounded in observed shop-floor conditions:</p>
+        <div style="border-left:3px solid var(--cs-accent);padding:2px 0 2px 20px;">
           <p style="font-family:var(--font-serif);font-size:18px;line-height:1.5;color:var(--fg);">"In manufacturing environments with fast-paced operations where multiple components are used in an operation, it is common to use industrial handheld mobile devices to report production activities."</p>
           <p style="font-size:12.5px;letter-spacing:0.02em;color:var(--muted);margin-top:12px;">Oracle Readiness documentation · Mobile Material Issue &amp; Return</p>
         </div>
-        <p style="margin-bottom:0;">Customer research and ongoing feedback surfaced the same pattern: operators often lacked access to fixed workstations, leading to delayed transaction reporting and manual data entry — the exact workflow this mobile, barcode-driven experience set out to replace.</p>
       </div>
       <div class="cs-callout cs-reveal" style="margin-top:24px;">
         <div class="cs-callout-label">The Goal</div>
@@ -97,7 +92,7 @@
       </div>
       <p class="cs-eyebrow cs-reveal" style="margin-top:64px;">The Existing Desktop Experience</p>
       <p class="cs-subheading cs-reveal" style="font-size:20px;margin-bottom:24px;">Operator Workbench: Report Materials Flow</p>
-      <div class="cs-canvas-grid cs-reveal">
+      <div class="cs-canvas-grid cs-reveal" style="position:relative;left:50%;right:50%;width:100vw;margin:32px -50vw 0;padding:0 24px;box-sizing:border-box;">
         <div class="cs-canvas-card">
           <img src="images/mobile/owb-1.svg" alt="OWB Step 1 — Work Order Details" />
           <div class="cs-canvas-card-body">
@@ -140,32 +135,32 @@
         <div class="cs-constraint-num">1</div>
         <div class="cs-constraint-text">
           <strong>The Documentation Paradox</strong>
-          <span>No standard Requirements Doc existed — only fragmented bullet points and partial flows. Requests for clarity yielded massive, multi-page Excel spreadsheets with nested logic that often contradicted each other. No clear source of truth.</span>
+          <span>No standard requirements doc existed — just fragmented bullets and massive Excel spreadsheets whose nested logic often contradicted itself.</span>
         </div>
       </div>
       <div class="cs-constraint-item" style="flex-direction:column;align-items:flex-start;gap:12px;">
         <div class="cs-constraint-num">2</div>
         <div class="cs-constraint-text">
           <strong>The Timezone Gap</strong>
-          <span>The PM team was based in India while the UX team was in PST — a strictly limited 1-hour window each morning to sync. Unanswered questions during this window caused cascading project stalls.</span>
+          <span>The PM team (India) and UX team (PST) shared a single 1-hour sync window each morning — any unanswered question stalled the project for a day.</span>
         </div>
       </div>
       <div class="cs-constraint-item" style="flex-direction:column;align-items:flex-start;gap:12px;">
         <div class="cs-constraint-num">3</div>
         <div class="cs-constraint-text">
           <strong>The "Stop-the-Line" Intervention</strong>
-          <span>After low-fi wireframes were rejected for not aligning with unwritten requirements, the team escalated — facilitating an alignment meeting to force a "Source of Truth" agreement and a live walkthrough of OWB business logic.</span>
+          <span>When lo-fi wireframes were rejected for missing unwritten requirements, we escalated — forcing an alignment meeting to lock a single source of truth and walk OWB's business logic live.</span>
         </div>
       </div>
     </div>
-    <div class="cs-cols-2 cs-reveal" style="margin-top:48px;gap:20px;">
+    <div class="cs-cols-2 cs-reveal" style="gap:20px;position:relative;left:50%;right:50%;width:100vw;margin:48px -50vw 0;padding:0 24px;box-sizing:border-box;">
       <div class="cs-img-block sharp no-border" style="margin:0;">
         <img src="images/mobile/initial-explorations.png" alt="Initial low-fidelity wireframe explorations" />
         <p class="cs-img-caption">Initial lo-fi wireframes built from fragmented documentation — rejected for not matching unwritten requirements.</p>
       </div>
       <div class="cs-img-block sharp no-border" style="margin:0;">
         <img src="images/mobile/req-1.png" alt="Requirements documentation" />
-        <p class="cs-img-caption">An example of the fragmented requirements documentation — dense, nested logic that frequently contradicted other docs, with no clear source of truth.</p>
+        <p class="cs-img-caption">An example of the fragmented requirements docs — dense, nested logic that often contradicted other docs.</p>
       </div>
     </div>
   </section>
@@ -257,11 +252,11 @@
       <div>
         <div class="cs-callout">
           <div class="cs-callout-label">Hierarchy of Information</div>
-          <p><strong>Primary Line:</strong> Material Number — the unique identifier operators look for first.<br/><br/><strong>Secondary Line:</strong> Transact Quantity + Unit of Measure — exactly how much is needed, no extra tap required.</p>
+          <p><strong>Primary line:</strong> Material Number — what operators look for first.<br/><br/><strong>Secondary line:</strong> Quantity + Unit of Measure — how much is needed, no extra tap.</p>
         </div>
         <div class="cs-callout accent3" style="margin-top:20px;">
           <div class="cs-callout-label">Status as Visual Shorthand</div>
-          <p><strong>Pending (Grey):</strong> Work still to do.<br/><strong>Ready (Green):</strong> All data captured — serial, lot, LPN confirmed.<br/><br/>Operators can scan a long list and instantly see what remains without reading every row.</p>
+          <p><strong>Pending (grey):</strong> still to do.<br/><strong>Ready (green):</strong> all data captured — serial, lot, LPN.<br/><br/>Operators can scan a long list and see what remains at a glance.</p>
         </div>
       </div>
     </div>
@@ -281,7 +276,7 @@
         <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
           <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;">
             <img src="images/mobile/solution-1.svg" alt="State 1 — Material field in focus, Submit disabled" />
-            <p class="cs-img-caption">State 1 — Pre-issued materials listed with status badges. Submit disabled until all reported.</p>
+            <p class="cs-img-caption">State 1 — Pre-issued materials with status badges.</p>
           </div>
           <div>
             <div class="cs-solution-num">01</div>
@@ -298,7 +293,7 @@
         <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
           <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;direction:ltr;">
             <img src="images/mobile/solution-2.svg" alt="State 2 — Material scanned, required fields revealed" />
-            <p class="cs-img-caption">State 2 — Scanning a material highlights it in the list and reveals only its required fields.</p>
+            <p class="cs-img-caption">State 2 — Scanning reveals only that material's required fields.</p>
           </div>
           <div style="direction:ltr;">
             <div class="cs-solution-num">02</div>
@@ -315,7 +310,7 @@
         <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
           <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;">
             <img src="images/mobile/solution-3.svg" alt="State 3 — All materials ready, Submit enabled" />
-            <p class="cs-img-caption">State 4 — All required fields filled. Badge flips from Pending → Ready. Submit activates.</p>
+            <p class="cs-img-caption">State 3 — All fields filled; badge flips to Ready and Submit activates.</p>
           </div>
           <div>
             <div class="cs-solution-num">03</div>
@@ -332,7 +327,7 @@
         <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
           <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;direction:ltr;">
             <img src="images/mobile/solution-4.svg" alt="Detail Drawer — full-screen editor for complex entries" />
-            <p class="cs-img-caption">The Detail Drawer — a full-screen editor for split quantities and locator edits, accessible via the Edit icon.</p>
+            <p class="cs-img-caption">The Detail Drawer — a full-screen editor for split quantities and locator edits.</p>
           </div>
           <div style="direction:ltr;">
             <div class="cs-solution-num">04</div>
@@ -344,10 +339,17 @@
     </div>
 
     <!-- Issue Material final UI -->
-    <div class="cs-wide" style="margin-top:48px;">
+    <div class="cs-wide" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:48px -50vw 0;padding:0 24px;box-sizing:border-box;">
       <div class="cs-img-block sharp no-border cs-reveal" style="margin:0;">
         <img src="images/mobile/issue-material.svg" alt="Final Issue Material UI — full flow" />
         <p class="cs-img-caption">Final Issue Material UI — the complete scanning flow from list to submission.</p>
+      </div>
+    </div>
+
+    <div class="cs-wrap">
+      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
+        <div class="cs-callout-label">Stakeholder Reaction · Lead Manufacturing Engineer</div>
+        <p>"The proactive field injection is a game-changer. We won't have to train operators on which materials require a Lot vs. a Serial number — the UI just tells them what to do next."</p>
       </div>
     </div>
   </section>
@@ -357,11 +359,11 @@
     <p class="cs-eyebrow cs-reveal">07 — Additional Flows</p>
     <h2 class="cs-heading cs-reveal">Beyond the Happy Path</h2>
     <p class="cs-body cs-reveal" style="margin-bottom:48px;">The core scanning flow handles the majority of transactions — but two additional flows round out the full operator experience.</p>
-    <div class="cs-img-block sharp no-border cs-reveal" style="margin-bottom:16px;">
+    <div class="cs-img-block sharp no-border cs-reveal" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:0 -50vw 16px;padding:0 24px;box-sizing:border-box;">
       <img src="images/mobile/app-launch.svg" alt="App Launch and Organization Switching flow" />
       <p class="cs-img-caption">App Launch & Organization Switching — selecting an organization on first launch to set the work context.</p>
     </div>
-    <div class="cs-img-block sharp no-border cs-reveal">
+    <div class="cs-img-block sharp no-border cs-reveal" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:0 -50vw;padding:0 24px;box-sizing:border-box;">
       <img src="images/mobile/ad-hoc-issue.svg" alt="Ad-hoc Material Issue flow" />
       <p class="cs-img-caption">Ad-hoc Material Issue — issuing materials not pre-listed on the work order, including split quantity and LPN capture.</p>
     </div>
@@ -399,10 +401,6 @@
         <div class="cs-callout-label">Part of a bigger shift</div>
         <p>The Material Issue flow shown here is one piece of a broader Oracle move to the floor: the Redwood Production Reporting release brought barcode-enabled mobile support to six core transaction types — Material Issue, Material Return, Operation Completion, Scrap, Rejects, and Product Outputs — replacing paper forms, fixed workstations, and delayed entry with point-of-work reporting.</p>
       </div>
-      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
-        <div class="cs-callout-label">Stakeholder Reaction · Lead Manufacturing Engineer</div>
-        <p>"The proactive field injection is a game-changer. We won't have to train operators on which materials require a Lot vs. a Serial number — the UI just tells them what to do next."</p>
-      </div>
     </div>
   </section>
 
@@ -415,22 +413,22 @@
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">01</div>
         <div class="cs-reflection-title">Design as Diplomacy</div>
-        <div class="cs-reflection-body">This project was a masterclass in navigating ambiguity. The most important tool isn't always Figma — sometimes it's a shared spreadsheet and a "Stop-the-Line" meeting that unblocks the entire project. Communication is a design skill.</div>
+        <div class="cs-reflection-body">The most important tool isn't always Figma — sometimes it's a shared spreadsheet and a "Stop-the-Line" meeting that unblocks the whole project. Communication is a design skill.</div>
       </div>
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">02</div>
         <div class="cs-reflection-title">Hardware Dictates Software</div>
-        <div class="cs-reflection-body">Designing for a rugged scanner with a physical keypad differs fundamentally from designing for a smartphone. Understanding the physical environment — gloves, low light, loud noise — before committing to UI patterns is critical and non-negotiable.</div>
+        <div class="cs-reflection-body">Designing for a rugged scanner is nothing like designing for a smartphone. Understand the physical environment — gloves, low light, noise — before committing to any UI pattern.</div>
       </div>
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">03</div>
         <div class="cs-reflection-title">The Power of Constraints</div>
-        <div class="cs-reflection-body">The limited screen real estate of Zebra/Honeywell devices actually made the product better. It forced the team to strip away "nice-to-haves" and focus on "must-haves" — resulting in a cleaner, faster experience than the original desktop OWB.</div>
+        <div class="cs-reflection-body">The tiny screens made the product better — forcing us to cut "nice-to-haves" for "must-haves," resulting in a cleaner, faster experience than the desktop OWB.</div>
       </div>
       <div class="cs-reflection-card">
         <div class="cs-reflection-num">04</div>
         <div class="cs-reflection-title">Know Your User's World</div>
-        <div class="cs-reflection-body">The VP review that revealed the scanner hardware was humbling but invaluable. Assumptions about the user's physical environment — device type, lighting, protective gear — are as important to validate as assumptions about their mental model.</div>
+        <div class="cs-reflection-body">The VP review that surfaced the scanner hardware was humbling. Assumptions about the user's physical world — device, lighting, gear — matter as much as assumptions about their mental model.</div>
       </div>
     </div>
   </section>
@@ -445,11 +443,10 @@
       <div class="cs-cols-2 cs-reveal" style="margin-top:40px;gap:32px;align-items:start;">
         <div>
           <h3 class="cs-subheading">Testing with real operators</h3>
-          <p class="cs-body">A moderated usability test on actual Zebra/Honeywell hardware, in a real or simulated floor environment — gloves on, low light, ambient noise. The core question: can an untrained operator complete a material report without help?</p>
+          <p class="cs-body">A moderated usability test on real Zebra/Honeywell hardware — gloves on, low light, noise. The core question: can an untrained operator complete a report without help?</p>
           <ul style="margin-top:16px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
             <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);"><strong style="color:var(--fg);font-weight:500;">Task success rate</strong> — share of operators completing a report unaided</li>
             <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);"><strong style="color:var(--fg);font-weight:500;">Time-on-task</strong> — measured against the desktop OWB baseline</li>
-            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);"><strong style="color:var(--fg);font-weight:500;">Error &amp; rework rate</strong> on Lot / Serial / LPN entry</li>
             <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent);"><strong style="color:var(--fg);font-weight:500;">Glove &amp; low-light usability</strong> of scan focus and tap targets</li>
           </ul>
         </div>
@@ -460,15 +457,10 @@
             <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent3);"><strong style="color:var(--fg);font-weight:500;">Transaction completion time</strong> — to confirm the projected ~50% cut holds at scale</li>
             <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent3);"><strong style="color:var(--fg);font-weight:500;">Point-of-work rate</strong> — % of transactions logged at the line vs. a desktop terminal</li>
             <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent3);"><strong style="color:var(--fg);font-weight:500;">Real-time exception catch rate</strong> — errors caught at the station vs. hours later</li>
-            <li style="font-size:14px;color:var(--muted);padding-left:16px;border-left:2px solid var(--accent3);"><strong style="color:var(--fg);font-weight:500;">Adoption</strong> — first-month active operators on the new flow</li>
           </ul>
         </div>
       </div>
 
-      <div class="cs-callout cs-reveal" style="margin-top:40px;">
-        <div class="cs-callout-label">The Bigger Lesson</div>
-        <p>Shipping a clean handoff isn't the finish line — proving it works for the person in gloves on the floor is. If I ran this again, operator testing would come <em>before</em> the engineering handoff, not after.</p>
-      </div>
     </div>
   </section>
 
@@ -515,5 +507,6 @@
 
   <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
   <script src="cs-main.js"></script>
+  <script src="hero-spotlight.js?v=1"></script>
 </body>
 </html>

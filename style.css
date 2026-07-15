@@ -439,6 +439,12 @@ img { display: block; max-width: 100%; }
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(5px); }
 }
+/* the playground arrow points right, so bob it horizontally instead */
+.ed-pg-link .ed-scrollcue-arrow { animation: edBobX 1.8s ease-in-out infinite; }
+@keyframes edBobX {
+  0%,100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
 @media (max-width: 640px) {
   .ed-hero { padding: 110px 24px 80px; }
   .ed-meta { gap: 28px; }
@@ -469,6 +475,10 @@ img { display: block; max-width: 100%; }
   color: transparent !important;
   -webkit-text-fill-color: transparent !important;
 }
+/* the overlay is a static mirror of the fully-revealed title; its cloned
+   .ed-line lines don't carry the .revealed class, so pin them to the shown
+   position instead of the pre-reveal translateY(115%) that overflow:hidden clips */
+.spot-overlay .ed-line { transform: none !important; }
 @keyframes edRainbow {
   to { background-position: 200% center; }
 }
