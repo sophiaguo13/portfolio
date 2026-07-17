@@ -62,7 +62,10 @@
 
   <!-- Cover Image -->
   <div class="cs-cover-wrap">
-    <img src="images/mobile/cover-hero.png" alt="Mobile Production Reporting — feature overview" />
+    <video autoplay muted loop playsinline preload="auto" aria-label="Mobile Production Reporting — the Issue Material scan flow running on a Zebra rugged scanner" style="width:100%;display:block;border-radius:24px;">
+      <source src="images/mobile/hero-device.webm" type="video/webm" />
+      <source src="images/mobile/hero-device.mp4" type="video/mp4" />
+    </video>
   </div>
 
   <!-- 01 The Problem -->
@@ -70,6 +73,34 @@
     <div class="cs-wrap">
       <p class="cs-eyebrow cs-reveal">01 — The Problem</p>
       <h2 class="cs-heading cs-reveal">Tethered to the Desk</h2>
+
+      <div class="cs-reveal" style="max-width:720px;margin:28px 0 40px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:26px 30px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">First, a quick primer</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 20px;max-width:none;">A few shop-floor terms in plain English — skip ahead if you know the domain.</p>
+        <dl style="margin:0;display:flex;flex-direction:column;gap:16px;">
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Production Operator</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">The factory-floor worker who runs equipment and reports the materials used in each production step — the primary user of this feature.</dd>
+          </div>
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Report Materials</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">Logging which materials, and how much, were consumed to build a product — the core transaction this app handles.</dd>
+          </div>
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Issue / Return</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">Issuing pulls materials from inventory into a work order; returning sends unused materials back.</dd>
+          </div>
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">LPN (License Plate Number)</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">A barcode that identifies a specific container or pallet, so a whole unit of material can be tracked with a single scan.</dd>
+          </div>
+          <div>
+            <dt style="font-weight:600;color:var(--fg);font-size:15px;margin-bottom:3px;">Serial Number</dt>
+            <dd style="margin:0;color:var(--muted);font-size:14.5px;line-height:1.6;">A unique ID for an individual tracked item — versus a lot, which tracks a whole batch together.</dd>
+          </div>
+        </dl>
+      </div>
+
       <div class="cs-reveal">
         <p class="cs-body" style="max-width:760px;">Oracle's <strong>Operator Workbench (OWB)</strong> is a comprehensive desktop application that lets operators report operation completions, issue and return materials, and report scrap. Powerful — but entirely stationary.</p>
         <p class="cs-body" style="max-width:760px;margin-top:16px;">This created a real business gap: a growing share of manufacturers now run production reporting on handheld devices, yet OWB kept operators tethered — commuting to terminals between every task and adding latency to the production record.</p>
@@ -267,7 +298,15 @@
     <div class="cs-wrap">
       <p class="cs-eyebrow cs-reveal">06 — The Solution</p>
       <h2 class="cs-heading cs-reveal">A Scannable, Reactive UI</h2>
-      <p class="cs-body cs-reveal" style="margin-bottom:64px;">The Redwood Design System was leveraged to create a high-density, efficient reporting experience. The happy path is entirely scan-driven — operators rarely need to type a single character.</p>
+      <p class="cs-body cs-reveal" style="margin-bottom:48px;">The Redwood Design System was leveraged to create a high-density, efficient reporting experience. The happy path is entirely scan-driven — operators rarely need to type a single character.</p>
+
+      <div class="cs-img-block no-border cs-reveal" style="max-width:380px;margin:0 auto 8px;">
+        <video autoplay muted loop playsinline preload="metadata" style="width:100%;display:block;" aria-label="The Issue Material flow running on the actual Zebra rugged scanner">
+          <source src="images/mobile/device-flow.webm" type="video/webm" />
+          <source src="images/mobile/device-flow.mp4" type="video/mp4" />
+        </video>
+        <p class="cs-img-caption">The happy path running on the actual hardware — a Zebra rugged scanner, scan field in focus and ready.</p>
+      </div>
     </div>
 
     <!-- Solution 1 -->
@@ -358,11 +397,7 @@
   <section class="cs-section warm-bg">
     <p class="cs-eyebrow cs-reveal">07 — Additional Flows</p>
     <h2 class="cs-heading cs-reveal">Beyond the Happy Path</h2>
-    <p class="cs-body cs-reveal" style="margin-bottom:48px;">The core scanning flow handles the majority of transactions — but two additional flows round out the full operator experience.</p>
-    <div class="cs-img-block sharp no-border cs-reveal" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:0 -50vw 16px;padding:0 24px;box-sizing:border-box;">
-      <img src="images/mobile/app-launch.svg" alt="App Launch and Organization Switching flow" />
-      <p class="cs-img-caption">App Launch & Organization Switching — selecting an organization on first launch to set the work context.</p>
-    </div>
+    <p class="cs-body cs-reveal" style="margin-bottom:48px;">The core scanning flow handles the majority of transactions — but one more flow rounds out the full operator experience: issuing materials that aren't pre-listed on the work order.</p>
     <div class="cs-img-block sharp no-border cs-reveal" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:0 -50vw;padding:0 24px;box-sizing:border-box;">
       <img src="images/mobile/ad-hoc-issue.svg" alt="Ad-hoc Material Issue flow" />
       <p class="cs-img-caption">Ad-hoc Material Issue — issuing materials not pre-listed on the work order, including split quantity and LPN capture.</p>

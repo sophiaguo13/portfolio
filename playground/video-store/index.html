@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moonlight Video — open 'til 2am</title>
+<style>
+  :root{
+    --navy-0:#080d1a;      /* deepest back wall */
+    --navy-1:#0c1226;      /* room */
+    --navy-2:#141b36;      /* surfaces */
+    --navy-3:#1d2647;      /* raised surfaces */
+    --ink:#e8ecf7;         /* off-white text */
+    --ink-dim:#8b93b8;
+    --neon-pink:#ff5fa8;
+    --neon-cyan:#5fe8ff;
+    --neon-amber:#ffc95f;
+    --tube:#eaf4ff;
+    --shelf-h:264px;       /* spine height */
+    --case-w:260px; --case-h:440px; --case-d:44px;
+    --font-display:"Futura","Trebuchet MS","Avenir Next",-apple-system,sans-serif;
+    --font-body:"Avenir Next","Helvetica Neue",-apple-system,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--navy-0);
+    color:var(--ink);
+    font-family:var(--font-body);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- room ---------- */
+  #room{
+    position:fixed; inset:0;
+    background:
+      radial-gradient(120% 90% at 50% -10%, #1a2348 0%, var(--navy-1) 45%, var(--navy-0) 100%);
+  }
+  /* wall texture: faint dot grid */
+  #room::before{
+    content:""; position:absolute; inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size:22px 22px;
+    mask-image:linear-gradient(#000 55%, transparent 92%);
+    -webkit-mask-image:linear-gradient(#000 55%, transparent 92%);
+  }
+  /* carpet */
+  #floor{
+    position:absolute; left:0; right:0; bottom:0; height:17vh; min-height:96px;
+    background:
+      repeating-linear-gradient(90deg, rgba(95,232,255,.05) 0 2px, transparent 2px 46px),
+      repeating-linear-gradient(0deg, rgba(255,95,168,.04) 0 2px, transparent 2px 34px),
+      linear-gradient(#232b52 0%, #10152e 70%, #0a0e20 100%);
+    box-shadow:0 -18px 40px rgba(0,0,0,.55) inset;
+  }
+  #floor::before{ /* light pool from the tube */
+    content:""; position:absolute; left:50%; top:0; width:72%; height:100%;
+    transform:translateX(-50%);
+    background:radial-gradient(60% 90% at 50% 0%, rgba(220,238,255,.10), transparent 70%);
+    animation:roomflicker 11s linear infinite;
+  }
+
+  /* ---------- fluorescent tube ---------- */
+  #fixture{
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:min(560px,72vw); height:44px; z-index:5; pointer-events:none;
+  }
+  #fixture .housing{
+    position:absolute; top:0; left:0; right:0; height:16px;
+    background:linear-gradient(#3a4368,#20264a 70%,#171c38);
+    border-radius:0 0 6px 6px;
+    box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  #fixture .tube{
+    position:absolute; top:14px; left:16px; right:16px; height:10px; border-radius:6px;
+    background:linear-gradient(var(--tube), #b9d4ee);
+    box-shadow:
+      0 0 10px 2px rgba(224,240,255,.9),
+      0 0 46px 10px rgba(190,220,255,.35),
+      0 26px 80px 24px rgba(170,205,255,.16);
+    animation:tubeflicker 11s linear infinite;
+  }
+  /* room-wide light wash that flickers in sync */
+  #lightwash{
+    position:fixed; inset:0; z-index:4; pointer-events:none;
+    background:radial-gradient(58% 46% at 50% 0%, rgba(214,233,255,.13), transparent 72%);
+    animation:roomflicker 11s linear infinite;
+  }
+  @keyframes tubeflicker{
+    0%,25.9%,27%,53.9%,55.4%,56%,81.9%,83%,100%{opacity:1}
+    26%{opacity:.35} 26.5%{opacity:.85}
+    54%{opacity:.15} 54.6%{opacity:.7} 55%{opacity:.3}
+    82%{opacity:.55} 82.4%{opacity:.9}
+  }
+  @keyframes roomflicker{
+    0%,25.9%,27%,53.9%,55.4%,56%,81.9%,83%,100%{opacity:1}
+    26%{opacity:.5} 26.5%{opacity:.9}
+    54%{opacity:.35} 54.6%{opacity:.8} 55%{opacity:.5}
+    82%{opacity:.65} 82.4%{opacity:.95}
+  }
+
+  /* ---------- store sign ---------- */
+  #storesign{
+    position:fixed; top:22px; left:28px; z-index:6; pointer-events:none;
+    font-family:var(--font-display); letter-spacing:.12em;
+  }
+  #storesign .name{
+    font-size:clamp(15px,2vw,21px); font-weight:700; color:var(--neon-pink);
+    text-shadow:0 0 6px rgba(255,95,168,.9), 0 0 24px rgba(255,95,168,.5), 0 0 60px rgba(255,95,168,.3);
+  }
+  #storesign .hours{
+    margin-top:4px; font-size:11px; letter-spacing:.22em; color:var(--ink-dim);
+    text-transform:uppercase;
+  }
+  #hint{
+    position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+    z-index:6; font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-dim); pointer-events:none; white-space:nowrap;
+    transition:opacity .8s ease;
+  }
+
+  /* ---------- shelf ---------- */
+  #aisle{
+    position:fixed; inset:0; z-index:3;
+    overflow-x:auto; overflow-y:hidden;
+    display:flex; align-items:center;
+    scrollbar-width:none;
+    cursor:grab;
+  }
+  #aisle::-webkit-scrollbar{display:none}
+  #aisle.dragging{cursor:grabbing}
+  #shelf{
+    display:flex; align-items:flex-end; gap:56px;
+    padding:0 max(7vw,56px) 0 max(9vw,72px);
+    position:relative;
+    margin-top:4vh;
+  }
+  /* continuous shelf plank */
+  #shelf::after{
+    content:""; position:absolute; left:0; right:0; bottom:-18px; height:18px;
+    background:linear-gradient(#454e78 0%, #2b3258 32%, #1a1f3e 100%);
+    border-top:1px solid rgba(255,255,255,.22);
+    box-shadow:0 14px 26px rgba(0,0,0,.55);
+  }
+  /* shadow the tapes cast on the plank */
+  #shelf::before{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:10px;
+    background:rgba(0,0,0,.4); filter:blur(5px);
+  }
+
+  .genre{display:flex; flex-direction:column; align-items:flex-start}
+  .sign{
+    position:relative;
+    margin:0 0 26px 6px;
+    font-family:var(--font-display); font-weight:700;
+    font-size:13px; letter-spacing:.34em; text-transform:uppercase;
+    padding:8px 14px 7px 17px;
+    color:var(--sign-color);
+    background:rgba(9,13,28,.85);
+    border:1px solid color-mix(in srgb, var(--sign-color) 55%, transparent);
+    border-radius:4px;
+    text-shadow:0 0 5px var(--sign-color), 0 0 18px color-mix(in srgb, var(--sign-color) 65%, transparent);
+    box-shadow:0 0 22px -4px color-mix(in srgb, var(--sign-color) 45%, transparent), 0 4px 10px rgba(0,0,0,.5);
+  }
+  /* hanging chains */
+  .sign::before,.sign::after{
+    content:""; position:absolute; top:-30px; width:1px; height:30px;
+    background:linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.35));
+  }
+  .sign::before{left:12px} .sign::after{right:12px}
+  .sign .dying{animation:dyingletter 4.2s steps(1) infinite}
+  @keyframes dyingletter{
+    0%,7%,9%,38%,40.5%,100%{opacity:1}
+    8%{opacity:.15} 39%{opacity:.25} 40%{opacity:.7}
+  }
+
+  .row{display:flex; gap:7px; align-items:flex-end}
+
+  /* ---------- spines ---------- */
+  .spine{
+    appearance:none; border:0; font:inherit; cursor:pointer;
+    position:relative;
+    width:46px; height:var(--shelf-h);
+    border-radius:2px 2px 1px 1px;
+    display:flex; flex-direction:column; align-items:center;
+    padding:14px 0 10px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(255,255,255,.14) 9%, rgba(255,255,255,0) 22%,
+        rgba(0,0,0,0) 78%, rgba(0,0,0,.28) 92%, rgba(0,0,0,.5) 100%),
+      linear-gradient(var(--c1), var(--c2));
+    box-shadow:
+      -1px 0 0 rgba(0,0,0,.5),
+      2px 3px 6px rgba(0,0,0,.45);
+    transition:transform .22s cubic-bezier(.34,1.5,.6,1), box-shadow .22s ease, filter .22s ease;
+    transform-origin:bottom center;
+    outline-offset:3px;
+  }
+  /* VHS ridges */
+  .spine::before,.spine::after{
+    content:""; position:absolute; left:6px; right:6px; height:7px;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.3) 0 1px, rgba(255,255,255,.12) 1px 2px, transparent 2px 3px);
+    border-radius:1px; opacity:.9;
+  }
+  .spine::before{top:5px} .spine::after{bottom:26px}
+  .spine .stitle{
+    writing-mode:vertical-rl;
+    font-family:var(--font-display); font-weight:700;
+    font-size:12.5px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--tx); max-height:190px; overflow:hidden;
+    line-height:1;
+  }
+  .spine .syear{
+    writing-mode:vertical-rl; margin-top:6px;
+    font-size:8.5px; letter-spacing:.18em; color:var(--tx); opacity:.75;
+  }
+  .spine .srating{
+    margin-top:auto; font-size:7px; font-weight:700; letter-spacing:.05em;
+    color:var(--c1); background:var(--tx);
+    padding:2px 3px; border-radius:2px; line-height:1;
+  }
+  .spine:hover,.spine:focus-visible{
+    transform:translateY(-10px);
+    filter:brightness(1.22) saturate(1.08);
+    box-shadow:
+      -1px 0 0 rgba(0,0,0,.5),
+      3px 8px 14px rgba(0,0,0,.5),
+      0 0 22px -2px rgba(120,180,255,.35);
+    z-index:2;
+  }
+  .spine:focus-visible{outline:2px solid var(--neon-cyan)}
+  .spine:active{transform:translateY(-6px) scale(.99)}
+  /* empty slot while the tape is out */
+  .spine.pulled{
+    background:linear-gradient(#05070f,#0a0e1e 60%,#11162c);
+    box-shadow:inset 0 4px 14px rgba(0,0,0,.85), inset 0 -2px 6px rgba(0,0,0,.6);
+    pointer-events:none;
+  }
+  .spine.pulled::before,.spine.pulled::after{opacity:0}
+  .spine.pulled>*{opacity:0}
+
+  /* ---------- pulled-out case (3D) ---------- */
+  #backdrop{
+    position:fixed; inset:0; z-index:20;
+    background:radial-gradient(80% 80% at 50% 45%, rgba(4,6,14,.55), rgba(3,4,10,.82));
+    opacity:0; pointer-events:none; transition:opacity .5s ease;
+  }
+  #backdrop.on{opacity:1; pointer-events:auto}
+  #caseWrap{
+    position:fixed; z-index:21;
+    left:50%; top:47%;
+    width:var(--case-w); height:var(--case-h);
+    margin-left:calc(var(--case-w)/-2); margin-top:calc(var(--case-h)/-2);
+    perspective:1400px;
+    display:none;
+  }
+  #caseWrap.show{display:block}
+  #case3d{
+    position:absolute; inset:0;
+    transform-style:preserve-3d;
+    cursor:pointer;
+  }
+  #caseWrap.anim{transition:transform .75s cubic-bezier(.24,.9,.26,1)}
+  #caseWrap.anim #case3d{transition:transform .75s cubic-bezier(.24,.9,.26,1)}
+  .face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .face.front{transform:translateZ(calc(var(--case-d)/2))}
+  .face.back{transform:rotateY(180deg) translateZ(calc(var(--case-d)/2))}
+  .face.sp{
+    width:var(--case-d); left:calc(50% - var(--case-d)/2);
+    transform:rotateY(-90deg) translateZ(calc(var(--case-w)/2));
+    border-radius:3px;
+  }
+  .face.sp2{
+    width:var(--case-d); left:calc(50% - var(--case-d)/2);
+    transform:rotateY(90deg) translateZ(calc(var(--case-w)/2));
+    border-radius:3px;
+  }
+  .face.top,.face.bot{
+    height:var(--case-d); top:calc(50% - var(--case-d)/2);
+    background:#0d0f18;
+  }
+  .face.top{transform:rotateX(90deg) translateZ(calc(var(--case-h)/2))}
+  .face.bot{transform:rotateX(-90deg) translateZ(calc(var(--case-h)/2))}
+
+  /* spine face reuses spine styling at full size */
+  .face.sp,.face.sp2{
+    display:flex; flex-direction:column; align-items:center; padding:22px 0 16px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.4), rgba(255,255,255,.12) 12%, transparent 30%, rgba(0,0,0,.35) 100%),
+      linear-gradient(var(--c1), var(--c2));
+  }
+  .face.sp .stitle,.face.sp2 .stitle{
+    writing-mode:vertical-rl; font-family:var(--font-display); font-weight:700;
+    font-size:19px; letter-spacing:.1em; text-transform:uppercase; color:var(--tx); line-height:1;
+  }
+
+  /* front cover */
+  .face.front{
+    background:linear-gradient(160deg, var(--c1), var(--c2) 78%);
+    display:flex; flex-direction:column;
+    padding:22px 20px 16px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12), inset 0 0 60px rgba(0,0,0,.25);
+  }
+  .front .fglyph{
+    font-size:88px; line-height:1; margin:auto 0;
+    align-self:center;
+    filter:drop-shadow(0 8px 14px rgba(0,0,0,.4));
+  }
+  .front .ftitle{
+    font-family:var(--font-display); font-weight:800; text-transform:uppercase;
+    font-size:29px; line-height:1.02; letter-spacing:.01em; color:var(--tx);
+    text-shadow:0 2px 0 rgba(0,0,0,.22);
+  }
+  .front .fyear{
+    margin-top:8px; font-size:11px; letter-spacing:.3em; color:var(--tx); opacity:.8;
+  }
+  .front .fformat{
+    margin-top:14px; padding-top:9px;
+    border-top:1px solid color-mix(in srgb, var(--tx) 40%, transparent);
+    display:flex; justify-content:space-between;
+    font-size:9px; letter-spacing:.24em; color:var(--tx); opacity:.75; text-transform:uppercase;
+  }
+  .front .poster{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover;
+    opacity:0; transition:opacity .25s ease;
+  }
+  .front .poster.loaded{opacity:1}
+  /* plastic-sleeve sheen over the poster */
+  .front .gloss{
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(105deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,.05) 18%, transparent 32%),
+      linear-gradient(rgba(255,255,255,.06), transparent 12%, transparent 88%, rgba(0,0,0,.28));
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14), inset 0 0 44px rgba(0,0,0,.22);
+  }
+  .front .pricetag{
+    position:absolute; top:14px; right:12px;
+    width:64px; height:64px; border-radius:50%;
+    background:var(--neon-amber);
+    color:#241a02; font-family:var(--font-display); font-weight:800;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:15px; line-height:1; transform:rotate(9deg);
+    box-shadow:0 3px 8px rgba(0,0,0,.4);
+  }
+  .front .pricetag small{font-size:6.5px; letter-spacing:.08em; font-weight:700; margin-top:3px}
+
+  /* back cover */
+  .face.back{
+    background:linear-gradient(#f4eedd, #e9e1cb);
+    color:#26221a;
+    display:flex; flex-direction:column;
+    padding:18px 20px 14px;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 50px rgba(120,100,60,.14);
+  }
+  .back .bband{
+    background:var(--c1); color:var(--tx);
+    margin:-18px -20px 14px; padding:13px 20px 11px;
+    font-family:var(--font-display); font-weight:700; font-size:12.5px;
+    letter-spacing:.06em; line-height:1.3;
+  }
+  .back .bsyn{font-size:11.5px; line-height:1.55}
+  .back .bcast{margin-top:12px; font-size:10px; line-height:1.5}
+  .back .bcast b{
+    display:block; font-family:var(--font-display); font-size:8.5px; font-weight:700;
+    letter-spacing:.26em; text-transform:uppercase; color:#7a6f52; margin-bottom:3px;
+  }
+  .back .bmeta{
+    margin-top:auto; padding-top:10px;
+    border-top:1px solid rgba(0,0,0,.2);
+    display:flex; align-items:center; gap:10px;
+  }
+  .back .brating{
+    border:1.5px solid #26221a; font-family:var(--font-display); font-weight:800;
+    font-size:13px; padding:3px 6px; border-radius:2px; line-height:1;
+  }
+  .back .bruntime{font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#5c543e}
+  .back .bbarcode{
+    margin-left:auto; width:64px; height:30px;
+    background:
+      repeating-linear-gradient(90deg,#1c1912 0 2px,transparent 2px 4px,#1c1912 4px 5px,transparent 5px 9px,#1c1912 9px 12px,transparent 12px 14px);
+    position:relative;
+  }
+  .back .rewind{
+    position:absolute; right:16px; bottom:76px;
+    transform:rotate(-7deg);
+    background:var(--neon-pink); color:#fff;
+    font-family:var(--font-display); font-weight:800; font-size:8px; letter-spacing:.14em;
+    padding:5px 8px; border-radius:3px;
+    box-shadow:0 2px 6px rgba(0,0,0,.35);
+  }
+  #closeBtn{
+    position:fixed; z-index:22; display:none;
+    appearance:none; border:1px solid rgba(255,255,255,.25); background:rgba(10,14,30,.8);
+    color:var(--ink); width:36px; height:36px; border-radius:50%;
+    font-size:15px; cursor:pointer; line-height:1;
+    top:calc(47% - var(--case-h)/2 - 14px);
+    left:calc(50% + var(--case-w)/2 + 2px);
+    transition:background .2s ease, transform .2s ease;
+  }
+  #closeBtn:hover{background:rgba(40,50,90,.9); transform:scale(1.08)}
+  #closeBtn.show{display:block}
+
+  /* ---------- NOW PLAYING monitor ---------- */
+  #tv{
+    position:fixed; right:22px; bottom:20px; z-index:10;
+    width:196px; pointer-events:none;
+  }
+  #tv .bezel{
+    background:linear-gradient(#3a415f,#232946 60%,#181d38);
+    border-radius:10px; padding:10px 10px 7px;
+    box-shadow:0 10px 26px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.14);
+  }
+  #tv canvas{
+    display:block; width:100%; height:126px;
+    border-radius:5px; background:#050810;
+    image-rendering:pixelated;
+  }
+  #tv .screenglass{
+    position:absolute; top:10px; left:10px; right:10px; height:126px;
+    border-radius:5px; pointer-events:none;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.13), transparent 45%);
+    box-shadow:inset 0 0 22px rgba(0,0,0,.75);
+  }
+  #tv .tvlabel{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:6px 3px 2px;
+    font-family:var(--font-display); font-size:8px; font-weight:700;
+    letter-spacing:.3em; color:var(--ink-dim); text-transform:uppercase;
+  }
+  #tv .tvlabel .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:#3c4568;
+  }
+  #tv.playing .tvlabel .dot{
+    background:var(--neon-pink);
+    box-shadow:0 0 6px var(--neon-pink), 0 0 14px rgba(255,95,168,.6);
+    animation:recblink 1.4s steps(1) infinite;
+  }
+  #tv.playing .tvlabel span{color:var(--neon-cyan); text-shadow:0 0 8px rgba(95,232,255,.6)}
+  @keyframes recblink{0%,60%{opacity:1}61%,100%{opacity:.35}}
+  #tv .stand{
+    margin:0 auto; width:64px; height:12px;
+    background:linear-gradient(#1c2140,#12162c);
+    border-radius:0 0 6px 6px;
+  }
+
+  /* vignette for the first-person feel */
+  #vignette{
+    position:fixed; inset:0; z-index:12; pointer-events:none;
+    background:radial-gradient(110% 95% at 50% 45%, transparent 58%, rgba(2,3,9,.55) 100%);
+  }
+
+  @media (max-width:720px){
+    :root{--shelf-h:220px; --case-w:216px; --case-h:366px; --case-d:38px}
+    .spine{width:40px}
+    .spine .stitle{font-size:11px}
+    #tv{width:140px; right:12px; bottom:12px}
+    #tv canvas{height:92px}
+    #tv .screenglass{height:92px}
+    #storesign{left:16px; top:14px}
+    .front .ftitle{font-size:24px}
+    .front .fglyph{font-size:66px}
+    #closeBtn{left:auto; right:12px; top:12px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    #fixture .tube,#lightwash,#floor::before{animation:none}
+    .sign .dying{animation:none}
+    #caseWrap.anim,#caseWrap.anim #case3d{transition-duration:.2s}
+    .spine{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<div id="room" aria-hidden="true">
+  <div id="floor"></div>
+</div>
+
+<div id="fixture" aria-hidden="true">
+  <div class="housing"></div>
+  <div class="tube"></div>
+</div>
+<div id="lightwash" aria-hidden="true"></div>
+
+<div id="storesign" aria-hidden="true">
+  <div class="name">MOONLIGHT VIDEO</div>
+  <div class="hours">open 'til 2 am &nbsp;·&nbsp; be kind, rewind</div>
+</div>
+
+<main id="aisle" aria-label="Video rental shelf">
+  <div id="shelf"></div>
+</main>
+
+<div id="backdrop"></div>
+<div id="caseWrap" role="dialog" aria-modal="true" aria-label="Video case">
+  <div id="case3d"></div>
+</div>
+<button id="closeBtn" aria-label="Put the tape back">✕</button>
+
+<div id="tv" aria-hidden="true">
+  <div class="bezel">
+    <canvas id="tvcanvas" width="132" height="86"></canvas>
+    <div class="screenglass"></div>
+    <div class="tvlabel"><span id="tvtext">Standby</span><i class="dot"></i></div>
+  </div>
+  <div class="stand"></div>
+</div>
+
+<div id="vignette" aria-hidden="true"></div>
+<div id="hint">scroll to browse&nbsp;&nbsp;·&nbsp;&nbsp;click a tape to pull it off the shelf</div>
+
+<script>
+/* ============================== data ============================== */
+const MOVIES = [
+ {id:"knives-out",t:"Knives Out",y:2019,g:"mystery",r:"PG-13",run:"130 MIN",gl:"🗡️",
+  c1:"#7a1f2b",c2:"#3c0f18",tx:"#f5e3c8",
+  tag:"Everyone has a motive. No one has a clue.",
+  syn:"A famed crime novelist is found dead the morning after his 85th birthday — and everyone in his delightfully rotten family is a suspect. Gentleman detective Benoit Blanc peels back the lies one layer at a time in this wickedly sharp whodunit.",
+  cast:"Daniel Craig · Ana de Armas · Chris Evans · Jamie Lee Curtis"},
+ {id:"oceans-8",t:"Ocean's 8",y:2018,g:"mystery",r:"PG-13",run:"110 MIN",gl:"💎",
+  c1:"#1b2c4e",c2:"#0d1426",tx:"#d8e4ff",
+  tag:"Every con has its pros.",
+  syn:"Fresh out of prison, Debbie Ocean has spent five years planning the perfect heist: a $150 million diamond necklace, lifted off a movie star's neck in the middle of the Met Gala. She'll need seven very good women — and zero men.",
+  cast:"Sandra Bullock · Cate Blanchett · Anne Hathaway · Rihanna"},
+ {id:"national-treasure",t:"National Treasure",y:2004,g:"mystery",r:"PG",run:"131 MIN",gl:"🗺️",
+  c1:"#8a6420",c2:"#41300e",tx:"#f6ecd4",
+  tag:"The greatest adventure history has ever revealed.",
+  syn:"There's an invisible treasure map on the back of the Declaration of Independence — and historian Ben Gates is going to steal it. To protect it. Obviously. A coast-to-coast hunt through two centuries of secrets.",
+  cast:"Nicolas Cage · Diane Kruger · Justin Bartha · Sean Bean"},
+
+ {id:"devil-wears-prada",t:"The Devil Wears Prada",y:2006,g:"comedy",r:"PG-13",run:"109 MIN",gl:"👠",
+  c1:"#c22e5a",c2:"#5e1030",tx:"#ffe9f1",
+  tag:"Meet Andy Sachs. A million girls would kill for her job.",
+  syn:"Fresh out of college, aspiring journalist Andy Sachs lands the job 'a million girls would kill for' — assistant to Miranda Priestly, the most feared editor in fashion. Now she just has to survive it. That's all.",
+  cast:"Meryl Streep · Anne Hathaway · Emily Blunt · Stanley Tucci"},
+ {id:"little-miss-sunshine",t:"Little Miss Sunshine",y:2006,g:"comedy",r:"R",run:"101 MIN",gl:"🚐",
+  c1:"#e8b62a",c2:"#8a5f0a",tx:"#2e2104",
+  tag:"A family on the verge of a breakdown.",
+  syn:"One yellow VW bus. One broken clutch. One family on the verge of collapse, driving 800 miles so seven-year-old Olive can compete in the Little Miss Sunshine pageant. Winning has never mattered less.",
+  cast:"Steve Carell · Toni Collette · Abigail Breslin · Alan Arkin"},
+ {id:"tag",t:"Tag",y:2018,g:"comedy",r:"R",run:"100 MIN",gl:"🏃",
+  c1:"#2e7d4f",c2:"#123a22",tx:"#e2f7e9",
+  tag:"Based on a true story. We're not kidding.",
+  syn:"For one month every year, five grown men drop everything for a no-holds-barred game of tag they've been playing since the first grade. This year they're teaming up to take down the one player who has never, ever been It.",
+  cast:"Ed Helms · Jeremy Renner · Jon Hamm · Isla Fisher"},
+
+ {id:"past-lives",t:"Past Lives",y:2023,g:"romance",r:"PG-13",run:"105 MIN",gl:"🌉",
+  c1:"#4a6b8a",c2:"#1e2f42",tx:"#eaf3fb",
+  tag:"What if this is a past life too?",
+  syn:"Nora and Hae Sung shared a childhood in Seoul — and then twenty-four years apart. When he finally visits her in New York, one week together forces a question a lifetime in the making: what if?",
+  cast:"Greta Lee · Teo Yoo · John Magaro"},
+ {id:"when-harry-met-sally",t:"When Harry Met Sally",y:1989,g:"romance",r:"R",run:"96 MIN",gl:"🥪",
+  c1:"#b3542e",c2:"#54240f",tx:"#ffeede",
+  tag:"Can two friends sleep together and still love each other in the morning?",
+  syn:"Harry believes men and women can't be friends. Sally disagrees. Twelve years, three chance meetings, and one famous deli scene later, they're both about to be proven wrong. Or right.",
+  cast:"Billy Crystal · Meg Ryan · Carrie Fisher · Bruno Kirby"},
+ {id:"27-dresses",t:"27 Dresses",y:2008,g:"romance",r:"PG-13",run:"111 MIN",gl:"👗",
+  c1:"#c77b9d",c2:"#6b3350",tx:"#ffeef6",
+  tag:"Always a bridesmaid, never a bride.",
+  syn:"Perpetual bridesmaid Jane has 27 dresses in her closet and zero weddings of her own — until a cynical wedding columnist starts asking why. She's organized everyone else's big day. Hers is going to need a rewrite.",
+  cast:"Katherine Heigl · James Marsden · Malin Akerman"},
+ {id:"saving-face",t:"Saving Face",y:2004,g:"romance",r:"R",run:"91 MIN",gl:"🥟",
+  c1:"#a83a3a",c2:"#4e1414",tx:"#ffe9dc",
+  tag:"A romantic comedy about right, wrong, and everything in between.",
+  syn:"Wil is a young surgeon hiding her girlfriend from her Chinese-American family. Then her widowed mother turns up pregnant, unwed, and newly homeless — and Flushing will never recover. Love, dumplings, and coming out. In that order.",
+  cast:"Michelle Krusiec · Joan Chen · Lynn Chen"},
+ {id:"set-it-up",t:"Set It Up",y:2018,g:"romance",r:"TV-14",run:"105 MIN",gl:"🍕",
+  c1:"#3f7f8c",c2:"#173840",tx:"#e4f6fa",
+  tag:"Set the trap. Watch them fall.",
+  syn:"Two overworked assistants hatch a plan to set their nightmare bosses up with each other — buying back their own nights and weekends. The plan works perfectly. On the wrong people.",
+  cast:"Zoey Deutch · Glen Powell · Lucy Liu · Taye Diggs"},
+
+ {id:"mamma-mia",t:"Mamma Mia!",y:2008,g:"musical",r:"PG-13",run:"108 MIN",gl:"🏝️",
+  c1:"#2f9ec4",c2:"#125672",tx:"#fdf6d8",
+  tag:"Take a trip down the aisle you'll never forget.",
+  syn:"On a sun-soaked Greek island, bride-to-be Sophie secretly invites three men to her wedding — because one of them is her father. Her mother Donna is in for the surprise of her life. Cue ABBA. All of it.",
+  cast:"Meryl Streep · Amanda Seyfried · Pierce Brosnan · Colin Firth"},
+ {id:"sound-of-music",t:"The Sound of Music",y:1965,g:"musical",r:"G",run:"174 MIN",gl:"⛰️",
+  c1:"#4b7d3f",c2:"#1f3a18",tx:"#f2f7dd",
+  tag:"The happiest sound in all the world.",
+  syn:"A free-spirited would-be nun becomes governess to seven unruly children and melts the heart of their stern captain father — as the shadow of war falls over Austria. The hills are alive, and so is every song you already know by heart.",
+  cast:"Julie Andrews · Christopher Plummer · Eleanor Parker"},
+
+ {id:"ratatouille",t:"Ratatouille",y:2007,g:"family",r:"G",run:"111 MIN",gl:"🐀",
+  c1:"#d4622a",c2:"#6e2a0c",tx:"#ffefdc",
+  tag:"Anyone can cook.",
+  syn:"Remy dreams of becoming a great chef. Unfortunately, Remy is a rat — and the finest kitchen in Paris has a strict no-rodent policy. A five-course tale about talent showing up exactly where nobody thinks to look.",
+  cast:"Patton Oswalt · Lou Romano · Ian Holm · Janeane Garofalo"},
+ {id:"tangled",t:"Tangled",y:2010,g:"family",r:"PG",run:"100 MIN",gl:"🏮",
+  c1:"#8858b0",c2:"#3d2158",tx:"#ffeed8",
+  tag:"They're taking adventure to new lengths.",
+  syn:"Locked in a tower with seventy feet of magical golden hair, Rapunzel strikes a deal with a charming thief for one trip to see the floating lights. It's the best day of her life. Mostly. Bring a frying pan.",
+  cast:"Mandy Moore · Zachary Levi · Donna Murphy"},
+ {id:"wild-robot",t:"The Wild Robot",y:2024,g:"family",r:"PG",run:"102 MIN",gl:"🦆",
+  c1:"#3e7d6a",c2:"#16362d",tx:"#dff5ec",
+  tag:"Discover your true nature.",
+  syn:"Shipwrecked on a wild island, robot ROZZUM unit 7134 does the one thing she was never programmed to do: become a mother. A story about kindness as a survival skill — and one very stubborn gosling.",
+  cast:"Lupita Nyong'o · Pedro Pascal · Catherine O'Hara · Kit Connor"},
+ {id:"klaus",t:"Klaus",y:2019,g:"family",r:"PG",run:"96 MIN",gl:"✉️",
+  c1:"#31547e",c2:"#122238",tx:"#e8f1fd",
+  tag:"Welcome to the jingle.",
+  syn:"A spoiled postman is banished to a frozen feuding town where nobody sends letters — until he knocks on the door of a mysterious toymaker named Klaus. The legend of Santa starts here, and it starts with an ulterior motive.",
+  cast:"Jason Schwartzman · J.K. Simmons · Rashida Jones · Joan Cusack"},
+ {id:"ice-princess",t:"Ice Princess",y:2005,g:"family",r:"G",run:"98 MIN",gl:"⛸️",
+  c1:"#6fa8cf",c2:"#2a4d68",tx:"#f0f8ff",
+  tag:"Dream. Believe. Skate.",
+  syn:"Physics whiz Casey Carlyle cracks the aerodynamics of the perfect jump — then decides she'd rather land it herself. Trading a Harvard scholarship for a pair of skates, she takes on the ice with math on her side.",
+  cast:"Michelle Trachtenberg · Joan Cusack · Kim Cattrall"},
+
+ {id:"forrest-gump",t:"Forrest Gump",y:1994,g:"drama",r:"PG-13",run:"142 MIN",gl:"🍫",
+  c1:"#5e7ea6",c2:"#26374e",tx:"#f2f6fc",
+  tag:"Life is like a box of chocolates…",
+  syn:"Slow of wit and pure of heart, Forrest Gump runs straight through three decades of American history — war hero, shrimp tycoon, ping-pong champion — while carrying a torch for the girl he's loved since the school bus.",
+  cast:"Tom Hanks · Robin Wright · Gary Sinise · Sally Field"},
+ {id:"lady-bird",t:"Lady Bird",y:2017,g:"drama",r:"R",run:"94 MIN",gl:"🕊️",
+  c1:"#b04a56",c2:"#521c23",tx:"#ffe8ea",
+  tag:"Fly away home.",
+  syn:"Christine 'Lady Bird' McPherson is determined to escape Sacramento, her mother, and everything she comes from. Senior year has other plans. A love story between a mother and a daughter who can't stop fighting.",
+  cast:"Saoirse Ronan · Laurie Metcalf · Tracy Letts · Timothée Chalamet"},
+
+ {id:"italian-job",t:"The Italian Job",y:2003,g:"mystery",r:"PG-13",run:"111 MIN",gl:"🚗",
+  c1:"#5a6d80",c2:"#263340",tx:"#e8f1f8",
+  tag:"Get in. Get out. Get even.",
+  syn:"After a double-cross in Venice leaves their crew one man down and $35 million lighter, Charlie Croker's team plans the perfect payback: gridlock all of Los Angeles and drive off with the gold in three Mini Coopers.",
+  cast:"Mark Wahlberg · Charlize Theron · Edward Norton · Jason Statham"},
+ {id:"ant-man",t:"Ant-Man",y:2015,g:"mystery",r:"PG-13",run:"117 MIN",gl:"🐜",
+  c1:"#a8332e",c2:"#481212",tx:"#ffe2dc",
+  tag:"Heroes don't get any bigger.",
+  syn:"Cat burglar Scott Lang just wants to go straight for his daughter. Instead, inventor Hank Pym hands him a suit that shrinks him to the size of an insect — and one last heist that could save the world. Small hero. Big deal.",
+  cast:"Paul Rudd · Evangeline Lilly · Michael Douglas · Corey Stoll"},
+
+ {id:"crazy-stupid-love",t:"Crazy, Stupid, Love",y:2011,g:"comedy",r:"PG-13",run:"118 MIN",gl:"🍸",
+  c1:"#4a6ea0",c2:"#1e3050",tx:"#e8f0fc",
+  tag:"This is crazy. This is stupid. This is love.",
+  syn:"Freshly dumped and hopeless, Cal Weaver gets a barstool makeover from smooth operator Jacob — while three generations of love lives tangle themselves into one perfectly ridiculous knot in a backyard.",
+  cast:"Steve Carell · Ryan Gosling · Julianne Moore · Emma Stone"},
+
+ {id:"pride-prejudice",t:"Pride & Prejudice",y:2005,g:"romance",r:"PG",run:"129 MIN",gl:"💌",
+  c1:"#86986b",c2:"#3c4a2a",tx:"#f2f6e4",
+  tag:"Sometimes the last person on earth you want to be with is the one person you can't be without.",
+  syn:"Elizabeth Bennet has four sisters, a matchmaking mother, and no patience for the proud, silent Mr. Darcy. Unfortunately for both of them, first impressions are rarely the whole story.",
+  cast:"Keira Knightley · Matthew Macfadyen · Rosamund Pike · Donald Sutherland"},
+ {id:"definitely-maybe",t:"Definitely, Maybe",y:2008,g:"romance",r:"PG-13",run:"112 MIN",gl:"📖",
+  c1:"#b06a86",c2:"#52293c",tx:"#ffeaf2",
+  tag:"Three loves. One mystery.",
+  syn:"On the eve of his divorce, Will tells his daughter Maya the story of how he met her mother — names changed, so she has to guess which of his three great loves is the one. It's not the one you think.",
+  cast:"Ryan Reynolds · Isla Fisher · Rachel Weisz · Abigail Breslin"},
+
+ {id:"chicago",t:"Chicago",y:2002,g:"musical",r:"PG-13",run:"113 MIN",gl:"🎭",
+  c1:"#9a7a20",c2:"#453208",tx:"#fdf2cf",
+  tag:"If you can't be famous, be infamous.",
+  syn:"Roxie Hart shoots her lover and lands in Cook County Jail alongside her idol, double-murderess Velma Kelly. With razzle-dazzle lawyer Billy Flynn on the case, murder has never been such sweet showbiz.",
+  cast:"Renée Zellweger · Catherine Zeta-Jones · Richard Gere · Queen Latifah"},
+ {id:"pitch-perfect",t:"Pitch Perfect",y:2012,g:"musical",r:"PG-13",run:"112 MIN",gl:"🎤",
+  c1:"#3a7ba8",c2:"#143a54",tx:"#e0f2ff",
+  tag:"Get pitch slapped.",
+  syn:"Freshman Beca would rather make mixes than friends, but the Barden Bellas need a new sound before the national a cappella finals. Cue riff-offs, cup songs, and one spectacular comeback. Aca-believe it.",
+  cast:"Anna Kendrick · Rebel Wilson · Skylar Astin · Brittany Snow"},
+
+ {id:"parent-trap",t:"The Parent Trap",y:1998,g:"family",r:"PG",run:"128 MIN",gl:"👯",
+  c1:"#4f7a3a",c2:"#24400f",tx:"#eaf5dc",
+  tag:"Twice the fun. Double the trouble.",
+  syn:"Hallie from California and Annie from London meet at summer camp and discover they're identical twins their divorced parents never mentioned. Naturally, they swap lives. Their parents don't stand a chance.",
+  cast:"Lindsay Lohan · Dennis Quaid · Natasha Richardson"},
+
+ {id:"edge-of-seventeen",t:"The Edge of Seventeen",y:2016,g:"drama",r:"R",run:"104 MIN",gl:"🎢",
+  c1:"#d09a2e",c2:"#6b4a0c",tx:"#fff5e0",
+  tag:"You're only young once… is it over yet?",
+  syn:"High school is hard enough — and then Nadine's best (and only) friend starts dating her perfect older brother. Armed with nothing but sarcasm and a reluctant history teacher, she wades into the worst year of her life.",
+  cast:"Hailee Steinfeld · Woody Harrelson · Kyra Sedgwick · Hayden Szeto"},
+ {id:"farewell",t:"The Farewell",y:2019,g:"drama",r:"PG",run:"100 MIN",gl:"✈️",
+  c1:"#3f8f5e",c2:"#17402a",tx:"#e6f8ec",
+  tag:"Based on an actual lie.",
+  syn:"When Nai Nai is given weeks to live, her family throws a wedding as an excuse to say goodbye — without ever telling her she's sick. Billi flies home to Changchun to keep the secret, and isn't sure she can.",
+  cast:"Awkwafina · Tzi Ma · Diana Lin · Zhao Shuzhen"},
+ {id:"perks-wallflower",t:"The Perks of Being a Wallflower",y:2012,g:"drama",r:"PG-13",run:"103 MIN",gl:"🌃",
+  c1:"#4e5aa8",c2:"#202a56",tx:"#e6ebff",
+  tag:"We are infinite.",
+  syn:"Freshman Charlie watches life from the sidelines until two seniors, Sam and Patrick, pull him onto the dance floor. First mixtapes, first parties, first love — and the tunnel song turned all the way up.",
+  cast:"Logan Lerman · Emma Watson · Ezra Miller"},
+];
+
+const SECTIONS = [
+ {key:"mystery", label:"Mystery & Heist", neon:"var(--neon-cyan)"},
+ {key:"comedy",  label:"Comedy",          neon:"var(--neon-amber)"},
+ {key:"romance", label:"Romance",         neon:"var(--neon-pink)", dying:3},
+ {key:"musical", label:"Musicals",        neon:"var(--neon-cyan)"},
+ {key:"family",  label:"Family",          neon:"var(--neon-amber)"},
+ {key:"drama",   label:"Drama",           neon:"var(--neon-pink)"},
+];
+
+/* ============================== shelf ============================== */
+const shelf = document.getElementById("shelf");
+const byId = {};
+for(const sec of SECTIONS){
+  const genre = document.createElement("div");
+  genre.className = "genre";
+  const sign = document.createElement("div");
+  sign.className = "sign";
+  sign.style.setProperty("--sign-color", sec.neon);
+  if(sec.dying != null){
+    const L = sec.label;
+    sign.innerHTML = L.slice(0,sec.dying) +
+      '<span class="dying">'+L[sec.dying]+"</span>" + L.slice(sec.dying+1);
+  }else sign.textContent = sec.label;
+  const row = document.createElement("div");
+  row.className = "row";
+  for(const m of MOVIES.filter(m=>m.g===sec.key)){
+    const b = document.createElement("button");
+    b.className = "spine";
+    b.dataset.id = m.id;
+    b.setAttribute("aria-label", m.t+" ("+m.y+") — pull off the shelf");
+    b.style.setProperty("--c1", m.c1);
+    b.style.setProperty("--c2", m.c2);
+    b.style.setProperty("--tx", m.tx);
+    b.innerHTML =
+      '<span class="stitle">'+m.t+'</span>'+
+      '<span class="syear">'+m.y+'</span>'+
+      '<span class="srating">'+m.r+'</span>';
+    b.addEventListener("click", ()=>{ if(!dragMoved) openCase(m, b); });
+    row.appendChild(b);
+    byId[m.id] = b;
+  }
+  genre.append(sign, row);
+  shelf.appendChild(genre);
+}
+
+/* ============================== scroll (wheel + drag) ============================== */
+const aisle = document.getElementById("aisle");
+aisle.addEventListener("wheel", e=>{
+  if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+    aisle.scrollLeft += e.deltaY;
+    e.preventDefault();
+  }
+},{passive:false});
+
+let dragMoved=false, dragStartX=0, dragStartScroll=0, dragging=false;
+aisle.addEventListener("pointerdown", e=>{
+  if(e.target.closest(".spine") && e.pointerType==="touch") return; // let taps be taps
+  dragging=true; dragMoved=false;
+  dragStartX=e.clientX; dragStartScroll=aisle.scrollLeft;
+  aisle.classList.add("dragging");
+});
+window.addEventListener("pointermove", e=>{
+  if(!dragging) return;
+  const dx = e.clientX - dragStartX;
+  if(Math.abs(dx)>6) dragMoved=true;
+  aisle.scrollLeft = dragStartScroll - dx;
+});
+window.addEventListener("pointerup", ()=>{
+  dragging=false; aisle.classList.remove("dragging");
+  setTimeout(()=>{dragMoved=false},0);
+});
+
+/* ============================== 3D pull-out ============================== */
+const wrap = document.getElementById("caseWrap");
+const case3d = document.getElementById("case3d");
+const backdrop = document.getElementById("backdrop");
+const closeBtn = document.getElementById("closeBtn");
+const hint = document.getElementById("hint");
+let current=null, currentBtn=null, rot=90, busy=false;
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function buildFaces(m){
+  case3d.style.setProperty("--c1", m.c1);
+  case3d.style.setProperty("--c2", m.c2);
+  case3d.style.setProperty("--tx", m.tx);
+  case3d.innerHTML =
+   '<div class="face front">'+
+     '<div class="fglyph">'+m.gl+'</div>'+
+     '<div class="ftitle">'+esc(m.t)+'</div>'+
+     '<div class="fyear">'+m.y+'</div>'+
+     '<div class="fformat"><span>VHS</span><span>HI-FI STEREO</span><span>COLOR</span></div>'+
+     '<img class="poster" alt="">'+
+     '<div class="gloss"></div>'+
+     '<div class="pricetag">$2.99<small>3-DAY RENTAL</small></div>'+
+   '</div>'+
+   '<div class="face back">'+
+     '<div class="bband">'+esc(m.tag)+'</div>'+
+     '<p class="bsyn">'+esc(m.syn)+'</p>'+
+     '<div class="bcast"><b>Starring</b>'+esc(m.cast)+'</div>'+
+     '<div class="rewind">BE KIND · REWIND</div>'+
+     '<div class="bmeta">'+
+       '<span class="brating">'+m.r+'</span>'+
+       '<span class="bruntime">'+m.run+' · '+m.y+'</span>'+
+       '<span class="bbarcode"></span>'+
+     '</div>'+
+   '</div>'+
+   '<div class="face sp"><span class="stitle">'+esc(m.t)+'</span></div>'+
+   '<div class="face sp2"></div>'+
+   '<div class="face top"></div><div class="face bot"></div>';
+  loadPoster(case3d.querySelector(".poster"), m.id);
+}
+
+/* fade the poster in when it arrives; retry a few times if the request hiccups */
+function loadPoster(img, id, tries){
+  tries = tries || 0;
+  img.onload = ()=> img.classList.add("loaded");
+  img.onerror = ()=>{
+    if(tries < 3) setTimeout(()=> loadPoster(img, id, tries+1), 400*(tries+1));
+  };
+  img.src = "video-store-posters/"+id+".jpg" + (tries ? "?retry="+tries : "");
+}
+
+function caseScale(){
+  const CW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--case-w"));
+  const CH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--case-h"));
+  return Math.min(1, (innerHeight*0.72)/CH, (innerWidth*0.82)/CW);
+}
+
+function spineTransform(btn){
+  const r = btn.getBoundingClientRect();
+  const CH = wrap.offsetHeight;
+  const s0 = r.height / CH;
+  const dx = (r.left + r.width/2) - innerWidth/2;
+  const dy = (r.top + r.height/2) - innerHeight*0.47;
+  return "translate("+dx+"px,"+dy+"px) scale("+s0+")";
+}
+
+function openCase(m, btn){
+  if(busy || current) return;
+  busy = true; current = m; currentBtn = btn;
+  buildFaces(m);
+  wrap.classList.add("show");
+  wrap.classList.remove("anim");
+  rot = 90; // spine facing camera
+  wrap.style.transform = spineTransform(btn);
+  case3d.style.transform = "rotateY("+rot+"deg)";
+  btn.classList.add("pulled");
+  // force layout, then animate out
+  void wrap.offsetWidth;
+  wrap.classList.add("anim");
+  backdrop.classList.add("on");
+  rot = 0; // land on the poster; click flips to the back
+  wrap.style.transform = "translate(0px,0px) scale("+caseScale()+")";
+  case3d.style.transform = "rotateY("+rot+"deg)";
+  sfx.pull();
+  tvPlay(m);
+  hint.textContent = "click the box to flip it over · esc puts it back";
+  setTimeout(()=>{ busy=false; closeBtn.classList.add("show"); closeBtn.focus({preventScroll:true}); }, 780);
+}
+
+function flipCase(){
+  if(busy || !current) return;
+  rot += 180; // back <-> front, always spinning the same way
+  case3d.style.transform = "rotateY("+rot+"deg)";
+  sfx.flip();
+}
+
+function closeCase(){
+  if(busy || !current) return;
+  busy = true;
+  closeBtn.classList.remove("show");
+  backdrop.classList.remove("on");
+  rot += (90 - (rot % 360) + 360) % 360; // forward to the next spine-facing angle
+  wrap.style.transform = spineTransform(currentBtn);
+  case3d.style.transform = "rotateY("+rot+"deg)";
+  sfx.slide();
+  tvStandby();
+  const btn = currentBtn;
+  setTimeout(()=>{
+    wrap.classList.remove("show","anim");
+    btn.classList.remove("pulled");
+    btn.focus({preventScroll:true});
+    current=null; currentBtn=null; busy=false;
+    hint.textContent = "scroll to browse  ·  click a tape to pull it off the shelf";
+  }, 780);
+}
+
+case3d.addEventListener("click", flipCase);
+closeBtn.addEventListener("click", closeCase);
+backdrop.addEventListener("click", closeCase);
+window.addEventListener("keydown", e=>{ if(e.key==="Escape") closeCase(); });
+
+/* ============================== NOW PLAYING monitor ============================== */
+const tv = document.getElementById("tv");
+const tvtext = document.getElementById("tvtext");
+const cv = document.getElementById("tvcanvas");
+const cx = cv.getContext("2d");
+let tvMovie = null, tvBurst = 0;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function drawStatic(intensity){
+  const w=cv.width, h=cv.height;
+  const img = cx.createImageData(w,h);
+  const d = img.data;
+  for(let i=0;i<d.length;i+=4){
+    const v = Math.random()*255*intensity;
+    d[i]   = v*0.75;        // cool phosphor tint
+    d[i+1] = v*0.92;
+    d[i+2] = v;
+    d[i+3] = 255;
+  }
+  cx.putImageData(img,0,0);
+  // occasional horizontal tear
+  if(Math.random()<0.12){
+    const y = Math.random()*h|0;
+    cx.fillStyle = "rgba(180,220,255,0.35)";
+    cx.fillRect(0,y,w,1+Math.random()*2);
+  }
+}
+function drawTitle(){
+  if(!tvMovie) return;
+  const w=cv.width, h=cv.height;
+  cx.fillStyle = "rgba(3,8,20,0.62)";
+  cx.fillRect(0,0,w,h);
+  const jx = reduceMotion?0:(Math.random()*1.6-0.8);
+  const jy = reduceMotion?0:(Math.random()*1.2-0.6);
+  cx.fillStyle = "#8df2ff";
+  cx.font = "700 9px 'Futura','Trebuchet MS',sans-serif";
+  cx.textAlign="center";
+  cx.fillText("NOW PLAYING", w/2+jx, h/2-14+jy);
+  cx.fillStyle = "#f3f7ff";
+  const t = tvMovie.t.toUpperCase();
+  cx.font = (t.length>16? "800 10px":"800 13px")+" 'Futura','Trebuchet MS',sans-serif";
+  cx.fillText(t, w/2+jx, h/2+4+jy, w-10);
+  cx.fillStyle = "rgba(141,242,255,0.75)";
+  cx.font = "600 8px 'Futura',sans-serif";
+  cx.fillText(tvMovie.y+"  ·  "+tvMovie.r, w/2+jx, h/2+20+jy);
+}
+let lastFrame=0;
+function tvLoop(ts){
+  requestAnimationFrame(tvLoop);
+  if(ts-lastFrame < (reduceMotion?250:80)) return;
+  lastFrame = ts;
+  if(tvBurst>0){ drawStatic(1); tvBurst--; return; }
+  if(tvMovie){ drawStatic(0.45); drawTitle(); }
+  else drawStatic(0.8);
+}
+requestAnimationFrame(tvLoop);
+
+function tvPlay(m){ tvMovie=m; tvBurst=reduceMotion?0:6; tv.classList.add("playing"); tvtext.textContent="Now Playing"; }
+function tvStandby(){ tvMovie=null; tvBurst=reduceMotion?0:5; tv.classList.remove("playing"); tvtext.textContent="Standby"; }
+
+/* ============================== tiny sounds ============================== */
+const sfx = (()=>{
+  let ac=null;
+  function ctx(){ if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)(); return ac; }
+  function noiseBurst(dur, freq, gain){
+    try{
+      const a=ctx(), t=a.currentTime;
+      const buf=a.createBuffer(1, a.sampleRate*dur, a.sampleRate);
+      const ch=buf.getChannelData(0);
+      for(let i=0;i<ch.length;i++) ch[i]=(Math.random()*2-1)*(1-i/ch.length);
+      const src=a.createBufferSource(); src.buffer=buf;
+      const bp=a.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=freq; bp.Q.value=1.2;
+      const g=a.createGain(); g.gain.setValueAtTime(gain,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      src.connect(bp).connect(g).connect(a.destination);
+      src.start(t);
+    }catch(e){}
+  }
+  return {
+    pull(){ noiseBurst(0.12, 900, 0.18); noiseBurst(0.2, 180, 0.22); },
+    flip(){ noiseBurst(0.07, 1400, 0.1); },
+    slide(){ noiseBurst(0.16, 500, 0.14); },
+  };
+})();
+
+/* warm the poster cache so the flip never catches a blank front */
+addEventListener("load", () => {
+  setTimeout(() => MOVIES.forEach(m => { new Image().src = "video-store-posters/" + m.id + ".jpg"; }), 400);
+});
+
+/* resize: keep an open case fitting the viewport */
+window.addEventListener("resize", ()=>{
+  if(current && !busy){
+    wrap.classList.remove("anim");
+    wrap.style.transform = "translate(0px,0px) scale("+caseScale()+")";
+    void wrap.offsetWidth;
+    wrap.classList.add("anim");
+  }
+});
+</script>
+</body>
+</html>
