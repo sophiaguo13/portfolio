@@ -480,6 +480,10 @@ img { display: block; max-width: 100%; }
    position (translateY(0), matching the revealed original exactly so the two
    layers rasterize glyphs identically) rather than the pre-reveal 115% */
 .spot-overlay .ed-line { transform: translateY(0) !important; }
+/* the overlay is a static mirror (no reveal animation), so it doesn't need the
+   reveal-word's overflow:hidden clip — which can land a pixel high on some GPUs
+   and slice descenders (g/p/y), letting the black base text peek out below */
+.spot-overlay .reveal-word { overflow: visible !important; }
 @keyframes edRainbow {
   to { background-position: 200% center; }
 }
