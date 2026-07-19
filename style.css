@@ -479,15 +479,17 @@ img { display: block; max-width: 100%; }
    .ed-line lines don't carry the .revealed class, so pin them to the shown
    position (translateY(0), matching the revealed original exactly so the two
    layers rasterize glyphs identically) rather than the pre-reveal 115% */
-.spot-overlay .ed-line { transform: translateY(0) !important; }
-/* the overlay is a static mirror (no reveal animation), so it doesn't need the
-   reveal-word's overflow:hidden clip — which can land a pixel high on some GPUs
-   and slice descenders (g/p/y), letting the black base text peek out below */
-.spot-overlay .reveal-word { overflow: visible !important; }
-/* the hero title is a flex column; make its overlay clone stack the same way so
-   line positions match exactly (block vs flex can diverge on some browsers,
-   offsetting the rainbow above the base text and exposing descenders) */
 .ed-title .spot-overlay { display: flex; flex-direction: column; }
+.spot-overlay .reveal-word { overflow: visible !important; }
+/* the rainbow is background-clip:text; the title's tight line-height leaves
+   descenders (g/p/y) below the paint box, so they'd go unpainted and expose the
+   black base text. Extend the paint box down with padding, negated by an equal
+   margin so line positions are unchanged. */
+.spot-overlay .ed-line {
+  transform: translateY(0) !important;
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
+}
 @keyframes edRainbow {
   to { background-position: 200% center; }
 }
