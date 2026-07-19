@@ -448,6 +448,14 @@ img { display: block; max-width: 100%; }
 @media (max-width: 640px) {
   .ed-hero { padding: 110px 24px 80px; }
   .ed-meta { gap: 28px; }
+  /* stack the masthead labels so they don't cram into a broken grid */
+  .ed-masthead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 20px;
+    margin-bottom: 36px;
+  }
 }
 
 /* Spotlight: cursor reveals rainbow letters under a soft light (any heading) */
