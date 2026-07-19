@@ -484,6 +484,10 @@ img { display: block; max-width: 100%; }
    reveal-word's overflow:hidden clip — which can land a pixel high on some GPUs
    and slice descenders (g/p/y), letting the black base text peek out below */
 .spot-overlay .reveal-word { overflow: visible !important; }
+/* the hero title is a flex column; make its overlay clone stack the same way so
+   line positions match exactly (block vs flex can diverge on some browsers,
+   offsetting the rainbow above the base text and exposing descenders) */
+.ed-title .spot-overlay { display: flex; flex-direction: column; }
 @keyframes edRainbow {
   to { background-position: 200% center; }
 }
