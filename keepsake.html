@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keepsake — Sophia Guo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="stylesheet" href="case-study.css?v=16" />
+  <style>
+    /* placeholder scaffolding — remove as sections are filled in */
+    .kp-note { color: var(--muted); font-style: italic; }
+    .kp-ph {
+      border: 2px dashed var(--card-border);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      text-align: center; padding: 24px;
+      background: var(--card-bg);
+    }
+    .kp-ph.wide { aspect-ratio: 16 / 9; }
+    .kp-ph.phone { aspect-ratio: 9 / 19; max-width: 300px; margin: 0 auto; }
+  </style>
+  <style>
+    /* persistent page styles */
+    .cs-pill-list.kp-dots-pink li::before { background: var(--accent); }
+    /* looping prototype flow videos — device mockup fills the frame; radius clips the gray canvas corners */
+    .kp-flow-vid { display:block; width:100%; max-width:300px; border-radius:46px; margin:0; }
+    /* one flow per row, alternating sides — reads as a sequence, less simultaneous motion */
+    .kp-flow-row { display:flex; align-items:center; gap:56px; margin-top:56px; }
+    .kp-flow-row.reverse { flex-direction:row-reverse; }
+    .kp-flow-media { flex:0 0 300px; }
+    .kp-flow-media .kp-ph.phone { margin:0; }
+    .kp-flow-text { flex:1; }
+    @media (max-width:760px){
+      .kp-flow-row, .kp-flow-row.reverse { flex-direction:column; align-items:flex-start; gap:20px; margin-top:44px; }
+      .kp-flow-media { flex:0 0 auto; width:100%; max-width:300px; }
+    }
+    /* finale flow — two perspectives (sender → recipient) shown as a handoff */
+    .kp-flow-finale { margin-top:80px; }
+    .kp-share-duo { display:flex; align-items:flex-start; justify-content:center; gap:40px; margin-top:40px; }
+    .kp-share-duo figure { margin:0; width:100%; max-width:280px; }
+    .kp-share-arrow { align-self:center; flex:0 0 auto; color:var(--muted); font-size:22px; line-height:1; }
+    .kp-share-cap { text-align:center; font-size:12.5px; color:var(--muted); margin-top:12px; }
+    @media (max-width:760px){
+      .kp-share-duo { flex-direction:column; align-items:center; gap:28px; }
+      .kp-share-arrow { transform:rotate(90deg); }
+    }
+    /* photo-curation: before -> after -> in-app, one horizontal flow */
+    .kp-cur-label { font-size:11px; letter-spacing:0.09em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+    .kp-cur-flow { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-top:32px; flex-wrap:wrap; }
+    .kp-cur-stage { display:flex; flex-direction:column; align-items:center; gap:14px; }
+    .kp-cur-mini { display:grid; gap:7px; }
+    .kp-cur-mini.before { grid-template-columns: repeat(4, 66px); }
+    .kp-cur-mini.after { grid-template-columns: repeat(2, 96px); }
+    .kp-cur-mini img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:6px; display:block; }
+    .kp-cur-mini.before img { opacity:0.68; }
+    .kp-cur-phone { display:block; width:236px; border-radius:36px; }
+    .kp-cur-arrow2 { color:var(--muted); font-size:22px; line-height:1; }
+    /* shared web page — 3 recipient screens side by side */
+    .cs-share-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:34px; align-items:start; }
+    .cs-share-strip figure { margin:0; }
+    .cs-share-strip img { width:100%; display:block; }
+    .cs-share-strip figcaption { text-align:center; font-size:12.5px; color:var(--muted); margin-top:14px; }
+    @media (max-width:760px){ .cs-share-strip { grid-template-columns:1fr; max-width:320px; margin-left:auto; margin-right:auto; } }
+    @media (max-width:760px){
+      .kp-cur-flow { flex-direction:column; }
+      .kp-cur-arrow2 { transform:rotate(90deg); }
+    }
+    /* success & next — 2-up cards */
+    .kp-signals { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+    @media (max-width:640px){ .kp-signals { grid-template-columns:1fr; } }
+    /* problem origin — camera-roll grid beside the paragraphs */
+    .kp-problem-row { display:flex; gap:48px; align-items:center; margin-top:24px; }
+    .kp-problem-text { flex:1 1 380px; min-width:0; }
+    .kp-problem-text p:first-child { margin-top:0; }
+    .kp-roll-wrap { flex:0 0 clamp(210px, 32%, 262px); position:relative; }
+    .kp-roll-img { width:100%; display:block; border-radius:24px; border:1px solid rgba(0,0,0,0.06); box-shadow:0 22px 48px -18px rgba(40,34,24,0.34); }
+    .kp-roll-cap { text-align:center; font-size:12.5px; color:var(--muted); margin-top:14px; }
+    @media (min-width:721px){ .kp-roll-cap { position:absolute; top:100%; left:0; right:0; margin-top:12px; } }
+    @media (max-width:720px){ .kp-problem-row { flex-direction:column; } .kp-roll-wrap { flex:0 0 auto; width:100%; max-width:300px; } }
+    /* cover — staggered phone trio on a warm, editorial paper band (matches the app's identity) */
+    .kp-cover { background: linear-gradient(157deg, #F4F0E8 0%, #ECE6DB 55%, #E6DFD1 100%); border-radius: 24px; padding: clamp(44px,6vw,76px) 24px; overflow: hidden; }
+    .kp-cover-stage { display: flex; align-items: center; justify-content: center; }
+    .kp-cover-phone { display: block; box-shadow: 0 26px 50px -18px rgba(48,40,28,0.32); }
+    .kp-cover-phone.side { width: 200px; border-radius: 28px; }
+    .kp-cover-phone.center { width: 244px; border-radius: 32px; position: relative; z-index: 2; box-shadow: 0 42px 72px -22px rgba(48,40,28,0.42); }
+    .kp-cover-phone.left { margin-right: -34px; z-index: 1; transform: translateY(8px); }
+    .kp-cover-phone.right { margin-left: -34px; z-index: 1; transform: translateY(8px); }
+    @media (max-width: 700px){
+      .kp-cover-phone.side { display: none; }
+      .kp-cover-phone.center { width: min(62vw, 260px); }
+      .kp-cover { padding: 40px 16px; }
+    }
+  </style>
+</head>
+<body class="cs-page">
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo" data-cursor="link">sg.</a>
+    <div class="nav-links">
+      <a href="index.html#work" class="nav-link" data-cursor="link">Work</a>
+      <a href="playground.html" class="nav-link" data-cursor="link">Playground</a>
+      <a href="index.html#about" class="nav-link" data-cursor="link">About</a>
+      <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="nav-link nav-cta" data-cursor="link">Resume ↗</a>
+    </div>
+  </nav>
+
+  <!-- Sticky table of contents (update labels/ids as sections are finalized) -->
+  <nav class="cs-toc" aria-label="Case study sections">
+    <a href="#sec-01" class="cs-toc-link" data-cursor="link">The Problem</a>
+    <a href="#sec-02" class="cs-toc-link" data-cursor="link">The Solution</a>
+    <a href="#sec-03" class="cs-toc-link" data-cursor="link">Input Philosophy</a>
+    <a href="#sec-04" class="cs-toc-link" data-cursor="link">Photo Curation</a>
+    <a href="#sec-05" class="cs-toc-link" data-cursor="link">The Narrative</a>
+    <a href="#sec-06" class="cs-toc-link" data-cursor="link">Trust &amp; Truth</a>
+    <a href="#sec-07" class="cs-toc-link" data-cursor="link">Capturing Feeling</a>
+    <a href="#sec-08" class="cs-toc-link" data-cursor="link">Edit &amp; Read Modes</a>
+    <a href="#sec-09" class="cs-toc-link" data-cursor="link">Navigation</a>
+    <a href="#sec-10" class="cs-toc-link" data-cursor="link">Sharing</a>
+    <a href="#sec-11" class="cs-toc-link" data-cursor="link">Success &amp; Next</a>
+    <a href="#sec-12" class="cs-toc-link" data-cursor="link">Reflections</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="cs-hero">
+    <div class="cs-wrap">
+      <div class="cs-hero-meta"><a href="index.html#work" class="cs-back" data-cursor="link">
+        <span class="cs-back-arrow">←</span>
+        Back to work
+      </a>
+      <div class="cs-project-label">
+        <span class="cs-project-label-dot"></span>
+        Self-Initiated · AI Mobile Concept
+      </div></div>
+      <h1 class="cs-title spotlight-target">Keepsake</h1>
+      <p class="cs-lead">An AI concept that turns a camera roll into a detailed, first-person account of a trip — for the traveler who took hundreds of photos and wrote down nothing.</p>
+      <div class="cs-meta-strip">
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Timeline</div>
+          <div class="cs-meta-value">July 2026 – Present</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Role</div>
+          <div class="cs-meta-value">Sole Designer</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Tools</div>
+          <div class="cs-meta-value">Figma · Claude Design · ChatGPT</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Type</div>
+          <div class="cs-meta-value">AI Mobile Concept</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover -->
+  <div class="cs-cover-wrap">
+    <div class="kp-cover cs-reveal">
+      <div class="kp-cover-stage">
+        <img class="kp-cover-phone side left" src="images/keepsake/cover-left.jpg" alt="Keepsake onboarding — &lsquo;Three steps, then it&rsquo;s yours&rsquo;" />
+        <video class="kp-cover-phone center" autoplay loop muted playsinline preload="metadata" aria-label="Keepsake — a camera roll reconstructed into a day-by-day, first-person trip story">
+          <source src="images/keepsake/finish-trip.webm" type="video/webm">
+          <source src="images/keepsake/finish-trip.mp4" type="video/mp4">
+        </video>
+        <img class="kp-cover-phone side right" src="images/keepsake/cover-right.png" alt="Keepsake Trips library — the home screen of saved trip cards (Japan, Manzanita, Italy)" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 The Problem -->
+  <section id="sec-01" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">01 — The Problem</p>
+      <h2 class="cs-heading cs-reveal">Photos Pile Up, Memories Don't</h2>
+      <div class="kp-problem-row cs-reveal">
+        <div class="kp-problem-text">
+          <p class="cs-body">Keepsake started with a phone call. My parents had just gotten back from two weeks in Prague and Austria — they take two or three big trips a year and love sharing the photos with our extended family — but my mom couldn't remember which city they'd been in on which day, or the names of half the landmarks they'd stood in front of. They'd already tried a handful of apps on the App Store. None of them fit.</p>
+          <p class="cs-body" style="margin-top:16px;">When I looked at my own last few years, I found the same blind spot: photos full of restaurants I can't name and small towns I can't place, and a little shop I loved that I could never point a friend back to. When someone asks what a trip was actually like, the itinerary is messy, half-followed, and impossible to find.</p>
+          <p class="cs-body" style="margin-top:22px;padding:16px 0 16px 20px;border-left:3px solid var(--accent);color:var(--fg);">It's a common shape — photos pile up faster than we make sense of them, and a trip's details blur within weeks, close to unrecoverable within months. And every tool that promises to help asks for the effort at the wrong moment: <strong>while you're traveling, not after.</strong></p>
+        </div>
+        <div class="kp-roll-wrap">
+          <img class="kp-roll-img" src="images/keepsake/camera-roll.jpg" alt="A single trip's iOS camera roll — a dense, blurred grid of hundreds of unsorted travel photos" loading="lazy" />
+          <div class="kp-roll-cap">One trip's camera roll — and this is a third of it.</div>
+        </div>
+      </div>
+
+      <h3 class="cs-subheading cs-reveal" style="margin-top:44px;">A Crowded Space, One Shared Blind Spot</h3>
+      <p class="cs-body cs-reveal" style="max-width:760px;">The apps my mom tried weren't bad — they were built for a different moment. Scanning the "AI + travel memories" space showed why: it's crowded, but every serious player shares one requirement Keepsake drops.</p>
+      <div class="cs-table-wrap cs-reveal" style="margin-top:20px;">
+        <table class="cs-table">
+          <thead>
+            <tr><th>Approach</th><th>Example</th><th>What it asks of you</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>GPS live tracking</td><td>Polarsteps</td><td>The app running live, all trip</td></tr>
+            <tr><td>AI journaling</td><td>Day One AI</td><td>Prompts answered as you go</td></tr>
+            <tr><td>Photo + reflection</td><td>A wave of newer apps</td><td>Opened and used during the trip</td></tr>
+            <tr class="cs-table-total"><td><strong>Camera roll, after the fact</strong></td><td><strong>Keepsake</strong></td><td><strong>Nothing during the trip ←</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cs-body cs-reveal" style="max-width:760px;margin-top:20px;">The differentiation that survived scrutiny wasn't the AI — it was the audience: <strong>Keepsake is built for someone who did nothing during the trip.</strong> That single distinction became the filter I ran every later decision through.</p>
+
+      <div class="cs-callout accent3 cs-reveal" style="margin-top:32px;">
+        <div class="cs-callout-label">Who It's For</div>
+        <p>Primarily frequent travelers — people who take enough trips to start losing track of the individual ones — though anyone who travels can use Keepsake as a running log of everywhere they've been. Frequent travel is simply where the pain is sharpest.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 The Solution (moved up, right after the problem brief) -->
+  <section id="sec-02" class="cs-section warm-bg">
+    <p class="cs-eyebrow cs-reveal">02 — The Solution</p>
+    <h2 class="cs-heading cs-reveal">A Trip, Reconstructed From Your Camera Roll</h2>
+    <p class="cs-body cs-reveal" style="max-width:760px;">The result is a keepsake you can read back — a day-by-day, first-person account of where you went, what you ate, and what you saw. It's built from the photos themselves: <strong>timestamps order the days, EXIF location data places each one, and image recognition reads what's in the frame</strong> — a temple, a bowl of ramen, a train platform — so the AI can name places and describe meals without you labeling a thing. Optional context like a calendar or itinerary can sharpen names and fill gaps, but the photos lead. Everything after that first draft is about <strong>making it accurate, and making it yours.</strong> Here's the full arc, from empty app to a trip worth sharing.</p>
+
+    <!-- 6 prototype flows — one per row, alternating sides; swap each .kp-ph.phone for the looping video when ready -->
+
+    <div class="kp-flow-row cs-reveal">
+      <div class="kp-flow-media">
+        <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+          <source src="images/keepsake/onboarding.webm" type="video/webm">
+          <source src="images/keepsake/onboarding.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="kp-flow-text">
+        <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:var(--font-serif);color:var(--accent);font-size:30px;line-height:1;">01</span><span style="font-weight:600;color:var(--fg);font-size:23px;">Onboarding</span></div>
+        <p style="font-size:14px;line-height:1.6;margin-top:10px;max-width:430px;color:var(--muted);">Onboarding opens with expectations, not a form — three plain steps before it asks for anything. Photo access comes with a promise: <strong style="color:var(--fg);">the photos are read for your story only, never posted or shared.</strong> Sign-in stays lightweight and passwordless, so setup never feels like a gate.</p>
+      </div>
+    </div>
+
+    <div class="kp-flow-row reverse cs-reveal">
+      <div class="kp-flow-media">
+        <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+          <source src="images/keepsake/start-trip.webm" type="video/webm">
+          <source src="images/keepsake/start-trip.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="kp-flow-text">
+        <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:var(--font-serif);color:var(--accent);font-size:30px;line-height:1;">02</span><span style="font-weight:600;color:var(--fg);font-size:23px;">Start a Trip</span></div>
+        <p style="font-size:14px;line-height:1.6;margin-top:10px;max-width:430px;color:var(--muted);">Starting a trip means picking one, not building one — Keepsake has already grouped your camera roll into trips by date and place. Optional context like a calendar or itinerary is offered but always skippable, and anything it adds you can toggle off, because <strong style="color:var(--fg);">the photos stay the source of truth.</strong> Generation runs in the background and lands in your library when it's done.</p>
+      </div>
+    </div>
+
+    <div class="kp-flow-row cs-reveal">
+      <div class="kp-flow-media">
+        <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+          <source src="images/keepsake/review-correct.webm" type="video/webm">
+          <source src="images/keepsake/review-correct.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="kp-flow-text">
+        <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:var(--font-serif);color:var(--accent);font-size:30px;line-height:1;">03</span><span style="font-weight:600;color:var(--fg);font-size:23px;">Review &amp; Correct</span></div>
+        <p style="font-size:14px;line-height:1.6;margin-top:10px;max-width:430px;color:var(--muted);">Reviewing is just reading — there's no separate review queue. Unsure names carry a dotted underline that opens a photo-backed &ldquo;Fix this place,&rdquo; usually a one-tap save. You can also rewrite a whole sentence, so the story ends up <strong style="color:var(--fg);">sounding like you, not a model.</strong></p>
+      </div>
+    </div>
+
+    <div class="kp-flow-row reverse cs-reveal">
+      <div class="kp-flow-media">
+        <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+          <source src="images/keepsake/reflections.webm" type="video/webm">
+          <source src="images/keepsake/reflections.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="kp-flow-text">
+        <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:var(--font-serif);color:var(--accent);font-size:30px;line-height:1;">04</span><span style="font-weight:600;color:var(--fg);font-size:23px;">Add Reflections</span></div>
+        <p style="font-size:14px;line-height:1.6;margin-top:10px;max-width:430px;color:var(--muted);">Reflections are the one place feeling enters the story — so they live in their own card at the end of each day, <strong style="color:var(--fg);">never woven into the factual narrative.</strong> They're opt-in prompts answered in your own words, and the picker only surfaces ones you haven't used, so it never nags.</p>
+      </div>
+    </div>
+
+    <div class="kp-flow-row cs-reveal">
+      <div class="kp-flow-media">
+        <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+          <source src="images/keepsake/finish-trip.webm" type="video/webm">
+          <source src="images/keepsake/finish-trip.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="kp-flow-text">
+        <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:var(--font-serif);color:var(--accent);font-size:30px;line-height:1;">05</span><span style="font-weight:600;color:var(--fg);font-size:23px;">Finish the Trip</span></div>
+        <p style="font-size:14px;line-height:1.6;margin-top:10px;max-width:430px;color:var(--muted);">Once every day is reviewed, &ldquo;Generate trip memory&rdquo; stitches them into one continuous, day-by-day read — <strong style="color:var(--fg);">the keepsake itself.</strong> Nothing locks; you can keep editing afterward. It flows morning to night with your reflections folded in, and closes on a Wrapped-style card that reads your travel style from how you actually moved.</p>
+      </div>
+    </div>
+
+    <div class="kp-flow-finale cs-reveal">
+      <div style="text-align:center;max-width:600px;margin:0 auto;">
+        <div style="display:flex;align-items:baseline;gap:10px;justify-content:center;"><span style="font-family:var(--font-serif);color:var(--accent);font-size:30px;line-height:1;">06</span><span style="font-weight:600;color:var(--fg);font-size:23px;">Share the Trip</span></div>
+        <p style="font-size:14px;line-height:1.6;margin-top:10px;color:var(--muted);">Sharing stays low-stakes on both ends. You choose what goes in the link — <strong style="color:var(--fg);">reflections stay private unless you turn them on</strong> — then send it like any other link. The recipient opens a plain, view-only web page in their browser: no app, no account, just the whole trip.</p>
+      </div>
+      <div class="kp-share-duo">
+        <figure>
+          <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+            <source src="images/keepsake/share-sender.webm" type="video/webm">
+            <source src="images/keepsake/share-sender.mp4" type="video/mp4">
+          </video>
+          <div class="kp-share-cap">You share the link</div>
+        </figure>
+        <div class="kp-share-arrow" aria-hidden="true">→</div>
+        <figure>
+          <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata">
+            <source src="images/keepsake/share-recipient.webm" type="video/webm">
+            <source src="images/keepsake/share-recipient.mp4" type="video/mp4">
+          </video>
+          <div class="kp-share-cap">They open it — no app, no account</div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Input Philosophy -->
+  <section id="sec-03" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">03 — Input Philosophy</p>
+      <h2 class="cs-heading cs-reveal">Recognition Over Recall</h2>
+      <p class="cs-body cs-reveal" style="max-width:760px;">The founding rule for every input source was simple: <strong>nothing should ever require typing structured information.</strong> Photos are the one required input — the trip's raw material — and everything else is a connect, forward, or paste action, never a form. Those optional sources are surfaced only <em>after</em> the first AI draft already exists, so Keepsake proves its worth on almost nothing before it asks you for anything more.</p>
+
+      <div class="cs-img-block no-border cs-bleed" style="margin-top:36px;">
+        <img src="images/keepsake/input-flow.svg" alt="Keepsake input model — one required source (camera roll), optional context (Google Calendar, file upload, pasted itinerary, or a named destination), a reconstruction step that groups photos into days and scores every place as confirmed or needs-review, and the resulting draft trip" />
+        <p class="cs-img-caption">The full input model — one required source, up to four optional ones (any, all, or none), and a reconstruction step that grades every place as confirmed or needs review before the day is written. Skipping all four optional sources is a supported path; more days simply arrive marked for review.</p>
+      </div>
+
+      <div class="cs-callout accent2 cs-reveal" style="margin-top:36px;">
+        <div class="cs-callout-label">A Feature I Killed</div>
+        <p>An early feature let users forward booking-confirmation emails for Keepsake to parse automatically. It was fully scoped — then cut. Its one unique contribution, flight details invisible to photos, could be recovered far more cheaply from a <strong>screenshot people already take</strong>, folded into the existing upload-and-paste flow rather than standing up new email-parsing infrastructure. A clean case of killing a feature once it couldn't justify its cost.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Photo Curation -->
+  <section id="sec-04" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">04 — Photo Curation</p>
+      <h2 class="cs-heading cs-reveal">Representative, Not Exhaustive</h2>
+      <p class="cs-body cs-reveal" style="max-width:720px;">A single day can be hundreds of photos, and dropping all of them into the recap would bury the story. So the AI curates a representative few for each day — and how it chooses matters as much as how it writes.</p>
+      <ul class="cs-pill-list cs-reveal" style="margin-top:20px;max-width:720px;">
+        <li><strong>Stops before photos.</strong> A day is first clustered into sub-location stops — three to six of them, not one blob — and photos are chosen within each, so no single place dominates.</li>
+        <li><strong>Diversity over a quality score.</strong> It favors a spread of subjects — food, architecture, people, scenery — rather than ranking on sharpness alone, and weights photos with people in them higher.</li>
+        <li><strong>Bursts collapse.</strong> Near-identical burst shots dedupe down to the single best frame.</li>
+        <li><strong>Count scales with volume.</strong> The number shown grows with how much you actually shot, held between a floor and a ceiling — never a fixed number.</li>
+        <li><strong>Utility shots stay out of the way.</strong> Screenshots and receipts go to a low-priority reference bucket, never surfaced as highlights.</li>
+      </ul>
+
+      <div class="cs-reveal" style="margin-top:48px;">
+        <h3 class="cs-subheading">One Stop, Curated</h3>
+        <p class="cs-body" style="max-width:720px;margin-top:8px;">A single stop at Meiji Jingu produced fourteen near-overlapping photos — burst shots of the same gate, the same plaque wall, the same pose. Here's what that looks like end to end: the set the AI started with, the five it kept, and how they land in the app.</p>
+        <div class="kp-cur-flow">
+          <div class="kp-cur-stage">
+            <div class="kp-cur-label">Before · 14</div>
+            <div class="kp-cur-mini before">
+              <img src="images/keepsake/curation-before/before-01.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-02.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-03.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-04.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-05.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-06.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-07.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-08.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-09.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-10.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-11.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-12.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-13.jpg" alt="" loading="lazy" />
+              <img src="images/keepsake/curation-before/before-14.jpg" alt="" loading="lazy" />
+            </div>
+          </div>
+          <div class="kp-cur-arrow2" aria-hidden="true">→</div>
+          <div class="kp-cur-stage">
+            <div class="kp-cur-label">After · 5</div>
+            <div class="kp-cur-mini after">
+              <img src="images/keepsake/curation-after/after-02.jpg" alt="The sake-barrel wall" loading="lazy" />
+              <img src="images/keepsake/curation-after/after-04.jpg" alt="A written wish plaque, close up" loading="lazy" />
+              <img src="images/keepsake/curation-after/after-01.jpg" alt="The traveler at the shrine gate" loading="lazy" />
+              <img src="images/keepsake/curation-after/after-03.jpg" alt="The tree-lined approach" loading="lazy" />
+              <img src="images/keepsake/curation-after/after-05.jpg" alt="The traveler walking through the courtyard" loading="lazy" />
+            </div>
+          </div>
+          <div class="kp-cur-arrow2" aria-hidden="true">→</div>
+          <div class="kp-cur-stage">
+            <div class="kp-cur-label">In the app</div>
+            <video class="kp-cur-phone" autoplay loop muted playsinline preload="metadata" aria-label="In the day recap, the curated photos appear as an inline strip beneath the narrative">
+              <source src="images/keepsake/curation-app.webm" type="video/webm">
+              <source src="images/keepsake/curation-app.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-reveal" style="display:flex;gap:48px;align-items:center;margin-top:52px;flex-wrap:wrap;">
+        <video class="kp-flow-vid" autoplay loop muted playsinline preload="metadata" style="flex:0 0 auto;max-width:248px;border-radius:35px;" aria-label="Tapping the +N badge on a curated photo strip expands it to every photo from that stop">
+          <source src="images/keepsake/photo-expand.webm" type="video/webm">
+          <source src="images/keepsake/photo-expand.mp4" type="video/mp4">
+        </video>
+        <p class="cs-body" style="flex:1;min-width:280px;max-width:440px;margin:0;">And nothing is ever silently dropped. The curated set is only the default view; an explicit <strong>&ldquo;see all&rdquo;</strong> always expands to every photo from that stop. Curation is a suggestion, not a gate.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 The Narrative -->
+  <section id="sec-05" class="cs-section warm-bg">
+    <p class="cs-eyebrow cs-reveal">05 — The Narrative</p>
+    <h2 class="cs-heading cs-reveal">A Story, Not a Form</h2>
+    <p class="cs-body cs-reveal" style="max-width:720px;">The recap began as cards — one per stop, with a confidence badge and Confirm / Edit buttons. It read like a queue to clear, so I rebuilt it into flowing, first-person prose: a <strong>keepsake to read back</strong>, not a task to process.</p>
+
+    <div class="cs-cols-2 cs-reveal" style="gap:40px;margin-top:32px;align-items:start;">
+      <figure style="margin:0;">
+        <img src="images/keepsake/signal-before.svg" alt="Before — the recap as a stack of review cards: one card per stop with a photo, a confidence badge, and Confirm / Edit buttons" style="width:100%;max-width:280px;display:block;margin:0 auto;border:1px solid rgba(0,0,0,0.09);" />
+        <figcaption class="cs-img-caption" style="text-align:center;margin-top:14px;"><strong>Before</strong> — a review queue, one card per stop.</figcaption>
+      </figure>
+      <figure style="margin:0;">
+        <img src="images/keepsake/signal-after.svg" alt="After — the day written as flowing first-person prose with inline photos and a tappable, accent-colored place name" style="width:100%;max-width:280px;display:block;margin:0 auto;border:1px solid rgba(0,0,0,0.09);" />
+        <figcaption class="cs-img-caption" style="text-align:center;margin-top:14px;"><strong>After</strong> — a story to read back; reading a day without correcting it is the quiet confirmation.</figcaption>
+      </figure>
+    </div>
+
+    <p class="cs-body cs-reveal" style="max-width:720px;margin-top:40px;">Once it&rsquo;s prose, the text itself is the interface. Three things you can do to any day:</p>
+
+    <p class="cs-body cs-reveal" style="max-width:720px;margin-top:22px;"><strong>Correct a name.</strong> The AI infers places from photos and location data and won&rsquo;t always get them right. Anything it&rsquo;s unsure of carries a <strong>dotted underline</strong>; tapping it opens an in-place &ldquo;Fix this place&rdquo; with likely suggestions — usually a one-tap fix, and reading a day without touching it quietly confirms it.</p>
+    <figure class="cs-reveal" style="margin:20px 0 0;">
+      <img src="images/keepsake/nar-correct.svg" alt="Correcting a name in three steps: an unsure name flagged for review, a 'Fix this place' panel with suggestion chips and a type-your-own field, and the confirmed name saved inline with an undo option." loading="lazy" style="width:100%;display:block;" />
+    </figure>
+
+    <p class="cs-body cs-reveal" style="max-width:720px;margin-top:40px;"><strong>Rewrite a line.</strong> Tap any sentence to edit it directly — tighten the AI&rsquo;s phrasing or add something only you&rsquo;d know, so the story ends up in your words, not a model&rsquo;s.</p>
+    <figure class="cs-reveal" style="margin:20px 0 0;">
+      <img src="images/keepsake/nar-edit.svg" alt="Editing inline in three steps: the AI's wording, tapping a sentence to edit it in place with the keyboard, and the finished sentence in the traveler's own words with an undo option." loading="lazy" style="width:100%;display:block;" />
+    </figure>
+
+    <p class="cs-body cs-reveal" style="max-width:720px;margin-top:40px;"><strong>Tap for context.</strong> Only recognizable places — a famous shrine, a well-known district — render in <strong>accent</strong>; an everyday spot stays plain text. Tapping one slides a short context card in under the sentence, and a second tap moves it along — there when you&rsquo;re curious, gone when you&rsquo;re not.</p>
+    <figure class="cs-reveal" style="margin:20px 0 0;">
+      <img src="images/keepsake/nar-landmark.svg" alt="The landmark context interaction in three steps: reading the day with accent-colored place names, tapping one to insert a short context card under the sentence, and tapping a second name to move the panel to it." loading="lazy" style="width:100%;display:block;" />
+    </figure>
+
+  </section>
+
+  <!-- 06 Trust & Truth -->
+  <section id="sec-06" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">06 — Trust &amp; Truth</p>
+      <h2 class="cs-heading cs-reveal">What the AI Is Allowed to Say</h2>
+      <p class="cs-body cs-reveal" style="max-width:720px;">Keepsake writes in the first person, so I had to decide what it can claim on your behalf. The line runs between <strong>fact and feeling.</strong></p>
+
+      <div class="cs-cols-2 cs-reveal" style="gap:20px;margin-top:28px;align-items:stretch;">
+        <div style="border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:22px 24px;background:#fff;">
+          <div class="cs-callout-label" style="color:var(--accent3);">Grounded — writes freely</div>
+          <ul class="cs-pill-list">
+            <li>Where you were, and when</li>
+            <li>What you ate, saw, or passed through</li>
+            <li>A short, factual note on a landmark</li>
+          </ul>
+          <p style="font-size:13.5px;color:var(--muted);margin-top:14px;margin-bottom:0;">Sourced from photos, GPS, timestamps, and receipts.</p>
+        </div>
+        <div style="border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:22px 24px;background:#fff;">
+          <div class="cs-callout-label" style="color:var(--accent);">Evaluative — only in your words</div>
+          <ul class="cs-pill-list kp-dots-pink">
+            <li>&ldquo;I loved this place&rdquo;</li>
+            <li>&ldquo;Best meal of the trip&rdquo;</li>
+            <li>How a moment actually felt</li>
+          </ul>
+          <p style="font-size:13.5px;color:var(--muted);margin-top:14px;margin-bottom:0;">Never invented — it appears only when you wrote or said it.</p>
+        </div>
+      </div>
+
+      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:32px;">Even the facts have a ceiling. Landmark history is the one place the AI reaches past your photos — so it's capped at ~two sentences from a structured source, never free-generated. When unsure, it says less.</p>
+
+      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">The firmest line is about people. <strong>Face recognition and tagging were ruled out entirely</strong> — no biometric data, on travelers or bystanders, without consent. Who you were with is something you add yourself.</p>
+    </div>
+  </section>
+
+  <!-- 07 Reflections -->
+  <section id="sec-07" class="cs-section warm-bg">
+    <p class="cs-eyebrow cs-reveal">07 — Capturing Feeling</p>
+    <h2 class="cs-heading cs-reveal">Three Iterations to Find the Shape</h2>
+    <p class="cs-body cs-reveal" style="max-width:720px;">The most-revised part of the design. The question — <em>where does subjective content live?</em> — took three tries: a single generic prompt, then contextual callouts woven into the narrative, and finally a component of its own, only at the end of a day.</p>
+    <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">It also fixed <em>how</em> it asked. Empty fields read as a nag, so answered prompts became pull-quotes and &ldquo;add another&rdquo; surfaces only eligible, unanswered ones. The same component reappears at the trip level, tied to &ldquo;Generate trip memory.&rdquo;</p>
+    <div class="cs-callout accent2 cs-reveal" style="margin-top:24px;">
+      <div class="cs-callout-label">A Mistake I Reversed</div>
+      <p>Weaving reflection prompts inline, beside the paragraphs they related to, felt contextual — but scattered through the recap they were easy to skip and hard to find later. I&rsquo;d already built it before reversing course: pulling every reflection into a single <strong>end-of-day card</strong> makes the day&rsquo;s most memorable moments easy to revisit, and grouping them feels far more intentional than prompts sprinkled through the day.</p>
+    </div>
+    <div class="cs-cols-3 cs-reveal" style="gap:24px;margin-top:32px;">
+      <figure style="margin:0;">
+        <img src="images/keepsake/feeling-a.svg" alt="v1 — a single generic 'what made this day memorable?' prompt pinned to the bottom of the day" loading="lazy" style="width:100%;display:block;" />
+        <figcaption style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px;">v1 — one generic prompt</figcaption>
+      </figure>
+      <figure style="margin:0;">
+        <img src="images/keepsake/feeling-b.svg" alt="v2 — contextual callouts like 'best view here?' woven inline into the narrative" loading="lazy" style="width:100%;display:block;" />
+        <figcaption style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px;">v2 — contextual callouts, inline</figcaption>
+      </figure>
+      <figure style="margin:0;">
+        <img src="images/keepsake/feeling-c.svg" alt="v3 — a Reflections component of its own at the end of the day, answers shown as pull-quotes" loading="lazy" style="width:100%;display:block;" />
+        <figcaption style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px;">v3 — its own end-of-day card</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 08 Edit & Read Modes -->
+  <section id="sec-08" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">08 — Edit &amp; Read Modes</p>
+      <h2 class="cs-heading cs-reveal">Same Data, Different Job</h2>
+      <p class="cs-body cs-reveal" style="max-width:720px;">&ldquo;Generate trip memory&rdquo; isn't an export — it's a mode switch on the same live, still-editable data. <strong>Edit mode</strong> is built for fixing: paginated by day, with a review count and tap-to-fix cues. <strong>Read mode</strong> is built for reading: one continuous scroll with a numbered day index, closing on the Wrapped-style stat card. You can move between them as often as you like — nothing is ever locked.</p>
+      <div class="cs-cols-2 cs-reveal" style="gap:40px;margin-top:36px;">
+        <figure style="margin:0;">
+          <img src="images/keepsake/edit-mode.svg" alt="Edit mode — the day paginated by day tabs, with dotted-underline names to fix and a review count" style="width:100%;max-width:300px;display:block;margin:0 auto;filter:drop-shadow(0 18px 32px rgba(40,34,24,0.16));" />
+          <figcaption class="cs-img-caption" style="text-align:center;margin-top:16px;"><strong>Edit mode</strong> — paginated by day, built for fixing.</figcaption>
+        </figure>
+        <figure style="margin:0;">
+          <img src="images/keepsake/read-mode.svg" alt="Read mode — one continuous scroll with a numbered day index and a cover image" style="width:100%;max-width:300px;display:block;margin:0 auto;filter:drop-shadow(0 18px 32px rgba(40,34,24,0.16));" />
+          <figcaption class="cs-img-caption" style="text-align:center;margin-top:16px;"><strong>Read mode</strong> — one continuous scroll, built for reading.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 Navigation -->
+  <section id="sec-09" class="cs-section warm-bg">
+    <p class="cs-eyebrow cs-reveal">09 — Navigation</p>
+    <h2 class="cs-heading cs-reveal">Earning Simplicity Structurally</h2>
+    <p class="cs-body cs-reveal" style="max-width:720px;">The whole app has one root: <strong>Home</strong>, a library of trip cards, and the only screen you ever return to. There's no tab bar — with a single content type, a second root would just invent a destination that doesn't exist. Tapping a trip pushes one full-screen view, and everything else — switching days, toggling modes, correcting, reflecting — happens inside it through existing components, never another navigation level. The simplicity is <strong>earned by removing places to go, not hiding them.</strong></p>
+    <figure class="cs-reveal" style="margin:28px 0 0;">
+      <img src="images/keepsake/nav-model.svg" alt="Keepsake's navigation model: Level 0 is Home — a library of trip cards and the only screen the app opens to or returns to, with no tab bar. Tapping a trip pushes to Level 1, a single full-screen Trip view where day switching, the mode toggle, corrections, and the photo viewer all happen through existing components rather than deeper navigation." style="width:100%;display:block;" />
+    </figure>
+  </section>
+
+  <!-- 10 Sharing -->
+  <section id="sec-10" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">10 — Sharing</p>
+      <h2 class="cs-heading cs-reveal">Built for the Recipient</h2>
+      <p class="cs-body cs-reveal" style="max-width:720px;">The real goal — <strong>sharing the whole trip with family</strong> — is best served by a plain read-only web link, not a PDF or a screenshot. Anyone you send it to opens it in a browser: no app, no account. And because reflections are the most personal layer, the share sheet defaults to <strong>highlights only</strong> — sending your private notes is a deliberate opt-in.</p>
+      <p class="cs-body cs-reveal" style="max-width:720px;margin-top:16px;">The shared page isn't just in-app read mode behind a link. A first-time visitor needs context the owner never did, so the web version opens with a cover and a byline, and a day index that's <strong>labeled, not just numbered</strong> — &ldquo;Meiji Jingu, then Kyoto,&rdquo; not &ldquo;Day 3.&rdquo; It closes on a quiet &ldquo;made with Keepsake.&rdquo;</p>
+
+      <div class="cs-share-strip cs-reveal">
+        <figure>
+          <img src="images/keepsake/share-1.svg" alt="The shared web page on arrival — a cover photo, the byline &lsquo;A trip by Sophia,&rsquo; a &lsquo;shared with you, view only&rsquo; note, and a labeled day-by-day index" loading="lazy" />
+          <figcaption>Arrival — cover, byline, and a labeled index</figcaption>
+        </figure>
+        <figure>
+          <img src="images/keepsake/share-2.svg" alt="Tapping a day in the index jumps straight to that day's entry on the shared page" loading="lazy" />
+          <figcaption>Tap any day to jump straight in</figcaption>
+        </figure>
+        <figure>
+          <img src="images/keepsake/share-3.svg" alt="The end of a day on the shared page, closing on a quiet &lsquo;Made with Keepsake&rsquo; footer" loading="lazy" />
+          <figcaption>Every trip closes on a soft &ldquo;made with Keepsake&rdquo;</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 Success & Next -->
+  <section id="sec-11" class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">11 — Success &amp; Next</p>
+      <h2 class="cs-heading cs-reveal">How I'd Know It Worked</h2>
+      <p class="cs-body cs-reveal" style="max-width:720px;">It's a concept — nothing has shipped, so there are no numbers to point to yet. But a design is only as strong as the bet behind it, so here's how I'd test this one, and what I'd resolve next.</p>
+
+      <h3 class="cs-subheading cs-reveal" style="margin-top:40px;">Signals I'd watch</h3>
+      <ul class="cs-impact-list kp-signals cs-reveal">
+        <li><strong>Trust in the draft</strong>The share of days read without a single edit — high means the AI earned the reconstruction rather than making busywork.</li>
+        <li><strong>Worth keeping</strong>How often a finished trip actually gets shared — the clearest sign the memory was worth saving.</li>
+        <li><strong>The traveler loop</strong>Whether people come back to start a new trip after the next one — the repeat behavior the whole concept bets on.</li>
+        <li><strong>Correction effort</strong>Average taps to fix a day — low means curation and inference are pulling their weight.</li>
+      </ul>
+
+      <h3 class="cs-subheading cs-reveal" style="margin-top:44px;">Still open</h3>
+      <ul class="cs-impact-list kp-signals cs-reveal">
+        <li><strong>Put it in front of travelers</strong>The most important next step — pressure-test the core bet with real trips and real camera rolls, not just my own.</li>
+        <li><strong>Monetization</strong>Deliberately unsettled — it deserves its own pass, not a tacked-on answer.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 12 Reflections -->
+  <section id="sec-12" class="cs-section warm-bg">
+    <p class="cs-eyebrow cs-reveal">12 — Reflections</p>
+    <h2 class="cs-heading cs-reveal">What I Took Away</h2>
+    <p class="cs-body cs-reveal" style="max-width:680px;">A self-initiated concept meant the constraints were mine to set — which made the trade-offs the most useful part. Three things I'm carrying into the next project:</p>
+    <div class="cs-reflection-grid cols-3 cs-reveal">
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">01</div>
+        <div class="cs-reflection-title">Trust Is Built by Refusing</div>
+        <div class="cs-reflection-body">The hardest calls weren't features — they were where the AI should hold back. A hard line between fact and feeling, ruling out face recognition, keeping reflections opt-in: a first-person AI earns trust through what it refuses to say, not what it can generate.</div>
+      </div>
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">02</div>
+        <div class="cs-reflection-title">Simplicity Is Earned</div>
+        <div class="cs-reflection-body">Again and again the stronger move was to remove. I killed an email-parsing feature it couldn't justify, cut the tab bar to a single root, and kept photo curation a suggestion rather than a gate — simplicity came from taking things away with intent, not a lighter coat of style.</div>
+      </div>
+      <div class="cs-reflection-card">
+        <div class="cs-reflection-num">03</div>
+        <div class="cs-reflection-title">One Audience Did the Work</div>
+        <div class="cs-reflection-body">Designing for the traveler who did nothing during the trip became the filter for every later decision — photos-only input, reading-as-review, sharing built for the recipient. A sharp definition of who it's for settled more debates than any feature list.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Case Study (update target as needed) -->
+  <div class="cs-next">
+    <div class="cs-next-label">Next Case Study</div>
+    <div class="cs-next-title">Mobile Production<br/>Reporting</div>
+    <div class="cs-next-org">Oracle SCM · Smart Operations</div>
+    <a href="mobile-production-reporting.html" class="cs-next-cta" data-cursor="link">
+      View Case Study
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p class="footer-name">Sophia Guo</p>
+        <p class="footer-tagline">Designed with care ◡̈</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
+      </div>
+    </div>
+    <div class="footer-critters" aria-hidden="true">
+      <span class="critter c1"><span class="hop">ʕ•ᴥ•ʔ</span></span>
+      <span class="critter c2"><span class="hop">(=^･ω･^=)</span></span>
+      <span class="critter c3"><span class="hop">(・ᴗ・)</span></span>
+      <span class="critter c4"><span class="hop">◡̈</span></span>
+      <span class="critter c5"><span class="hop">@\_/</span></span>
+      <span class="critter c6"><span class="hop">ʕ•ᴥ•ʔ</span></span>
+      <span class="critter c7"><span class="hop">\(^_^)/</span></span>
+      <span class="critter c8"><span class="hop">(o_o)</span></span>
+      <span class="critter c9"><span class="hop">(=^･ω･^=)</span></span>
+    </div>
+    <div class="footer-bar">
+      <span>© 2026</span>
+      <span>Made with curiosity ✦</span>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <script src="cs-main.js"></script>
+  <script src="hero-spotlight.js?v=1"></script>
+  <script src="cs-toc.js?v=1"></script>
+  <script>
+    /* Play prototype flow videos only while in view — keeps simultaneous motion low */
+    (function(){
+      var vids = document.querySelectorAll('video.kp-flow-vid, video.kp-cur-phone');
+      if (!vids.length || !('IntersectionObserver' in window)) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var v = e.target;
+          if (e.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+          else { v.pause(); }
+        });
+      }, { threshold: 0.4 });
+      vids.forEach(function(v){ io.observe(v); });
+    })();
+  </script>
+</body>
+</html>
