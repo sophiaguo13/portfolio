@@ -66,8 +66,8 @@
   <div class="cs-cover-wrap">
     <div style="background-image:url('images/parallel-ops/hero-bg.jpg');background-size:cover;background-position:center;border-radius:24px;padding:clamp(32px,5vw,64px);display:flex;justify-content:center;align-items:center;">
       <video autoplay muted loop playsinline preload="auto" aria-label="Parallel Operations — adding operation dependencies in the Work Definition datagrid" style="width:100%;max-width:860px;display:block;border-radius:10px;box-shadow:0 30px 60px rgba(0,0,0,0.35);">
-        <source src="images/parallel-ops/add-dependencies.webm?v=2" type="video/webm" />
-        <source src="images/parallel-ops/add-dependencies.mp4?v=2" type="video/mp4" />
+        <source src="images/parallel-ops/add-dependencies.webm?v=3" type="video/webm" />
+        <source src="images/parallel-ops/add-dependencies.mp4?v=3" type="video/mp4" />
       </video>
     </div>
   </div>
@@ -137,9 +137,107 @@
     </div>
   </section>
 
+  <!-- 06 The Solution -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow">02 — The Solution</p>
+      <h2 class="cs-heading">Bridging Data and Visualization</h2>
+      <p class="cs-body">The final design pairs two complementary surfaces: a structured datagrid for authoring parallel relationships, and a dedicated canvas page for visual validation.</p>
+    </div>
+
+    <!-- Solution 1: Manually adding dependencies -->
+    <div class="cs-solution-section" style="border-top:none;padding-top:44px;">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;">
+          <div class="cs-img-block sharp" style="margin:0;">
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;border-radius:6px;box-shadow:0 10px 34px rgba(20,20,20,0.13);" aria-label="Manually adding operation dependencies row by row in the datagrid">
+              <source src="images/parallel-ops/add-dependencies.webm?v=3" type="video/webm" />
+              <source src="images/parallel-ops/add-dependencies.mp4?v=3" type="video/mp4" />
+            </video>
+            <p class="cs-img-caption">Adding a dependency by hand in the Operation Dependencies tab — one row per relationship.</p>
+          </div>
+          <div>
+            <div class="cs-solution-num" style="margin-bottom:8px;">01</div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+              <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: Context Awareness</span>
+            </div>
+            <h3 class="cs-subheading">Adding Dependencies by Hand</h3>
+            <p class="cs-body">A new "Operation Dependencies" tab in Work Definition gives manufacturing engineers a structured space to author relationships one row at a time — each row links two operations with a <strong>Finish-to-Start</strong> (sequential) or <strong>Start-to-Start</strong> (parallel) relationship and a Transfer Percent for the quantity moving between them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 2: Initializing dependencies -->
+    <div class="cs-solution-section">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;border-radius:6px;box-shadow:0 10px 34px rgba(20,20,20,0.13);" aria-label="Initializing the dependency table — the system auto-fills it from existing operations, sequentially">
+              <source src="images/parallel-ops/initialize.webm?v=2" type="video/webm" />
+              <source src="images/parallel-ops/initialize.mp4?v=2" type="video/mp4" />
+            </video>
+            <p class="cs-img-caption">Initialize auto-fills the table from the operations already defined — sequential by default, ready to edit into the real parallel structure.</p>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num" style="margin-bottom:8px;">02</div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+              <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: Head Start over Blank Slate</span>
+            </div>
+            <h3 class="cs-subheading">Initializing from Existing Operations</h3>
+            <p class="cs-body">If an engineer has already defined their operations in the Operations tab, the <strong>Initialize</strong> action auto-populates the dependency table for them — laying every operation out sequentially as a starting point. From there they only edit what actually runs in parallel, turning a blank grid into a head start.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 3: Save behavior -->
+    <div class="cs-solution-section">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;">
+          <div class="cs-img-block sharp" style="margin:0;">
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;border-radius:6px;box-shadow:0 10px 34px rgba(20,20,20,0.13);" aria-label="Save behavior — the diagram opens in a new tab and flags stale after grid edits until refreshed">
+              <source src="images/parallel-ops/save-behavior.webm?v=2" type="video/webm" />
+              <source src="images/parallel-ops/save-behavior.mp4?v=2" type="video/mp4" />
+            </video>
+            <p class="cs-img-caption">The diagram opens in its own tab; edits to the grid flag it stale until refreshed.</p>
+          </div>
+          <div>
+            <div class="cs-solution-num" style="margin-bottom:8px;">03</div>
+            <h3 class="cs-subheading">Save Behavior: Protecting Data Integrity</h3>
+            <p class="cs-body">Because the diagram opens in a separate browser tab, I designed a strict save flow to handle the state between the two views. When a user edits the datagrid after opening the diagram, the diagram is flagged as stale and must be refreshed — so engineers always validate against the latest authored data, never a cached snapshot.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 4: Error handling -->
+    <div class="cs-solution-section">
+      <div class="cs-wide">
+        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
+            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;border-radius:6px;box-shadow:0 10px 34px rgba(20,20,20,0.13);" aria-label="Error handling — invalid circular dependencies and bad transfer percentages surface with recovery guidance">
+              <source src="images/parallel-ops/error-handling.webm?v=2" type="video/webm" />
+              <source src="images/parallel-ops/error-handling.mp4?v=2" type="video/mp4" />
+            </video>
+            <p class="cs-img-caption">Invalid dependency state — circular loops and bad transfer percentages surface clearly with recovery guidance.</p>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num" style="margin-bottom:8px;">04</div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+              <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: System Validation &amp; Error Handling</span>
+            </div>
+            <h3 class="cs-subheading">Proactive Error Validation</h3>
+            <p class="cs-body">Parallel logic introduces risks invisible in a standard grid — circular dependencies, multiple last operations, transfer percentages that don't sum to 100%. I worked with developers to categorize every client- and server-side error, then designed banners and inline messages that explain exactly what's wrong and how to fix it. The diagram turns red for invalid nodes and renders the problematic edges in a distinct error color, making issues unmissable at a glance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 02 Understanding Users -->
   <section class="cs-section warm-bg">
-    <p class="cs-eyebrow">02 — Research</p>
+    <p class="cs-eyebrow">03 — Research</p>
     <h2 class="cs-heading">Understanding the Users</h2>
     <p class="cs-body" style="margin-bottom:36px;">I consulted Oracle Cloud Customer Connect for peer feedback and mapped the experience across three distinct user types — each with different needs and contexts around parallel operations.</p>
 
@@ -163,7 +261,7 @@
   <section class="cs-section">
     <div class="cs-wrap">
       <div class="cs-reveal">
-        <p class="cs-eyebrow">03 — Design Principles</p>
+        <p class="cs-eyebrow">04 — Design Principles</p>
         <h2 class="cs-heading">Four anchors before sketching a single frame</h2>
         <p class="cs-body">Before exploring any solutions, I established four guiding principles to keep every design decision tethered to real user needs.</p>
         <div class="cs-constraint-list is-2col" style="margin-top:24px;">
@@ -202,7 +300,7 @@
 
   <!-- 04 Information Architecture -->
   <section class="cs-section warm-bg">
-    <p class="cs-eyebrow">04 — Information Architecture</p>
+    <p class="cs-eyebrow">05 — Information Architecture</p>
     <h2 class="cs-heading">The Operation Dependencies Tab</h2>
     <p class="cs-body" style="margin-bottom:12px;">I restructured the Work Definition experience to accommodate new data points without overwhelming existing users. The solution centers on a new dedicated tab that introduces three new relationship types:</p>
 
@@ -236,7 +334,7 @@
   <!-- 05 Navigating Constraints -->
   <section class="cs-section">
     <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">05 — Exploration</p>
+      <p class="cs-eyebrow cs-reveal">06 — Exploration</p>
       <h2 class="cs-heading cs-reveal">Navigating the Redwood Design System</h2>
       <p class="cs-body cs-reveal">The core challenge: balancing the user's need for a robust, interactive flowchart against the technical boundaries of Oracle's Redwood Design System. Oracle requires consistent UI across the SCM suite, which means using existing, tested components over custom code.</p>
 
@@ -339,103 +437,6 @@
     </div>
   </section>
 
-  <!-- 06 The Solution -->
-  <section class="cs-section">
-    <div class="cs-wrap">
-      <p class="cs-eyebrow">06 — The Solution</p>
-      <h2 class="cs-heading">Bridging Data and Visualization</h2>
-      <p class="cs-body">The final design pairs two complementary surfaces: a structured datagrid for authoring parallel relationships, and a dedicated canvas page for visual validation.</p>
-    </div>
-
-    <!-- Solution 1: Manually adding dependencies -->
-    <div class="cs-solution-section">
-      <div class="cs-wide">
-        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;">
-          <div class="cs-img-block sharp" style="margin:0;">
-            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Manually adding operation dependencies row by row in the datagrid">
-              <source src="images/parallel-ops/add-dependencies.webm?v=2" type="video/webm" />
-              <source src="images/parallel-ops/add-dependencies.mp4?v=2" type="video/mp4" />
-            </video>
-            <p class="cs-img-caption">Adding a dependency by hand in the Operation Dependencies tab — one row per relationship.</p>
-          </div>
-          <div>
-            <div class="cs-solution-num" style="margin-bottom:8px;">01</div>
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-              <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: Context Awareness</span>
-            </div>
-            <h3 class="cs-subheading">Adding Dependencies by Hand</h3>
-            <p class="cs-body">A new "Operation Dependencies" tab in Work Definition gives manufacturing engineers a structured space to author relationships one row at a time — each row links two operations with a <strong>Finish-to-Start</strong> (sequential) or <strong>Start-to-Start</strong> (parallel) relationship and a Transfer Percent for the quantity moving between them.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Solution 2: Initializing dependencies -->
-    <div class="cs-solution-section">
-      <div class="cs-wide">
-        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;direction:rtl;">
-          <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
-            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Initializing the dependency table — the system auto-fills it from existing operations, sequentially">
-              <source src="images/parallel-ops/initialize.webm" type="video/webm" />
-              <source src="images/parallel-ops/initialize.mp4" type="video/mp4" />
-            </video>
-            <p class="cs-img-caption">Initialize auto-fills the table from the operations already defined — sequential by default, ready to edit into the real parallel structure.</p>
-          </div>
-          <div style="direction:ltr;">
-            <div class="cs-solution-num" style="margin-bottom:8px;">02</div>
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-              <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: Head Start over Blank Slate</span>
-            </div>
-            <h3 class="cs-subheading">Initializing from Existing Operations</h3>
-            <p class="cs-body">If an engineer has already defined their operations in the Operations tab, the <strong>Initialize</strong> action auto-populates the dependency table for them — laying every operation out sequentially as a starting point. From there they only edit what actually runs in parallel, turning a blank grid into a head start.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Solution 3: Save behavior -->
-    <div class="cs-solution-section">
-      <div class="cs-wide">
-        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;">
-          <div class="cs-img-block sharp" style="margin:0;">
-            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Save behavior — the diagram opens in a new tab and flags stale after grid edits until refreshed">
-              <source src="images/parallel-ops/save-behavior.webm" type="video/webm" />
-              <source src="images/parallel-ops/save-behavior.mp4" type="video/mp4" />
-            </video>
-            <p class="cs-img-caption">The diagram opens in its own tab; edits to the grid flag it stale until refreshed.</p>
-          </div>
-          <div>
-            <div class="cs-solution-num" style="margin-bottom:8px;">03</div>
-            <h3 class="cs-subheading">Save Behavior: Protecting Data Integrity</h3>
-            <p class="cs-body">Because the diagram opens in a separate browser tab, I designed a strict save flow to handle the state between the two views. When a user edits the datagrid after opening the diagram, the diagram is flagged as stale and must be refreshed — so engineers always validate against the latest authored data, never a cached snapshot.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Solution 4: Error handling -->
-    <div class="cs-solution-section">
-      <div class="cs-wide">
-        <div class="cs-cols-ratio media-lg cs-reveal" style="align-items:center;direction:rtl;">
-          <div class="cs-img-block sharp" style="margin:0;direction:ltr;">
-            <video autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Error handling — invalid circular dependencies and bad transfer percentages surface with recovery guidance">
-              <source src="images/parallel-ops/error-handling.webm" type="video/webm" />
-              <source src="images/parallel-ops/error-handling.mp4" type="video/mp4" />
-            </video>
-            <p class="cs-img-caption">Invalid dependency state — circular loops and bad transfer percentages surface clearly with recovery guidance.</p>
-          </div>
-          <div style="direction:ltr;">
-            <div class="cs-solution-num" style="margin-bottom:8px;">04</div>
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-              <span style="display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.02em;color:var(--muted);background:transparent;border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;">Principle: System Validation &amp; Error Handling</span>
-            </div>
-            <h3 class="cs-subheading">Proactive Error Validation</h3>
-            <p class="cs-body">Parallel logic introduces risks invisible in a standard grid — circular dependencies, multiple last operations, transfer percentages that don't sum to 100%. I worked with developers to categorize every client- and server-side error, then designed banners and inline messages that explain exactly what's wrong and how to fix it. The diagram turns red for invalid nodes and renders the problematic edges in a distinct error color, making issues unmissable at a glance.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Cross-Product Impact -->
   <section class="cs-section">

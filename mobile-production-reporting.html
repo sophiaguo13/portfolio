@@ -156,9 +156,109 @@
     </div>
   </section>
 
+  <!-- 06 The Solution -->
+  <section class="cs-section">
+    <div class="cs-wrap">
+      <p class="cs-eyebrow cs-reveal">02 — The Solution</p>
+      <h2 class="cs-heading cs-reveal">A Scannable, Reactive UI</h2>
+      <p class="cs-body cs-reveal" style="margin-bottom:48px;">The Redwood Design System was leveraged to create a high-density, efficient reporting experience. The happy path is entirely scan-driven — operators rarely need to type a single character.</p>
+
+      <div class="cs-img-block no-border cs-reveal" style="max-width:380px;margin:0 auto 8px;">
+        <video autoplay muted loop playsinline preload="metadata" style="width:100%;display:block;" aria-label="The Issue Material flow running on the actual Zebra rugged scanner">
+          <source src="images/mobile/device-flow.webm" type="video/webm" />
+          <source src="images/mobile/device-flow.mp4" type="video/mp4" />
+        </video>
+        <p class="cs-img-caption">The happy path running on the actual hardware — a Zebra rugged scanner, scan field in focus and ready.</p>
+      </div>
+    </div>
+
+    <!-- Solution 1 -->
+    <div class="cs-solution-section" style="border-top:none;">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;">
+            <img src="images/mobile/solution-1.svg" alt="State 1 — Material field in focus, Submit disabled"  style="box-shadow:0 8px 26px rgba(20,20,20,0.12);border-radius:6px;" />
+            <p class="cs-img-caption">State 1 — Pre-issued materials with status badges.</p>
+          </div>
+          <div>
+            <div class="cs-solution-num">01</div>
+            <h3 class="cs-subheading">The Intelligent List</h3>
+            <p class="cs-body">Pre-issued materials are displayed with clear <strong>Ready</strong> vs. <strong>Pending</strong> status badges for quick scanning in low-light factory environments. The material scan field is in immediate focus — no extra taps to begin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 2 -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;direction:ltr;">
+            <img src="images/mobile/solution-2.svg" alt="State 2 — Material scanned, required fields revealed"  style="box-shadow:0 8px 26px rgba(20,20,20,0.12);border-radius:6px;" />
+            <p class="cs-img-caption">State 2 — Scanning reveals only that material's required fields.</p>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">02</div>
+            <h3 class="cs-subheading">Scan-to-Reveal Logic</h3>
+            <p class="cs-body">Once the operator scans a material barcode, the system <strong>detects</strong> what that specific material requires — Lot, Serial, LPN — and surfaces only those fields. No decision fatigue, no blank fields to ignore.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 3 -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;">
+            <img src="images/mobile/solution-3.svg" alt="State 3 — All materials ready, Submit enabled"  style="box-shadow:0 8px 26px rgba(20,20,20,0.12);border-radius:6px;" />
+            <p class="cs-img-caption">State 3 — All fields filled; badge flips to Ready and Submit activates.</p>
+          </div>
+          <div>
+            <div class="cs-solution-num">03</div>
+            <h3 class="cs-subheading">Progressive Completion</h3>
+            <p class="cs-body">As each material is scanned and its fields completed, the badge changes from <strong>Pending</strong> to <strong>Ready</strong>. The Submit button activates only when every material is accounted for — a built-in quality gate.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution 4: Detail Drawer -->
+    <div class="cs-solution-section">
+      <div class="cs-wrap">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;direction:ltr;">
+            <img src="images/mobile/solution-4.svg" alt="Detail Drawer — full-screen editor for complex entries"  style="box-shadow:0 8px 26px rgba(20,20,20,0.12);border-radius:6px;" />
+            <p class="cs-img-caption">The Detail Drawer — a full-screen editor for split quantities and locator edits.</p>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">04</div>
+            <h3 class="cs-subheading">The Detail Drawer</h3>
+            <p class="cs-body">The primary "Happy Path" stays lean and scan-driven. For rare cases — like splitting quantities or editing locators — a full-screen drawer provides a complete editing surface without cluttering the main list. Complex tasks accessible but out of the way.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Issue Material final UI -->
+    <div class="cs-wide" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:48px -50vw 0;padding:0 24px;box-sizing:border-box;">
+      <div class="cs-img-block sharp no-border cs-reveal" style="margin:0;">
+        <img src="images/mobile/issue-material.svg" alt="Final Issue Material UI — full flow" />
+        <p class="cs-img-caption">Final Issue Material UI — the complete scanning flow from list to submission.</p>
+      </div>
+    </div>
+
+    <div class="cs-wrap">
+      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
+        <div class="cs-callout-label">Stakeholder Reaction · Lead Manufacturing Engineer</div>
+        <p>"The proactive field injection is a game-changer. We won't have to train operators on which materials require a Lot vs. a Serial number — the UI just tells them what to do next."</p>
+      </div>
+    </div>
+  </section>
+
   <!-- 02 The Conflict -->
   <section class="cs-section warm-bg">
-    <p class="cs-eyebrow cs-reveal">02 — The Conflict</p>
+    <p class="cs-eyebrow cs-reveal">03 — The Conflict</p>
     <h2 class="cs-heading cs-reveal">Navigating the Ambiguity</h2>
     <p class="cs-body cs-reveal" style="margin-bottom:48px;">The most significant challenge wasn't the UI — it was alignment. Three compounding obstacles threatened to derail the project before design could begin.</p>
     <div class="cs-cols-3 cs-reveal">
@@ -199,7 +299,7 @@
   <!-- 03 The Aha! Moment -->
   <section class="cs-section">
     <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">03 — The Pivot</p>
+      <p class="cs-eyebrow cs-reveal">04 — The Pivot</p>
       <h2 class="cs-heading cs-reveal">It's Not a Smartphone</h2>
       <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
         <div>
@@ -222,7 +322,7 @@
   <!-- 04 Design Principles -->
   <section class="cs-section">
     <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">04 — Design Principles</p>
+      <p class="cs-eyebrow cs-reveal">05 — Design Principles</p>
       <h2 class="cs-heading cs-reveal">Industrial-First Thinking</h2>
       <p class="cs-body cs-reveal" style="margin-bottom:48px;">Initial "mobile site" mocks were abandoned in favor of three principles shaped by the physical environment — gloves, loud noise, motion, low light.</p>
       <div class="cs-img-block sharp cs-reveal" style="margin-bottom:48px;">
@@ -250,7 +350,7 @@
 
   <!-- 05 Component Exploration -->
   <section class="cs-section warm-bg">
-    <p class="cs-eyebrow cs-reveal">05 — Component Exploration</p>
+    <p class="cs-eyebrow cs-reveal">06 — Component Exploration</p>
     <h2 class="cs-heading cs-reveal">The Anatomy of a Scannable List</h2>
     <p class="cs-body cs-reveal" style="margin-bottom:48px;">Multiple iterations of the Redwood List Item component were explored to find the right balance between data density and instant glanceability on a small screen.</p>
 
@@ -293,105 +393,6 @@
     </div>
   </section>
 
-  <!-- 06 The Solution -->
-  <section class="cs-section">
-    <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">06 — The Solution</p>
-      <h2 class="cs-heading cs-reveal">A Scannable, Reactive UI</h2>
-      <p class="cs-body cs-reveal" style="margin-bottom:48px;">The Redwood Design System was leveraged to create a high-density, efficient reporting experience. The happy path is entirely scan-driven — operators rarely need to type a single character.</p>
-
-      <div class="cs-img-block no-border cs-reveal" style="max-width:380px;margin:0 auto 8px;">
-        <video autoplay muted loop playsinline preload="metadata" style="width:100%;display:block;" aria-label="The Issue Material flow running on the actual Zebra rugged scanner">
-          <source src="images/mobile/device-flow.webm" type="video/webm" />
-          <source src="images/mobile/device-flow.mp4" type="video/mp4" />
-        </video>
-        <p class="cs-img-caption">The happy path running on the actual hardware — a Zebra rugged scanner, scan field in focus and ready.</p>
-      </div>
-    </div>
-
-    <!-- Solution 1 -->
-    <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;">
-            <img src="images/mobile/solution-1.svg" alt="State 1 — Material field in focus, Submit disabled" />
-            <p class="cs-img-caption">State 1 — Pre-issued materials with status badges.</p>
-          </div>
-          <div>
-            <div class="cs-solution-num">01</div>
-            <h3 class="cs-subheading">The Intelligent List</h3>
-            <p class="cs-body">Pre-issued materials are displayed with clear <strong>Ready</strong> vs. <strong>Pending</strong> status badges for quick scanning in low-light factory environments. The material scan field is in immediate focus — no extra taps to begin.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Solution 2 -->
-    <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
-          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;direction:ltr;">
-            <img src="images/mobile/solution-2.svg" alt="State 2 — Material scanned, required fields revealed" />
-            <p class="cs-img-caption">State 2 — Scanning reveals only that material's required fields.</p>
-          </div>
-          <div style="direction:ltr;">
-            <div class="cs-solution-num">02</div>
-            <h3 class="cs-subheading">Scan-to-Reveal Logic</h3>
-            <p class="cs-body">Once the operator scans a material barcode, the system <strong>detects</strong> what that specific material requires — Lot, Serial, LPN — and surfaces only those fields. No decision fatigue, no blank fields to ignore.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Solution 3 -->
-    <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;">
-            <img src="images/mobile/solution-3.svg" alt="State 3 — All materials ready, Submit enabled" />
-            <p class="cs-img-caption">State 3 — All fields filled; badge flips to Ready and Submit activates.</p>
-          </div>
-          <div>
-            <div class="cs-solution-num">03</div>
-            <h3 class="cs-subheading">Progressive Completion</h3>
-            <p class="cs-body">As each material is scanned and its fields completed, the badge changes from <strong>Pending</strong> to <strong>Ready</strong>. The Submit button activates only when every material is accounted for — a built-in quality gate.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Solution 4: Detail Drawer -->
-    <div class="cs-solution-section">
-      <div class="cs-wrap">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
-          <div class="cs-img-block sharp" style="margin:0 auto;max-width:300px;direction:ltr;">
-            <img src="images/mobile/solution-4.svg" alt="Detail Drawer — full-screen editor for complex entries" />
-            <p class="cs-img-caption">The Detail Drawer — a full-screen editor for split quantities and locator edits.</p>
-          </div>
-          <div style="direction:ltr;">
-            <div class="cs-solution-num">04</div>
-            <h3 class="cs-subheading">The Detail Drawer</h3>
-            <p class="cs-body">The primary "Happy Path" stays lean and scan-driven. For rare cases — like splitting quantities or editing locators — a full-screen drawer provides a complete editing surface without cluttering the main list. Complex tasks accessible but out of the way.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Issue Material final UI -->
-    <div class="cs-wide" style="position:relative;left:50%;right:50%;width:100vw;max-width:none;margin:48px -50vw 0;padding:0 24px;box-sizing:border-box;">
-      <div class="cs-img-block sharp no-border cs-reveal" style="margin:0;">
-        <img src="images/mobile/issue-material.svg" alt="Final Issue Material UI — full flow" />
-        <p class="cs-img-caption">Final Issue Material UI — the complete scanning flow from list to submission.</p>
-      </div>
-    </div>
-
-    <div class="cs-wrap">
-      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
-        <div class="cs-callout-label">Stakeholder Reaction · Lead Manufacturing Engineer</div>
-        <p>"The proactive field injection is a game-changer. We won't have to train operators on which materials require a Lot vs. a Serial number — the UI just tells them what to do next."</p>
-      </div>
-    </div>
-  </section>
 
   <!-- 07 Additional Flows -->
   <section class="cs-section warm-bg">
@@ -502,9 +503,9 @@
   <!-- Next Case Study -->
   <div class="cs-next">
     <div class="cs-next-label">Next Case Study</div>
-    <div class="cs-next-title">SideQuest</div>
-    <div class="cs-next-org">Self-Initiated · Consumer Mobile Concept</div>
-    <a href="sidequest.html" class="cs-next-cta" data-cursor="link">
+    <div class="cs-next-title">Governance Solution<br/>in Fusion Marketing</div>
+    <div class="cs-next-org">Oracle CX Marketing</div>
+    <a href="content-governance.html" class="cs-next-cta" data-cursor="link">
       View Case Study
       <span>→</span>
     </a>

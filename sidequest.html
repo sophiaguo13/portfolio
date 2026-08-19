@@ -122,13 +122,13 @@
   <!-- Sticky table of contents -->
   <nav class="cs-toc" aria-label="Case study sections">
     <a href="#sec-01" class="cs-toc-link" data-cursor="link">Overview</a>
+    <a href="#sec-08" class="cs-toc-link" data-cursor="link">Final Designs</a>
     <a href="#sec-02" class="cs-toc-link" data-cursor="link">User Research</a>
     <a href="#sec-03" class="cs-toc-link" data-cursor="link">Strategy</a>
     <a href="#sec-04" class="cs-toc-link" data-cursor="link">Interaction Architecture</a>
     <a href="#sec-05" class="cs-toc-link" data-cursor="link">Visual Craft</a>
     <a href="#sec-06" class="cs-toc-link" data-cursor="link">Usability Testing</a>
     <a href="#sec-07" class="cs-toc-link" data-cursor="link">Iteration</a>
-    <a href="#sec-08" class="cs-toc-link" data-cursor="link">Final Designs</a>
     <a href="#sec-09" class="cs-toc-link" data-cursor="link">Measuring Success</a>
     <a href="#sec-10" class="cs-toc-link" data-cursor="link">Reflections</a>
   </nav>
@@ -171,7 +171,7 @@
   <!-- Cover -->
   <div class="cs-cover-wrap">
     <div style="background:#6674D2;border-radius:24px;padding:52px 24px;display:flex;justify-content:center;">
-      <video src="images/sidequest/submit-see.mp4?v=2" autoplay muted loop playsinline preload="auto" aria-label="SideQuest — a contestant submits their entry, then unlocks the wall to see everyone else's" style="width:100%;max-width:300px;display:block;border-radius:40px;"></video>
+      <video src="images/sidequest/submit-see.mp4?v=3" autoplay muted loop playsinline preload="auto" aria-label="SideQuest — a contestant submits their entry, then unlocks the wall to see everyone else's" style="width:100%;max-width:300px;display:block;border-radius:40px;"></video>
     </div>
   </div>
 
@@ -192,11 +192,127 @@
     </div>
   </section>
 
+  <!-- 08 Final Designs -->
+  <section id="sec-08" class="cs-section">
+    <div class="cs-wrap">
+      <div class="cs-reveal">
+        <p class="cs-eyebrow">02 — Final Designs</p>
+        <h2 class="cs-heading">Every Flow Serves One Goal</h2>
+        <p class="cs-body">Not one screen in the prototype is a feature for its own sake. Each traces back to the single job the product exists to do: <strong>keep a scattered group genuinely close, week after week.</strong> Groups don't fade because people stop caring — they fade because there's nothing to do together. Walk through the core flows below, end to end — each one a connected prototype, with the design decisions that earn its place against that goal.</p>
+      </div>
+
+      <!-- Job 1 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block no-border" style="margin:0;">
+            <video src="images/sidequest/onboarding.mp4?v=4" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest onboarding flow — create a group, invite friends, and start the first week" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div>
+            <div class="cs-solution-num">01</div>
+            <h3 class="cs-subheading">Get a Scattered Group Started</h3>
+            <p class="cs-body">The real cold start isn't one user — it's a whole group. Onboarding starts the first week at three with a one-tap re-nudge for stragglers, deep-links invites straight past the sign-up cliff, and routes each member by how many groups they're in — the fixes for the cold-start gaps from testing, now in motion.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 2 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block no-border" style="margin:0;direction:ltr;">
+            <video src="images/sidequest/judge-challenge.mp4?v=3" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the judge sets the weekly challenge from a bank or a custom prompt" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">02</div>
+            <h3 class="cs-subheading">The Judge Sets the Challenge</h3>
+            <p class="cs-body">Each week the role rotates to a new judge, who picks from a curated bank of five prompts — six categories, 1–3 effort dots — or writes a custom 120-character challenge, then locks it. A <strong>24-hour clock</strong>, with a group-vote fallback, closes the judge bottleneck testing surfaced, so the week always starts on time no matter who's busy.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 3 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block no-border" style="margin:0;">
+            <video src="images/sidequest/submit-see.mp4?v=3" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — submit your entry, then see and comment on everyone else's" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div>
+            <div class="cs-solution-num">03</div>
+            <h3 class="cs-subheading">Submit, Then See</h3>
+            <p class="cs-body">The engagement engine, live. The <strong>submit-to-see wall</strong> keeps every entry blurred until you post your own — then opens into the private social space, with full-screen reactions, threaded comments, and the one-tap <strong>"I'm here"</strong> path for a busy week. Anticipation, participation, and banter in a single move.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 4 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
+          <div class="cs-img-block no-border" style="margin:0;direction:ltr;">
+            <video src="images/sidequest/judge-ranks.mp4?v=3" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the judge reviews every entry, ranks them, and reveals the results" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div style="direction:ltr;">
+            <div class="cs-solution-num">04</div>
+            <h3 class="cs-subheading">The Judge Ranks &amp; Reveals</h3>
+            <p class="cs-body">On the synchronized <strong>reveal night</strong>, the judge reviews each entry full-screen, ranks them 1–2–3, and posts. There's deliberately no "best" or "loser" — every active player earns at least a point, so the week reads as a collective effort, and the results land with their own thread for the gloating and recount demands.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 5 -->
+      <div class="cs-solution-section">
+        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
+          <div class="cs-img-block no-border" style="margin:0;">
+            <video src="images/sidequest/yearbook.mp4?v=4" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the Yearbook archive of past weeks' challenges and winning entries" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
+          </div>
+          <div>
+            <div class="cs-solution-num">05</div>
+            <h3 class="cs-subheading">The Yearbook</h3>
+            <p class="cs-body">The looking-back layer from the iteration phase, in the Group tab: a scrollable archive of every past week — challenge, winning entry, full ranking — that reopens as a complete time capsule of entries, captions, and comment threads. Standings reset each round, but the memories stay.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
+        <div class="cs-callout-label">The Through-Line</div>
+        <p>Every flow is in service of one thing: giving a scattered group a reason to show up for each other — and making sure no gap (a slow judge, a quiet midweek, a busy friend) is ever allowed to break the habit.</p>
+      </div>
+
+      <h3 class="cs-subheading" style="margin-top:64px;">Supporting Screens &amp; Edge Cases</h3>
+      <p class="cs-body">A few stationary flows that keep the core loop legible and handle the real-world states a scattered group actually runs into.</p>
+
+      <!-- Edge 1: In-group tabs -->
+      <div style="margin-top:36px;">
+        <h4 class="cs-subheading" style="font-size:20px;">In-Group Tabs</h4>
+        <p class="cs-body">Three fixed tabs keep the whole loop one tap apart: <strong>This Week</strong> (active challenge + submission), <strong>Standings</strong> (the round leaderboard), and <strong>Group</strong> (members, settings, and the Yearbook).</p>
+        <div class="cs-img-block no-border" style="margin:16px auto 0;max-width:72%;">
+          <img src="images/sidequest/edge-tabs.webp" alt="The three in-group tabs — This Week with the active challenge, Standings leaderboard, and Group with members and Yearbook" />
+        </div>
+      </div>
+
+      <!-- Edge 2: Adaptive landing -->
+      <div style="margin-top:48px;">
+        <h4 class="cs-subheading" style="font-size:20px;">Adaptive Landing</h4>
+        <p class="cs-body">The open screen routes by how many groups you're in, so no one hits a cold dashboard: <strong>zero →</strong> create or join; <strong>one →</strong> straight in; <strong>two or more →</strong> a dashboard that flags the group that needs you now.</p>
+        <div class="cs-img-block no-border" style="margin:16px auto 0;max-width:72%;">
+          <img src="images/sidequest/edge-landing.png?v=2" alt="Adaptive landing — the open screen for zero groups (create/join), exactly one group (straight in), and two or more (groups dashboard)" />
+        </div>
+      </div>
+
+      <!-- Edge 3: Add a new group -->
+      <div style="margin-top:48px;">
+        <h4 class="cs-subheading" style="font-size:20px;">Adding a New Group</h4>
+        <p class="cs-body">Real life means more than one circle. From the switcher you can spin up or join another group via the same two-minute path — without turning home into an endless feed that dilutes the one that matters.</p>
+        <div class="cs-img-block no-border" style="margin-top:16px;">
+          <img src="images/sidequest/edge-newgroup.png" alt="Adding a new group — single-group home, the switcher, create or join, name your group, and now in two groups" />
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 02 User Research -->
   <section id="sec-02" class="cs-section">
     <div class="cs-wrap">
       <div class="cs-reveal">
-        <p class="cs-eyebrow">02 — User Research</p>
+        <p class="cs-eyebrow">03 — User Research</p>
         <h2 class="cs-heading">Talking to Scattered Friends</h2>
         <p class="cs-body">SideQuest is about a problem I'm living, so I took it to the people living it. I ran <strong>18 generative interviews with peers aged 22–30</strong> — friends now scattered across six cities, a mix of genders, and every kind of post-grad life stage: some in grad school, some in med or law school, others working full-time across different industries. Same open-ended guide each time, then I coded the transcripts for patterns. The goal: stress-test my core assumptions and find the real design problem before drawing a single screen.</p>
       </div>
@@ -276,7 +392,7 @@
 
   <!-- 03 Strategy & Pivot -->
   <section id="sec-03" class="cs-section warm-bg">
-    <p class="cs-eyebrow">03 — Strategy</p>
+    <p class="cs-eyebrow">04 — Strategy</p>
     <h2 class="cs-heading">From Insight to Product Pillars</h2>
     <p class="cs-body">The research made the design problem unmistakable: <strong>Week 2 — not Week 1 — is where rituals die.</strong> Novelty handles the first round; the real challenge is engineering a reason to come back after the shine wears off. To make the ritual survive past novelty, I anchored the product to two foundational pillars:</p>
     <div class="cs-constraint-list" style="max-width:760px;">
@@ -301,7 +417,7 @@
   <!-- 03 Interaction Architecture -->
   <section id="sec-04" class="cs-section">
     <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">04 — Interaction Architecture</p>
+      <p class="cs-eyebrow cs-reveal">05 — Interaction Architecture</p>
       <h2 class="cs-heading cs-reveal">The Contestant vs. The Judge</h2>
       <p class="cs-body cs-reveal">To make the mechanics reinforce psychological safety and bonding rather than stressful competition, I split the core architecture into two distinct flows — mapped first as <strong>low-fidelity wireframes</strong> to lock the structure and pacing before any visual design.</p>
 
@@ -333,7 +449,7 @@
 
   <!-- 04 Visual Craft -->
   <section id="sec-05" class="cs-section warm-bg">
-    <p class="cs-eyebrow">05 — Visual Craft</p>
+    <p class="cs-eyebrow">06 — Visual Craft</p>
     <h2 class="cs-heading">Building a Digital Party Game</h2>
     <p class="cs-body" style="margin-bottom:8px;">The visual language had to feel quirky and playful without tipping into childish or overwhelming. SideQuest consciously avoids the clean, sterile aesthetics of modern SaaS and social platforms, positioning itself instead as an <strong>analog party game</strong> — a private, tactile hangout rather than a public broadcast feed.</p>
 
@@ -386,7 +502,7 @@
   <!-- 05 Usability Testing -->
   <section id="sec-06" class="cs-section">
     <div class="cs-wrap">
-      <p class="cs-eyebrow cs-reveal">06 — Usability Testing</p>
+      <p class="cs-eyebrow cs-reveal">07 — Usability Testing</p>
       <h2 class="cs-heading cs-reveal">Pressure-Testing the Ritual</h2>
       <p class="cs-body cs-reveal">Once the first hi-fi prototype was clickable, I ran <strong>moderated usability sessions with five of the same peers from discovery</strong> — each walked the full loop (create a group, judge a week, submit an entry, read the results) while I watched for friction and thought-aloud reactions. Judged against the one question that matters — <em>does this actually keep a scattered group close, week after week?</em> — the interface held up. The risks lived in the <strong>gaps between taps</strong>: the waiting, the one slow judge, the friend who's too busy this week.</p>
 
@@ -438,7 +554,7 @@
 
   <!-- 06 Iteration: The Yearbook -->
   <section id="sec-07" class="cs-section warm-bg">
-    <p class="cs-eyebrow">07 — Iteration</p>
+    <p class="cs-eyebrow">08 — Iteration</p>
     <h2 class="cs-heading">Iterating Toward Closeness</h2>
     <p class="cs-body">Two iterations pushed SideQuest from a game loop into a place a group actually hangs out — one adding conversation <em>in the moment</em>, the other giving the group a way to look back together.</p>
 
@@ -483,121 +599,6 @@
     </div>
   </section>
 
-  <!-- 08 Final Designs -->
-  <section id="sec-08" class="cs-section">
-    <div class="cs-wrap">
-      <div class="cs-reveal">
-        <p class="cs-eyebrow">08 — Final Designs</p>
-        <h2 class="cs-heading">Every Flow Serves One Goal</h2>
-        <p class="cs-body">Not one screen in the prototype is a feature for its own sake. Each traces back to the single job the product exists to do: <strong>keep a scattered group genuinely close, week after week.</strong> Groups don't fade because people stop caring — they fade because there's nothing to do together. Walk through the core flows below, end to end — each one a connected prototype, with the design decisions that earn its place against that goal.</p>
-      </div>
-
-      <!-- Job 1 -->
-      <div class="cs-solution-section">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-          <div class="cs-img-block no-border" style="margin:0;">
-            <video src="images/sidequest/onboarding.mp4?v=4" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest onboarding flow — create a group, invite friends, and start the first week" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
-          </div>
-          <div>
-            <div class="cs-solution-num">01</div>
-            <h3 class="cs-subheading">Get a Scattered Group Started</h3>
-            <p class="cs-body">The real cold start isn't one user — it's a whole group. Onboarding starts the first week at three with a one-tap re-nudge for stragglers, deep-links invites straight past the sign-up cliff, and routes each member by how many groups they're in — the fixes for the cold-start gaps from testing, now in motion.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Flow 2 -->
-      <div class="cs-solution-section">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
-          <div class="cs-img-block no-border" style="margin:0;direction:ltr;">
-            <video src="images/sidequest/judge-challenge.mp4?v=2" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the judge sets the weekly challenge from a bank or a custom prompt" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
-          </div>
-          <div style="direction:ltr;">
-            <div class="cs-solution-num">02</div>
-            <h3 class="cs-subheading">The Judge Sets the Challenge</h3>
-            <p class="cs-body">Each week the role rotates to a new judge, who picks from a curated bank of five prompts — six categories, 1–3 effort dots — or writes a custom 120-character challenge, then locks it. A <strong>24-hour clock</strong>, with a group-vote fallback, closes the judge bottleneck testing surfaced, so the week always starts on time no matter who's busy.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Flow 3 -->
-      <div class="cs-solution-section">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-          <div class="cs-img-block no-border" style="margin:0;">
-            <video src="images/sidequest/submit-see.mp4?v=2" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — submit your entry, then see and comment on everyone else's" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
-          </div>
-          <div>
-            <div class="cs-solution-num">03</div>
-            <h3 class="cs-subheading">Submit, Then See</h3>
-            <p class="cs-body">The engagement engine, live. The <strong>submit-to-see wall</strong> keeps every entry blurred until you post your own — then opens into the private social space, with full-screen reactions, threaded comments, and the one-tap <strong>"I'm here"</strong> path for a busy week. Anticipation, participation, and banter in a single move.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Flow 4 -->
-      <div class="cs-solution-section">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;direction:rtl;">
-          <div class="cs-img-block no-border" style="margin:0;direction:ltr;">
-            <video src="images/sidequest/judge-ranks.mp4?v=2" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the judge reviews every entry, ranks them, and reveals the results" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
-          </div>
-          <div style="direction:ltr;">
-            <div class="cs-solution-num">04</div>
-            <h3 class="cs-subheading">The Judge Ranks &amp; Reveals</h3>
-            <p class="cs-body">On the synchronized <strong>reveal night</strong>, the judge reviews each entry full-screen, ranks them 1–2–3, and posts. There's deliberately no "best" or "loser" — every active player earns at least a point, so the week reads as a collective effort, and the results land with their own thread for the gloating and recount demands.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Flow 5 -->
-      <div class="cs-solution-section">
-        <div class="cs-cols-ratio cs-reveal" style="align-items:center;">
-          <div class="cs-img-block no-border" style="margin:0;">
-            <video src="images/sidequest/yearbook.mp4?v=3" muted loop playsinline preload="none" class="sq-lazy-vid" aria-label="SideQuest — the Yearbook archive of past weeks' challenges and winning entries" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:35px;"></video>
-          </div>
-          <div>
-            <div class="cs-solution-num">05</div>
-            <h3 class="cs-subheading">The Yearbook</h3>
-            <p class="cs-body">The looking-back layer from the iteration phase, in the Group tab: a scrollable archive of every past week — challenge, winning entry, full ranking — that reopens as a complete time capsule of entries, captions, and comment threads. Standings reset each round, but the memories stay.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="cs-callout accent3 cs-reveal" style="margin-top:48px;">
-        <div class="cs-callout-label">The Through-Line</div>
-        <p>Every flow is in service of one thing: giving a scattered group a reason to show up for each other — and making sure no gap (a slow judge, a quiet midweek, a busy friend) is ever allowed to break the habit.</p>
-      </div>
-
-      <h3 class="cs-subheading" style="margin-top:64px;">Supporting Screens &amp; Edge Cases</h3>
-      <p class="cs-body">A few stationary flows that keep the core loop legible and handle the real-world states a scattered group actually runs into.</p>
-
-      <!-- Edge 1: In-group tabs -->
-      <div style="margin-top:36px;">
-        <h4 class="cs-subheading" style="font-size:20px;">In-Group Tabs</h4>
-        <p class="cs-body">Three fixed tabs keep the whole loop one tap apart: <strong>This Week</strong> (active challenge + submission), <strong>Standings</strong> (the round leaderboard), and <strong>Group</strong> (members, settings, and the Yearbook).</p>
-        <div class="cs-img-block no-border" style="margin:16px auto 0;max-width:72%;">
-          <img src="images/sidequest/edge-tabs.webp" alt="The three in-group tabs — This Week with the active challenge, Standings leaderboard, and Group with members and Yearbook" />
-        </div>
-      </div>
-
-      <!-- Edge 2: Adaptive landing -->
-      <div style="margin-top:48px;">
-        <h4 class="cs-subheading" style="font-size:20px;">Adaptive Landing</h4>
-        <p class="cs-body">The open screen routes by how many groups you're in, so no one hits a cold dashboard: <strong>zero →</strong> create or join; <strong>one →</strong> straight in; <strong>two or more →</strong> a dashboard that flags the group that needs you now.</p>
-        <div class="cs-img-block no-border" style="margin:16px auto 0;max-width:72%;">
-          <img src="images/sidequest/edge-landing.png?v=2" alt="Adaptive landing — the open screen for zero groups (create/join), exactly one group (straight in), and two or more (groups dashboard)" />
-        </div>
-      </div>
-
-      <!-- Edge 3: Add a new group -->
-      <div style="margin-top:48px;">
-        <h4 class="cs-subheading" style="font-size:20px;">Adding a New Group</h4>
-        <p class="cs-body">Real life means more than one circle. From the switcher you can spin up or join another group via the same two-minute path — without turning home into an endless feed that dilutes the one that matters.</p>
-        <div class="cs-img-block no-border" style="margin-top:16px;">
-          <img src="images/sidequest/edge-newgroup.png" alt="Adding a new group — single-group home, the switcher, create or join, name your group, and now in two groups" />
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- 09 Measuring Success & Next Steps -->
   <section id="sec-09" class="cs-section warm-bg">
@@ -664,9 +665,9 @@
   <!-- Next Case Study -->
   <div class="cs-next">
     <div class="cs-next-label">Next Case Study</div>
-    <div class="cs-next-title">Governance Solution<br/>in Fusion Marketing</div>
-    <div class="cs-next-org">Oracle CX Marketing</div>
-    <a href="content-governance.html" class="cs-next-cta" data-cursor="link">
+    <div class="cs-next-title">Parallel Operations<br/>in Work Definition</div>
+    <div class="cs-next-org">Oracle SCM · Manufacturing</div>
+    <a href="parallel-ops.html" class="cs-next-cta" data-cursor="link">
       View Case Study
       <span>→</span>
     </a>
