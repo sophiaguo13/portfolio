@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="stylesheet" href="style.css?v=19" />
   <style>
     /* hero doodles — wake up on proximity */
     .hero-doodle { display:inline-block; vertical-align:baseline; will-change:transform; }
@@ -18,6 +18,23 @@
       background-image: linear-gradient(100deg, #58549E 0%, #58549E 38%, #CFC4FF 50%, #58549E 62%, #58549E 100%);
       background-size: 250% 100%; background-repeat: no-repeat; background-position: 0% 0;
       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    /* footer — big editorial CTA */
+    .footer-cta { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; flex-wrap: wrap; margin-bottom: 80px; }
+    .footer-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4.4vw, 50px);
+      font-weight: 400; line-height: 1.1; letter-spacing: -0.02em;
+      color: var(--bg); margin: 0; flex: 1 1 420px;
+    }
+    .footer-headline em { font-style: italic; color: var(--accent); }
+    .footer-contact { display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 11px; flex: 0 0 auto; }
+    .footer-contact a { font-size: 15px; color: rgba(250,248,244,0.55); transition: color 0.2s; }
+    .footer-contact a:hover { color: var(--accent); }
+    @media (max-width: 700px) {
+      .footer-cta { flex-direction: column; align-items: flex-start; gap: 32px; }
+      .footer-headline { font-size: 33px; }
+      .footer-contact { align-items: flex-start; text-align: left; }
     }
   </style>
 </head>
@@ -238,21 +255,7 @@
           <p>Outside of work, I'm probably sipping matcha, collecting cute trinkets, traveling somewhere new, or making art for no reason other than it brings me joy.</p>
           <p class="ed-about-facts">Off the clock — concert-goer · competitive dancer · matcha devotee · serial traveler · beginner foodie · thrifting enthusiast.</p>
         </div>
-        <div class="ed-about-cv">
-          <span class="ed-label">Experience</span>
-          <ul class="ed-cv-list">
-            <li class="ed-cv-item"><span class="ed-cv-date">2024 – 26</span><span class="ed-cv-main"><span class="ed-cv-role">UX Designer</span><span class="ed-cv-org">Oracle Supply Chain Management</span></span></li>
-            <li class="ed-cv-item"><span class="ed-cv-date">Summer 23</span><span class="ed-cv-main"><span class="ed-cv-role">UX Design Intern</span><span class="ed-cv-org">Oracle CX Marketing</span></span></li>
-            <li class="ed-cv-item"><span class="ed-cv-date">2021 – 23</span><span class="ed-cv-main"><span class="ed-cv-role">VP, Design &amp; Product Designer</span><span class="ed-cv-org">Web Development at Berkeley</span></span></li>
-            <li class="ed-cv-item"><span class="ed-cv-date">2021 – 22</span><span class="ed-cv-main"><span class="ed-cv-role">VP, Design Services &amp; Graphic Designer</span><span class="ed-cv-org">Innovative Design</span></span></li>
-            <li class="ed-cv-item"><span class="ed-cv-date">2020 – 21</span><span class="ed-cv-main"><span class="ed-cv-role">Head of Design</span><span class="ed-cv-org">Her Campus Media at Berkeley</span></span></li>
-          </ul>
-          <div class="ed-about-connect">
-            <a href="mailto:sophiaguo555@gmail.com" class="ed-connect" data-cursor="link">Say hello →</a>
-            <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" class="ed-connect" data-cursor="link">LinkedIn →</a>
-            <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" class="ed-connect" data-cursor="link">Resume →</a>
-          </div>
-        </div>
+        <img class="ed-about-portrait" src="images/about/portrait.jpg" alt="Sophia Guo" />
       </div>
       <span class="ed-label ed-about-caption">Life, lately</span>
     </div>
@@ -333,30 +336,16 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-left">
-        <p class="footer-name">Sophia Guo</p>
-        <p class="footer-tagline">Designed with care ◡̈</p>
+    <div class="footer-cta">
+      <h2 class="footer-headline">Let's build something<br>people <em>actually enjoy</em>.</h2>
+      <div class="footer-contact">
+        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email ↗</a>
+        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn ↗</a>
+        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume ↗</a>
       </div>
-      <div class="footer-links">
-        <a href="mailto:sophiaguo555@gmail.com" data-cursor="link">Email</a>
-        <a href="https://www.linkedin.com/in/sophiaaguo/" target="_blank" data-cursor="link">LinkedIn</a>
-        <a href="https://drive.google.com/file/d/11sdsMuKjVapo7IbPVazikQqYI4OQgtbl/view?usp=sharing" target="_blank" data-cursor="link">Resume</a>
-      </div>
-    </div>
-    <div class="footer-critters" aria-hidden="true">
-      <span class="critter c1"><span class="hop">ʕ•ᴥ•ʔ</span></span>
-      <span class="critter c2"><span class="hop">(=^･ω･^=)</span></span>
-      <span class="critter c3"><span class="hop">(・ᴗ・)</span></span>
-      <span class="critter c4"><span class="hop">◡̈</span></span>
-      <span class="critter c5"><span class="hop">@\_/</span></span>
-      <span class="critter c6"><span class="hop">ʕ•ᴥ•ʔ</span></span>
-      <span class="critter c7"><span class="hop">\(^_^)/</span></span>
-      <span class="critter c8"><span class="hop">(o_o)</span></span>
-      <span class="critter c9"><span class="hop">(=^･ω･^=)</span></span>
     </div>
     <div class="footer-bar">
-      <span>© 2026</span>
+      <span>© 2026 Sophia Guo · Seattle</span>
       <span>Made with curiosity ✦</span>
     </div>
   </footer>
