@@ -97,7 +97,51 @@ function runHeroReveal() {
   });
 }
 
-window.addEventListener('load', runHeroReveal);
+/* ── Intro overlay → hero handoff ── */
+function initIntro() {
+  const intro = document.getElementById('intro');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const seen = sessionStorage.getItem('sgIntroSeen');
+
+  // No overlay (missing / reduced motion / already seen this session): reveal hero directly
+  if (!intro || reduce || seen) {
+    if (intro) intro.remove();
+    if (document.readyState === 'complete') runHeroReveal();
+    else window.addEventListener('load', runHeroReveal);
+    return;
+  }
+
+  sessionStorage.setItem('sgIntroSeen', '1');
+  document.documentElement.classList.add('intro-lock');
+  requestAnimationFrame(() => intro.classList.add('intro-in'));
+
+  let done = false;
+  const dismiss = () => {
+    if (done) return;
+    done = true;
+    intro.classList.add('intro-exit');
+    document.documentElement.classList.remove('intro-lock');
+    runHeroReveal();                                   // hero rises as the strips wipe up
+    // wait for the full staggered strip cascade (0.68s + 0.36s stagger) before removing
+    setTimeout(() => { if (intro.parentNode) intro.remove(); }, 1150);
+  };
+
+  const MIN_MS = 1650;
+  const started = performance.now();
+  const schedule = () => setTimeout(dismiss, Math.max(0, MIN_MS - (performance.now() - started)));
+  if (document.readyState === 'complete') schedule();
+  else window.addEventListener('load', schedule);
+
+  // Skip on any interaction
+  ['click', 'keydown', 'wheel', 'touchstart'].forEach(ev =>
+    window.addEventListener(ev, dismiss, { once: true, passive: true }));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initIntro);
+} else {
+  initIntro();
+}
 
 /* ── Scroll-triggered Reveals ── */
 const revealTargets = document.querySelectorAll(

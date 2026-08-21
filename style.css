@@ -56,6 +56,81 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ── Intro overlay (once per session) ── */
+html.intro-lock, html.intro-lock body { overflow: hidden; height: 100%; }
+.intro { position: fixed; inset: 0; z-index: 9500; display: none; }
+html.js .intro { display: block; }
+@media (prefers-reduced-motion: reduce) { html.js .intro { display: none; } }
+
+/* full-screen strips (the "blinds") */
+.intro-strips { position: absolute; inset: 0; display: flex; z-index: 1; }
+.intro-strip {
+  flex: 1 1 0; height: 100%;
+  background: var(--fg);
+  transform: translateY(0);
+  will-change: transform;
+}
+.intro.intro-exit .intro-strip {
+  transform: translateY(-100%);
+  transition: transform 0.68s var(--ease-out);
+}
+.intro.intro-exit .intro-strip:nth-child(1) { transition-delay: 0s; }
+.intro.intro-exit .intro-strip:nth-child(2) { transition-delay: 0.09s; }
+.intro.intro-exit .intro-strip:nth-child(3) { transition-delay: 0.18s; }
+.intro.intro-exit .intro-strip:nth-child(4) { transition-delay: 0.27s; }
+.intro.intro-exit .intro-strip:nth-child(5) { transition-delay: 0.36s; }
+
+/* stage — wordmark + glyphs, above the strips */
+.intro-stage {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+}
+.intro.intro-exit .intro-stage { opacity: 0; transition: opacity 0.26s ease; }
+
+.intro-mark {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(92px, 22vw, 300px); letter-spacing: -0.04em; line-height: 1;
+  color: var(--bg);
+}
+/* letter-by-letter stamp — each initial springs in with a bouncy overshoot */
+.intro-mark .ic {
+  display: inline-block;
+  opacity: 0; transform: translateY(30px) scale(0.3);
+  will-change: transform, opacity;
+}
+.intro-mark .ic.dot { color: var(--accent); }
+.intro.intro-in .intro-mark .ic {
+  opacity: 1; transform: none;
+  transition: opacity 0.34s ease, transform 0.6s cubic-bezier(0.3, 1.7, 0.5, 1);
+}
+.intro.intro-in .intro-mark .ic:nth-child(1) { transition-delay: 0.14s; }
+.intro.intro-in .intro-mark .ic:nth-child(2) { transition-delay: 0.30s; }
+.intro.intro-in .intro-mark .ic:nth-child(3) { transition-delay: 0.50s; }
+
+/* floating brand-doodle glyphs scattered across the screen */
+.intro-glyph {
+  position: absolute; font-family: var(--font-serif); line-height: 1;
+  opacity: 0; transform: scale(0.4) rotate(-8deg);
+}
+.intro.intro-in .intro-glyph {
+  opacity: 1; transform: none;
+  transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.intro-glyph.g1 { top: 17%;  left: 13%;  font-size: clamp(30px, 5vw, 66px);  transition-delay: 0.28s; animation: introFloatA 4.5s ease-in-out 1s infinite; }
+.intro-glyph.g2 { top: 21%;  right: 15%; font-size: clamp(34px, 6.4vw, 82px); transition-delay: 0.4s;  animation: introFloatB 5s   ease-in-out 1.1s infinite; }
+.intro-glyph.g3 { bottom: 20%; left: 18%; font-size: clamp(34px, 6vw, 78px);  transition-delay: 0.5s;  animation: introFloatB 4.8s ease-in-out 1.2s infinite; }
+.intro-glyph.g4 { bottom: 19%; right: 16%; font-size: clamp(28px, 4.6vw, 60px); transition-delay: 0.6s; animation: introFloatA 5.2s ease-in-out 1.3s infinite; }
+/* float only kicks in after the entrance transition settles (delay > entrance) */
+.intro:not(.intro-in) .intro-glyph { animation: none; }
+@keyframes introFloatA {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(5deg); }
+}
+@keyframes introFloatB {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(12px) rotate(-6deg); }
+}
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 
