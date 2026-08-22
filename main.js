@@ -121,12 +121,12 @@ function initIntro() {
     done = true;
     intro.classList.add('intro-exit');
     document.documentElement.classList.remove('intro-lock');
-    runHeroReveal();                                   // hero rises as the strips wipe up
-    // wait for the full staggered strip cascade (0.68s + 0.36s stagger) before removing
-    setTimeout(() => { if (intro.parentNode) intro.remove(); }, 1150);
+    runHeroReveal();                                   // hero shows through the opening seam
+    // wait for the split panels to clear (0.72s) before removing
+    setTimeout(() => { if (intro.parentNode) intro.remove(); }, 850);
   };
 
-  const MIN_MS = 1650;
+  const MIN_MS = 2100;
   const started = performance.now();
   const schedule = () => setTimeout(dismiss, Math.max(0, MIN_MS - (performance.now() - started)));
   if (document.readyState === 'complete') schedule();
@@ -307,11 +307,3 @@ window.addEventListener('scroll', () => {
 backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 backTop.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
 backTop.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-
-/* ── Parallax on hero blobs ── */
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  document.querySelector('.blob-1').style.transform = `translate(${y * 0.06}px, ${y * -0.08}px)`;
-  document.querySelector('.blob-2').style.transform = `translate(${y * -0.05}px, ${y * 0.06}px)`;
-  document.querySelector('.blob-3').style.transform = `translate(${y * 0.04}px, ${y * 0.04}px)`;
-});

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=29" />
+  <link rel="stylesheet" href="style.css?v=32" />
   <style>
     /* hero doodles — wake up on proximity */
     .hero-doodle { display:inline-block; vertical-align:baseline; will-change:transform; }
@@ -43,20 +43,11 @@
 
   <!-- Intro overlay (once per session) -->
   <div class="intro" id="intro" aria-hidden="true">
-    <div class="intro-strips">
-      <span class="intro-strip"></span>
-      <span class="intro-strip"></span>
-      <span class="intro-strip"></span>
-      <span class="intro-strip"></span>
-      <span class="intro-strip"></span>
-    </div>
-    <div class="intro-stage">
-      <span class="intro-glyph g1" style="color:#58549E;">˙⋆✮</span>
-      <span class="intro-glyph g2" style="color:#F4633A;">ೀ</span>
-      <span class="intro-glyph g3" style="color:#59B04F;">⚘</span>
-      <span class="intro-glyph g4" style="color:var(--accent);">✶</span>
+    <div class="intro-half top">
       <span class="intro-mark"><span class="ic">s</span><span class="ic">g</span><span class="ic dot">.</span></span>
     </div>
+    <div class="intro-half bottom"></div>
+    <span class="intro-rule" aria-hidden="true"></span>
   </div>
 
   <!-- Custom cursor -->
@@ -385,7 +376,7 @@
     tick(); setInterval(tick,30000);
   })();
   </script>
-  <script src="main.js?v=8"></script>
+  <script src="main.js?v=11"></script>
   <script src="editorial-scroll.js?v=2"></script>
   <script src="hero-spotlight.js?v=1"></script>
   <script>
