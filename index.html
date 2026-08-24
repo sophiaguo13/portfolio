@@ -9,11 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=39" />
+  <link rel="stylesheet" href="style.css?v=40" />
   <style>
     /* hero doodles — wake up on proximity */
     .hero-doodle { display:inline-block; vertical-align:baseline; will-change:transform; }
-    .spot-overlay .hero-doodle { opacity:0 !important; }  /* keep marks their brand colors under the spotlight overlay */
+    /* hide cloned doodles from the rainbow overlay — visibility:hidden (not opacity:0) also
+       removes their glyphs from the ed-line's background-clip:text, so no rainbow ghost shapes;
+       the base doodles keep their brand colors under the spotlight */
+    .spot-overlay .hero-doodle { visibility: hidden !important; }
     /* star sheen: gradient-filled text with a highlight parked off-screen at rest, swept across on wake */
     .hd-star {
       background-image: linear-gradient(100deg, #58549E 0%, #58549E 38%, #CFC4FF 50%, #58549E 62%, #58549E 100%);
