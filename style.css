@@ -4,7 +4,7 @@
    ============================================ */
 
 :root {
-  --bg: #faf8f4;
+  --bg: #FCFBF9;
   --fg: #1a1714;
   --accent: #DE2F7B;
   --accent2: #7c5cbf;
@@ -903,10 +903,40 @@ section { padding: 100px 48px; }
 .ed-connect:hover { color: var(--accent); border-color: var(--accent); }
 .ed-about-caption { display: block; margin-top: 76px; }
 
+/* Currently loving — books / albums / films */
+.ed-faves { margin-top: 96px; padding-top: 56px; border-top: 1px solid var(--card-border); }
+.ed-faves-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px;
+  margin-top: 34px;
+}
+.ed-fave-cat {
+  font-family: var(--font-serif); font-weight: 600; font-size: 21px;
+  color: var(--fg); letter-spacing: -0.01em; margin-bottom: 22px;
+}
+.ed-fave-list { list-style: none; display: flex; flex-direction: column; gap: 17px; }
+.ed-fave-list li { display: flex; flex-direction: column; gap: 3px; }
+.ed-fave-title { font-size: 15px; line-height: 1.35; color: var(--fg); transition: color 0.2s; }
+a.ed-fave-title:hover { color: var(--accent); }
+.ed-fave-by { font-size: 13px; color: var(--muted); }
+
+/* floating cover that follows the cursor on book hover */
+.fave-peek {
+  position: fixed; z-index: 9000; width: 128px; height: auto;
+  border-radius: 6px; box-shadow: 0 16px 38px rgba(20,16,12,0.32);
+  pointer-events: none; transform-origin: left center;
+  opacity: 0; transform: scale(0.84) rotate(-3deg);
+  transition: opacity 0.18s ease, transform 0.24s cubic-bezier(0.34,1.56,0.64,1);
+  will-change: transform, opacity;
+}
+.fave-peek.visible { opacity: 1; transform: scale(1) rotate(-3deg); }
+@media (max-width: 780px), (pointer: coarse) { .fave-peek { display: none; } }
+
 @media (max-width: 780px) {
   .ed-about-wrap { padding: 0 24px; }
   .ed-about-grid { grid-template-columns: 1fr; gap: 40px; }
   .ed-about-bio p { max-width: none; }
+  .ed-faves { margin-top: 64px; }
+  .ed-faves-grid { grid-template-columns: 1fr; gap: 38px; }
 }
 
 /* ── Work — editorial case-study spreads ── */

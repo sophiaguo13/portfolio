@@ -307,3 +307,38 @@ window.addEventListener('scroll', () => {
 backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 backTop.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
 backTop.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+
+/* ── Book cover peek on hover ── */
+(() => {
+  const items = document.querySelectorAll('.ed-fave-title[data-cover]');
+  if (!items.length || window.matchMedia('(pointer: coarse)').matches) return;
+
+  // warm the cache so the first hover shows instantly
+  items.forEach(el => { const i = new Image(); i.src = el.dataset.cover; });
+
+  const peek = document.createElement('img');
+  peek.className = 'fave-peek';
+  peek.alt = '';
+  document.body.appendChild(peek);
+
+  const W = 128;
+  const place = (e) => {
+    const h = peek.offsetHeight || 190;
+    let x = e.clientX + 22;
+    if (x + W > window.innerWidth - 10) x = e.clientX - 22 - W;   // flip left near the edge
+    let y = e.clientY - h / 2;
+    y = Math.max(10, Math.min(y, window.innerHeight - h - 10));    // keep on screen
+    peek.style.left = x + 'px';
+    peek.style.top = y + 'px';
+  };
+
+  items.forEach(el => {
+    el.addEventListener('mouseenter', (e) => {
+      if (peek.src !== el.dataset.cover) peek.src = el.dataset.cover;
+      place(e);
+      peek.classList.add('visible');
+    });
+    el.addEventListener('mousemove', place);
+    el.addEventListener('mouseleave', () => peek.classList.remove('visible'));
+  });
+})();
