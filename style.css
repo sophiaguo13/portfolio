@@ -492,8 +492,10 @@ img { display: block; max-width: 100%; }
   50% { transform: translateX(5px); }
 }
 @media (max-width: 640px) {
-  .ed-hero { padding: 110px 24px 80px; }
+  .ed-hero { padding: 96px 24px 72px; }
   .ed-meta { gap: 28px; }
+  /* smaller, tighter hero title so the sentence-lines wrap cleanly on phones */
+  .ed-title { font-size: clamp(25px, 6.6vw, 32px) !important; line-height: 1.14; margin-bottom: 36px; }
   /* stack the masthead labels so they don't cram into a broken grid */
   .ed-masthead {
     flex-direction: column;

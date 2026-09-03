@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=40" />
+  <link rel="stylesheet" href="style.css?v=41" />
   <style>
     /* hero doodles — wake up on proximity */
     .hero-doodle { display:inline-block; vertical-align:baseline; will-change:transform; }
@@ -36,9 +36,12 @@
     .footer-contact a { font-size: 15px; color: rgba(250,248,244,0.55); transition: color 0.2s; }
     .footer-contact a:hover { color: var(--accent); }
     @media (max-width: 700px) {
-      .footer-cta { flex-direction: column; align-items: flex-start; gap: 32px; }
-      .footer-headline { font-size: 33px; }
+      .footer { padding-left: 24px; padding-right: 24px; }
+      .footer-cta { flex-direction: column; align-items: flex-start; gap: 22px; margin-bottom: 44px; }
+      /* reset flex-basis: in a stacked column it becomes a 420px HEIGHT and leaves a huge gap */
+      .footer-headline { font-size: 31px; flex: 0 0 auto; }
       .footer-contact { align-items: flex-start; text-align: left; }
+      .footer-bar { flex-direction: column; gap: 6px; align-items: flex-start; }
     }
   </style>
 </head>
