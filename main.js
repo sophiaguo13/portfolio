@@ -89,8 +89,13 @@ function runHeroReveal() {
   const words = document.querySelectorAll('.reveal-word');
   const fades = document.querySelectorAll('.reveal-fade');
 
-  words.forEach((el, i) => {
-    setTimeout(() => el.classList.add('revealed'), 100 + i * 140);
+  // The hero holds two line variants (desktop + mobile); only one is visible.
+  // Reveal all so a later resize is covered, but stagger only the visible ones
+  // so the hidden variant doesn't add dead time before the reveal.
+  let vi = 0;
+  words.forEach((el) => {
+    const visible = el.offsetParent !== null;
+    setTimeout(() => el.classList.add('revealed'), visible ? 100 + (vi++) * 140 : 0);
   });
   fades.forEach((el, i) => {
     setTimeout(() => el.classList.add('revealed'), 500 + i * 120);

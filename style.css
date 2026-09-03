@@ -572,6 +572,12 @@ img { display: block; max-width: 100%; }
   transition: transform 0.9s var(--ease-out);
 }
 .ed-title .reveal-word.revealed .ed-line { transform: translateY(0); }
+/* the hero has two line-groupings: 4 lines on desktop, 6 regrouped lines on mobile */
+.ed-title .reveal-word.rw-mobile { display: none; }
+@media (max-width: 640px) {
+  .ed-title .reveal-word.rw-desktop { display: none; }
+  .ed-title .reveal-word.rw-mobile { display: block; }
+}
 @media (prefers-reduced-motion: reduce) {
   .ed-line { transform: none; }
 }
