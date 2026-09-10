@@ -23,11 +23,6 @@
       transition: color 0.2s, gap 0.2s;
     }
     .pl-back:hover { color: var(--fg); gap: 12px; }
-    .pl-masthead {
-      display: flex; align-items: center; justify-content: space-between; gap: 24px;
-      padding-bottom: 24px; margin-bottom: 40px;
-      border-bottom: 1px solid var(--card-border);
-    }
     .pl-title {
       font-family: var(--font-serif);
       font-size: clamp(40px, 6.4vw, 84px);
@@ -95,6 +90,28 @@
     .pl-action-ghost { color: var(--muted); border-bottom-color: var(--card-border); }
     .pl-action-ghost:hover { color: var(--fg); border-bottom-color: var(--fg); }
 
+    /* motion — embedded loading-loops gallery */
+    .pl-motion {
+      padding-top: 56px; margin-top: 56px;
+      border-top: 1px solid var(--card-border);
+    }
+    .pl-motion-head { margin-bottom: 30px; }
+    .pl-motion-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 3.6vw, 42px);
+      line-height: 1.04; letter-spacing: -0.022em;
+      color: var(--fg); margin: 14px 0 14px; position: relative;
+    }
+    .pl-motion-lead {
+      font-size: 15px; line-height: 1.7; color: var(--muted); max-width: 560px;
+    }
+    .pl-motion-lead em { color: var(--fg); font-style: italic; }
+    /* no container — each loop renders as its own card on the page bg */
+    .pl-motion-embed iframe {
+      display: block; width: 100%; height: 640px;
+      border: 0; background: transparent;
+    }
+
     /* more coming */
     .pl-more {
       padding-top: 56px; margin-top: 56px; padding-bottom: 120px;
@@ -142,10 +159,6 @@
       <!-- Hero -->
       <section class="pl-hero">
         <a href="index.html" class="pl-back" data-cursor="link">← Back to home</a>
-        <div class="pl-masthead">
-          <span class="ed-label">Playground — Experiments</span>
-          <span class="ed-label">Eight toys · all live</span>
-        </div>
         <h1 class="pl-title spotlight-target">Things I build<br>for the joy of it. <span style="color:var(--accent);font-size:0.5em;vertical-align:0.35em;letter-spacing:0.02em;">ੈ✩‧₊˚</span></h1>
         <p class="pl-lead">Small interactive toys I prototype by pairing with AI — half design play, half code. Everything here runs right in your browser.</p>
       </section>
@@ -256,7 +269,7 @@
         </div>
         <figure class="pl-figure">
           <div class="pl-frame">
-            <iframe src="playground/postcard/index.html" title="Wish You Were Here — a dithered postcard generator" loading="lazy"></iframe>
+            <iframe src="playground/postcard/index.html?v=2" title="Wish You Were Here — a dithered postcard generator" loading="lazy"></iframe>
           </div>
           <figcaption class="pl-cap">Fig. 05 · Type a city, then press enter.</figcaption>
         </figure>
@@ -300,7 +313,7 @@
         </div>
         <figure class="pl-figure">
           <div class="pl-frame">
-            <iframe src="playground/video-store/index.html" title="Moonlight Video — a late-night video rental shelf toy" loading="lazy"></iframe>
+            <iframe src="playground/video-store/index.html?v=3" title="Moonlight Video — a late-night video rental shelf toy" loading="lazy"></iframe>
           </div>
           <figcaption class="pl-cap">Fig. 07 · Click a spine to pull the case; click again to flip it over.</figcaption>
         </figure>
@@ -322,13 +335,24 @@
         </div>
         <figure class="pl-figure">
           <div class="pl-frame">
-            <iframe src="playground/iridescent-cards/index.html" title="Iridescent — a holographic tarot deck toy" loading="lazy"></iframe>
+            <iframe src="playground/iridescent-cards/index.html?v=2" title="Iridescent — a holographic tarot deck toy" loading="lazy"></iframe>
           </div>
           <figcaption class="pl-cap">Fig. 08 · Move your cursor to catch the light; flip a card to read it.</figcaption>
         </figure>
       </article>
 
       </div><!-- /pl-grid -->
+
+      <!-- Motion — seamless loading loops -->
+      <section class="pl-motion">
+        <div class="pl-motion-head">
+          <h2 class="pl-motion-title spotlight-target">Studies in motion.</h2>
+          <p class="pl-motion-lead">A growing set of small animations I make to explore timing, rhythm, and form.</p>
+        </div>
+        <div class="pl-motion-embed">
+          <iframe id="motionFrame" src="playground/loading-loops/index.html?v=3" title="Motion studies — five seamless loops" loading="lazy" scrolling="no"></iframe>
+        </div>
+      </section>
 
       <!-- More coming -->
       <section class="pl-more">
@@ -370,6 +394,15 @@
   </footer>
 
   <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+  <!-- Size the Motion iframe to its content so there's no inner scroll -->
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'loadingLoopsHeight') {
+        const f = document.getElementById('motionFrame');
+        if (f && e.data.height > 0) f.style.height = e.data.height + 'px';
+      }
+    });
+  </script>
   <script src="main.js?v=14"></script>
   <script src="editorial-scroll.js?v=1"></script>
   <script src="hero-spotlight.js?v=1"></script>

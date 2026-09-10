@@ -477,6 +477,21 @@
     #caseWrap.anim,#caseWrap.anim #case3d{transition-duration:.2s}
     .spine{transition:none}
   }
+
+  /* Playground thumbnail: the storefront is a wide, scrollable scene built for
+     a full window, so at thumbnail size it reads as an extreme close-up on a
+     few spines. Scaling the body (which becomes the containing block for the
+     fixed layers) pulls the whole storefront — marquee, shelves, floor, TV —
+     back into frame. The pointer hint is noise at this size. */
+  body.embedded{transform:scale(0.62); transform-origin:50% 50%;}
+  body.embedded #hint{display:none}
+  /* On a near-square/portrait preview frame (mobile grid), the shelf centres
+     high and the genre sign crowds the marquee — drop the shelf and the
+     secondary hours line so the storefront stays legible. */
+  @media (max-aspect-ratio:1/1){
+    body.embedded #shelf{margin-top:15vh}
+    body.embedded #storesign .hours{display:none}
+  }
 </style>
 </head>
 <body>
@@ -519,6 +534,9 @@
 <div id="hint">scroll to browse&nbsp;&nbsp;·&nbsp;&nbsp;click a tape to pull it off the shelf</div>
 
 <script>
+/* Playground thumbnail: scale the storefront down so the whole scene reads */
+if (window.self !== window.top) document.body.classList.add('embedded');
+
 /* ============================== data ============================== */
 const MOVIES = [
  {id:"knives-out",t:"Knives Out",y:2019,g:"mystery",r:"PG-13",run:"130 MIN",gl:"🗡️",

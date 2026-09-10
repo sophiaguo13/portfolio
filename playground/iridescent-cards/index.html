@@ -309,6 +309,19 @@
     .card { transform: none !important; }
     .flipper { transition: none; }
   }
+
+  /* Playground thumbnail: drop the title chrome so the holographic cards —
+     the actual subject — fill the preview frame instead of the intro screen. */
+  body.embedded { overflow: hidden; }
+  body.embedded header,
+  body.embedded .controls,
+  body.embedded .deck-note,
+  body.embedded .hint { display: none; }
+  body.embedded .grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px 18px;
+    padding: 20px 22px;
+  }
 </style>
 </head>
 <body>
@@ -330,6 +343,8 @@
 
 <script>
 (() => {
+  // Playground thumbnail: strip the intro chrome, show just the cards
+  if (window.self !== window.top) document.body.classList.add('embedded');
   // ?all deals the entire deck in order — a full-gallery view
   const showAll = new URLSearchParams(location.search).has('all');
   const NUM_CARDS = showAll ? 78 : 8;

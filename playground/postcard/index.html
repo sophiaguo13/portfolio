@@ -194,6 +194,12 @@
     opacity: 0.72; mix-blend-mode: multiply;
   }
   .postmark.light { mix-blend-mode: screen; opacity: 0.75; }
+
+  /* Playground thumbnail: hide the search chrome and scale the developed
+     postcard down so the whole card reads inside the small preview frame. */
+  body.embedded #pill, body.embedded #msg,
+  body.embedded #credit, body.embedded #collectBtn { display: none; }
+  body.embedded #scene { transform: scale(0.54); transform-origin: 50% 46%; }
 </style>
 </head>
 <body>
@@ -1304,6 +1310,20 @@ window.__pump = (n = 60) => { for (let i = 0; i < n; i++) renderActive(1 / 60); 
 window.__dev = f => { if (active) active.devStart = T - f * DEV_DUR; };
 window.__state = () => active && { photo: !!active.sc.photoPix, holding: active.devStart === Infinity };
 window.__inject = pix => { if (active) active.sc.photoPix = pix; };
+
+// Playground thumbnail: auto-develop a sample postcard so the frame shows the
+// real dithered output instead of an empty search field. Falls back to the
+// "imagined" procedural scene if the network is unavailable.
+if (window.self !== window.top) {
+  document.body.classList.add('embedded');
+  const seedCard = () => {
+    go('Kyoto, Japan');
+    // guarantee it finishes developing even if the photo fetch stalls
+    setTimeout(() => { if (active && active.devStart === Infinity) active.devStart = T; }, 2400);
+  };
+  if (document.readyState === 'complete') seedCard();
+  else addEventListener('load', seedCard);
+}
 </script>
 </body>
 </html>
