@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iridescent — holographic tarot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b10;
+    --ink: #e8e9ef;
+    --ink-dim: #8b8e9c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #17171f 0%, transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  header {
+    text-align: center;
+    padding: 52px 20px 8px;
+  }
+
+  h1 {
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    background: linear-gradient(100deg,
+      #9ad5ff 0%, #d6b5ff 25%, #ffb5d0 50%, #ffe0a8 75%, #a8ffd8 100%);
+    background-size: 200% 100%;
+    background-position: calc(var(--page-hue, 0) * 1%) 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    margin-top: 6px;
+    color: var(--ink-dim);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+
+  .controls {
+    text-align: center;
+    margin: 22px 0 0;
+  }
+
+  button.shuffle {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    padding: 10px 26px;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s, transform 0.15s;
+  }
+  button.shuffle:hover,
+  button.shuffle:focus-visible {
+    border-color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.06);
+  }
+  button.shuffle:active { transform: scale(0.96); }
+  button.shuffle:focus-visible { outline: 2px solid #9ad5ff; outline-offset: 3px; }
+
+  .deck-note {
+    text-align: center;
+    margin-top: 12px;
+    color: #6d7080;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 208px));
+    justify-content: center;
+    gap: 34px 28px;
+    padding: 30px 28px 26px;
+    max-width: 1060px;
+    margin: 0 auto;
+    perspective: 1400px;
+  }
+
+  .card {
+    aspect-ratio: 5 / 7;
+    position: relative;
+    content-visibility: auto;
+    contain-intrinsic-size: 208px 291px;
+    cursor: pointer;
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+      translateZ(calc(var(--lift, 0) * 1px));
+    border-radius: 14px;
+    outline: none;
+  }
+  .card:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px #9ad5ff; }
+
+  .flipper {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.3, 0.9, 0.35, 1.05);
+  }
+  .card.revealed .flipper { transform: rotateY(180deg); }
+  .card.flipping .flipper { transform: rotateY(90deg); }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    isolation: isolate;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: linear-gradient(165deg, #1b1c26 0%, #12121a 55%, #0e0e15 100%);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 18px 40px -14px rgba(0, 0, 0, 0.85),
+      0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* thin foil frame line */
+  .face::after {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border-radius: 9px;
+    border: 1px solid rgba(210, 218, 235, 0.22);
+    pointer-events: none;
+  }
+
+  .face.back { transform: rotateY(180deg); }
+  /* the meaning side keeps a whisper of foil so text stays readable */
+  .face.back .holo {
+    opacity: calc(var(--holo-o, 0.5) * var(--wake, 1) * 0.4);
+  }
+  .face.back .glare { opacity: calc(var(--glare-o, 0.4) * 0.6); }
+
+  .meaning {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    padding: 10px 2px;
+  }
+
+  .m-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: #8f95a8;
+    margin-bottom: 5px;
+  }
+
+  .m-text {
+    font-size: 12.5px;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    color: #cdd2e0;
+  }
+
+  .m-block.secondary { opacity: 0.5; }
+
+  .m-divider {
+    width: 26px;
+    height: 1px;
+    background: rgba(210, 218, 235, 0.35);
+  }
+
+  .art {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .art svg { width: 100%; height: 100%; display: block; }
+  .art.rev svg { transform: rotate(180deg); }
+
+  .meta {
+    position: absolute;
+    inset: 0;
+    padding: 16px 17px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .name {
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #cdd2e0;
+    line-height: 1.35;
+  }
+
+  .numeral {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: #8f95a8;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: #a9aec0;
+    white-space: nowrap;
+  }
+
+  .stars { color: #d8dcea; font-size: 11px; letter-spacing: 0.2em; }
+
+  /* ---- foil layers ---- */
+  .holo {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(var(--angle, 115deg),
+      var(--c1) 0%, var(--c2) 7%, var(--c3) 14%, var(--c4) 21%, var(--c1) 28%);
+    mix-blend-mode: color-dodge;
+    filter: hue-rotate(calc(var(--hue, 0) * 1deg)) saturate(1.35);
+    opacity: calc(var(--holo-o, 0.5) * var(--wake, 1));
+    pointer-events: none;
+  }
+
+  .sparkle {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.9) 0.6px, transparent 1.6px),
+      radial-gradient(circle at 70% 60%, rgba(255,255,255,0.8) 0.5px, transparent 1.4px),
+      radial-gradient(circle at 45% 85%, rgba(255,255,255,0.85) 0.6px, transparent 1.5px),
+      radial-gradient(circle at 85% 15%, rgba(255,255,255,0.75) 0.5px, transparent 1.3px);
+    background-size: 52px 58px, 38px 44px, 61px 49px, 44px 62px;
+    background-position:
+      calc(var(--gx, 50) * 0.6px) calc(var(--gy, 50) * 0.4px),
+      calc(var(--gx, 50) * -0.4px) calc(var(--gy, 50) * 0.5px),
+      calc(var(--gx, 50) * 0.3px) calc(var(--gy, 50) * -0.5px),
+      calc(var(--gx, 50) * -0.6px) calc(var(--gy, 50) * -0.3px);
+    mix-blend-mode: color-dodge;
+    opacity: calc(var(--sparkle-o, 0) * var(--wake, 1));
+    pointer-events: none;
+  }
+
+  .glare {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      farthest-corner circle at calc(var(--gx, 50) * 1%) calc(var(--gy, 50) * 1%),
+      rgba(255, 255, 255, 0.6) 4%,
+      rgba(255, 255, 255, 0.14) 24%,
+      rgba(0, 0, 0, 0.22) 70%
+    );
+    mix-blend-mode: overlay;
+    opacity: var(--glare-o, 0.4);
+    pointer-events: none;
+  }
+
+  .hint {
+    text-align: center;
+    padding: 4px 20px 56px;
+    color: #6d7080;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card { transform: none !important; }
+    .flipper { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>IRIDESCENT</h1>
+  <p class="subtitle">holographic tarot deck</p>
+</header>
+
+<div class="controls">
+  <button class="shuffle" id="shuffleBtn" type="button">⟳&nbsp; NEW SPREAD</button>
+</div>
+
+<p class="deck-note" id="deckNote"></p>
+
+<main class="grid" id="grid" aria-label="Drawn tarot cards"></main>
+
+<p class="hint">move your cursor to catch the light · flip a card to read its meaning</p>
+
+<script>
+(() => {
+  // ?all deals the entire deck in order — a full-gallery view
+  const showAll = new URLSearchParams(location.search).has('all');
+  const NUM_CARDS = showAll ? 78 : 8;
+  const grid = document.getElementById('grid');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const deckNote = document.getElementById('deckNote');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= SVG helpers (viewBox 0 0 100 140) ================= */
+  const S = 'stroke="#98a0b4" fill="none" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"';
+  const F = (v) => (+v).toFixed(1);
+  const ln = (x1, y1, x2, y2) =>
+    `<line x1="${F(x1)}" y1="${F(y1)}" x2="${F(x2)}" y2="${F(y2)}" ${S}/>`;
+  const ci = (x, y, r, fill) => fill
+    ? `<circle cx="${F(x)}" cy="${F(y)}" r="${F(r)}" fill="#98a0b4" stroke="none"/>`
+    : `<circle cx="${F(x)}" cy="${F(y)}" r="${F(r)}" ${S}/>`;
+  const ell = (x, y, rx, ry) =>
+    `<ellipse cx="${F(x)}" cy="${F(y)}" rx="${F(rx)}" ry="${F(ry)}" ${S}/>`;
+  const pl = (pts) =>
+    `<polyline points="${pts.map(p => p.map(F).join(',')).join(' ')}" ${S}/>`;
+  const pg = (pts) =>
+    `<polygon points="${pts.map(p => p.map(F).join(',')).join(' ')}" ${S}/>`;
+  const pa = (d) => `<path d="${d}" ${S}/>`;
+  const rays = (x, y, r1, r2, n, rot = 0) => {
+    let s = '';
+    for (let i = 0; i < n; i++) {
+      const a = rot + (i * 2 * Math.PI) / n;
+      s += ln(x + Math.cos(a) * r1, y + Math.sin(a) * r1,
+              x + Math.cos(a) * r2, y + Math.sin(a) * r2);
+    }
+    return s;
+  };
+  const star = (x, y, ro, ri, n = 5, rot = -Math.PI / 2) => {
+    const pts = [];
+    for (let i = 0; i < n * 2; i++) {
+      const r = i % 2 ? ri : ro, a = rot + (i * Math.PI) / n;
+      pts.push([x + Math.cos(a) * r, y + Math.sin(a) * r]);
+    }
+    return pg(pts);
+  };
+  const pentagram = (x, y, r, rot = -Math.PI / 2) => {
+    const p = [];
+    for (let i = 0; i < 5; i++) {
+      const a = rot + (i * 2 * Math.PI) / 5;
+      p.push([x + Math.cos(a) * r, y + Math.sin(a) * r]);
+    }
+    return pg([0, 2, 4, 1, 3].map(i => p[i]));
+  };
+  const crescent = (x, y, r) =>
+    pa(`M ${F(x)} ${F(y - r)} A ${F(r)} ${F(r)} 0 1 0 ${F(x)} ${F(y + r)}
+        A ${F(r * 1.5)} ${F(r * 1.5)} 0 0 1 ${F(x)} ${F(y - r)}`);
+  const wave = (y, amp, ph) => {
+    let d = `M 18 ${F(y)}`;
+    for (let x = 18; x <= 82; x += 4)
+      d += ` L ${x} ${F(y + Math.sin(x / 8 + ph) * amp)}`;
+    return pa(d);
+  };
+
+  /* ================= suit glyphs ================= */
+  function wandG(x, y, s) {
+    return ln(x, y - s, x, y + s)
+      + ln(x, y - s * 0.45, x - s * 0.4, y - s * 0.8)
+      + ln(x, y - s * 0.45, x + s * 0.4, y - s * 0.8)
+      + ci(x, y - s, Math.max(1.2, s * 0.14), true);
+  }
+  function cupG(x, y, s) {
+    return pa(`M ${F(x - 0.7 * s)} ${F(y - 0.55 * s)} Q ${F(x - 0.7 * s)} ${F(y + 0.3 * s)} ${F(x)} ${F(y + 0.3 * s)}
+               Q ${F(x + 0.7 * s)} ${F(y + 0.3 * s)} ${F(x + 0.7 * s)} ${F(y - 0.55 * s)}`)
+      + ln(x - 0.7 * s, y - 0.55 * s, x + 0.7 * s, y - 0.55 * s)
+      + ln(x, y + 0.3 * s, x, y + 0.68 * s)
+      + ln(x - 0.42 * s, y + 0.82 * s, x + 0.42 * s, y + 0.82 * s);
+  }
+  function swordG(x, y, s) {
+    return ln(x, y - s, x, y + 0.5 * s)
+      + pl([[x - 0.14 * s, y - 0.68 * s], [x, y - s], [x + 0.14 * s, y - 0.68 * s]])
+      + ln(x - 0.42 * s, y + 0.5 * s, x + 0.42 * s, y + 0.5 * s)
+      + ln(x, y + 0.5 * s, x, y + 0.8 * s)
+      + ci(x, y + 0.92 * s, Math.max(1, s * 0.12), true);
+  }
+  function pentG(x, y, s) {
+    return ci(x, y, s * 0.9) + pentagram(x, y, s * 0.62);
+  }
+  const GLYPH = { WANDS: wandG, CUPS: cupG, SWORDS: swordG, PENTACLES: pentG };
+
+  /* pip layouts (playing-card style), art area y ≈ 38..110 */
+  const PIP_POS = {
+    2: [[50, 52], [50, 94]],
+    3: [[50, 46], [50, 73], [50, 100]],
+    4: [[34, 52], [66, 52], [34, 94], [66, 94]],
+    5: [[34, 52], [66, 52], [50, 73], [34, 94], [66, 94]],
+    6: [[34, 48], [66, 48], [34, 73], [66, 73], [34, 98], [66, 98]],
+    7: [[34, 48], [66, 48], [50, 60], [34, 73], [66, 73], [34, 98], [66, 98]],
+    8: [[34, 48], [66, 48], [50, 60], [34, 73], [66, 73], [50, 86], [34, 98], [66, 98]],
+    9: [[34, 46], [50, 46], [66, 46], [34, 73], [50, 73], [66, 73], [34, 100], [50, 100], [66, 100]],
+    10: [[34, 40], [66, 40], [50, 50], [34, 60], [66, 60], [34, 80], [66, 80], [50, 90], [34, 100], [66, 100]],
+  };
+
+  function pipArt(suit, rank) {
+    const g = GLYPH[suit];
+    if (rank === 1) return g(50, 73, 26) + rays(50, 73, 33, 40, 12, Math.PI / 12);
+    const s = rank <= 3 ? 12 : rank <= 6 ? 10 : 8.5;
+    return PIP_POS[rank].map(([x, y]) => g(x, y, s)).join('');
+  }
+
+  const CROWNS = {
+    PAGE: ln(42, 56, 42, 36) + pg([[42, 36], [58, 41], [42, 46]]),
+    KNIGHT: pl([[38, 56], [50, 40], [62, 56]]) + ln(38, 56, 62, 56) + ci(50, 40, 1.8, true),
+    QUEEN: pg([[36, 56], [36, 42], [43, 51], [50, 40], [57, 51], [64, 42], [64, 56]])
+      + ci(36, 42, 1.6, true) + ci(50, 40, 1.6, true) + ci(64, 42, 1.6, true),
+    KING: pg([[36, 56], [36, 42], [43, 51], [50, 40], [57, 51], [64, 42], [64, 56]])
+      + ln(50, 40, 50, 33) + ln(47, 36.5, 53, 36.5),
+  };
+  const courtArt = (suit, court) => CROWNS[court] + GLYPH[suit](50, 86, 20);
+
+  /* ================= major arcana emblems ================= */
+  const MAJOR_ART = [
+    () => // 0 The Fool — wanderer at the cliff's edge
+      pl([[16, 100], [58, 100], [58, 112]])
+      + ci(74, 50, 8) + rays(74, 50, 11, 16, 8, Math.PI / 8)
+      + ci(40, 64, 6) + ln(40, 70, 40, 88)
+      + ln(40, 76, 54, 66) + ci(56, 64, 2.8)
+      + ln(40, 88, 34, 100) + ln(40, 88, 46, 100),
+    () => // I The Magician — lemniscate over a wand
+      ci(43, 48, 7) + ci(57, 48, 7)
+      + ln(50, 62, 50, 96) + star(50, 62, 5, 2, 4)
+      + ci(34, 100, 1.6, true) + ci(44, 104, 1.6, true)
+      + ci(56, 104, 1.6, true) + ci(66, 100, 1.6, true),
+    () => // II The High Priestess — pillars and crescent
+      ln(30, 46, 30, 104) + ln(26, 46, 34, 46) + ln(26, 104, 34, 104)
+      + ln(70, 46, 70, 104) + ln(66, 46, 74, 46) + ln(66, 104, 74, 104)
+      + crescent(50, 58, 9)
+      + ln(44, 86, 56, 86) + ln(44, 92, 56, 92),
+    () => // III The Empress — venus among stars
+      ci(50, 60, 13) + ln(50, 73, 50, 96) + ln(41, 85, 59, 85)
+      + star(26, 48, 3.5, 1.4, 4) + star(74, 52, 3.5, 1.4, 4) + star(68, 96, 3.5, 1.4, 4),
+    () => // IV The Emperor — mars, squared
+      ci(45, 82, 13) + ln(54, 72, 68, 52) + pl([[60, 52], [68, 52], [68, 60]])
+      + ln(22, 44, 30, 44) + ln(22, 44, 22, 52)
+      + ln(78, 102, 70, 102) + ln(78, 102, 78, 94),
+    () => // V The Hierophant — papal cross
+      ln(50, 42, 50, 102)
+      + ln(40, 56, 60, 56) + ln(35, 68, 65, 68) + ln(30, 80, 70, 80)
+      + ci(38, 98, 2, true) + ci(62, 98, 2, true),
+    () => // VI The Lovers — vesica under a small sun
+      ci(42, 78, 13) + ci(58, 78, 13)
+      + rays(50, 42, 6, 12, 7, Math.PI / 7),
+    () => // VII The Chariot — canopy, wheels, star
+      ln(32, 52, 68, 52) + ln(32, 52, 32, 74) + ln(68, 52, 68, 74)
+      + ln(32, 84, 68, 84)
+      + ci(38, 96, 8) + rays(38, 96, 0, 8, 4, Math.PI / 4)
+      + ci(62, 96, 8) + rays(62, 96, 0, 8, 4, Math.PI / 4)
+      + star(50, 66, 6, 2.4, 5),
+    () => // VIII Strength — infinity over a maned beast
+      ci(44, 48, 6) + ci(56, 48, 6)
+      + ci(50, 86, 14) + rays(50, 86, 16, 20, 10, Math.PI / 10)
+      + ci(45, 83, 1.3, true) + ci(55, 83, 1.3, true),
+    () => // IX The Hermit — lantern and staff
+      pg([[45, 58], [55, 58], [58, 74], [42, 74]])
+      + ln(46, 58, 50, 52) + ln(54, 58, 50, 52)
+      + pg([[50, 62], [53, 66.5], [50, 71], [47, 66.5]])
+      + rays(50, 66, 12, 16, 6, Math.PI / 6)
+      + ln(68, 46, 68, 104) + ci(68, 43, 3),
+    () => // X Wheel of Fortune
+      ci(50, 73, 22) + ci(50, 73, 7)
+      + rays(50, 73, 7, 22, 8, Math.PI / 8)
+      + rays(50, 73, 24, 27, 8),
+    () => // XI Justice — the scales
+      ln(50, 44, 50, 96) + ln(30, 56, 70, 56)
+      + ln(30, 56, 30, 68) + ln(70, 56, 70, 68)
+      + pa('M 22 68 Q 30 78 38 68') + pa('M 62 68 Q 70 78 78 68')
+      + pl([[40, 104], [50, 94], [60, 104]]) + ln(40, 104, 60, 104),
+    () => // XII The Hanged Man
+      ln(30, 44, 70, 44) + ln(50, 44, 50, 56)
+      + ln(50, 56, 50, 84) + ln(50, 62, 58, 54)
+      + ln(50, 80, 40, 90) + ln(50, 80, 60, 90)
+      + ci(50, 92, 6) + rays(50, 92, 9, 13, 6, Math.PI / 6),
+    () => // XIII Death — scythe and rose
+      ln(38, 44, 60, 104) + pa('M 38 44 Q 66 38 78 58')
+      + ci(30, 94, 4.5) + ci(30, 94, 1.4, true) + ln(30, 98.5, 30, 108)
+      + ln(30, 102, 25, 106) + ln(30, 102, 35, 106),
+    () => // XIV Temperance — water poured between cups
+      ci(50, 44, 8) + pg([[50, 39], [45.5, 47.5], [54.5, 47.5]])
+      + cupG(33, 62, 9) + cupG(67, 92, 9)
+      + pa('M 37 66 Q 50 70 50 77 Q 50 84 63 88'),
+    () => // XV The Devil — inverted pentagram, chained
+      ci(50, 68, 17) + pentagram(50, 68, 13, Math.PI / 2)
+      + pa('M 40 52 Q 32 40 42 38') + pa('M 60 52 Q 68 40 58 38')
+      + ci(42, 98, 3) + ci(50, 101, 3) + ci(58, 98, 3),
+    () => // XVI The Tower — struck by lightning
+      pl([[38, 106], [38, 58], [58, 58], [58, 106]])
+      + pl([[38, 58], [38, 52], [43, 52], [43, 58]])
+      + pl([[48, 58], [48, 52], [53, 52], [53, 58]])
+      + ln(43, 58, 48, 58) + ln(53, 58, 58, 58)
+      + ci(48, 78, 3) + ci(48, 94, 3)
+      + pl([[80, 36], [66, 46], [72, 49], [58, 60]])
+      + ci(68, 68, 1.5, true) + ci(74, 80, 1.5, true) + ci(66, 92, 1.5, true),
+    () => // XVII The Star — over still water
+      star(50, 58, 16, 6, 8)
+      + ci(26, 44, 1.6, true) + ci(74, 46, 1.6, true)
+      + ci(30, 76, 1.6, true) + ci(72, 72, 1.6, true)
+      + wave(98, 2.5, 0) + wave(105, 2.5, 2),
+    () => // XVIII The Moon — between two towers
+      crescent(51, 56, 12)
+      + ln(46, 76, 46, 82) + ln(52, 78, 52, 84) + ln(58, 76, 58, 82)
+      + pl([[24, 104], [24, 80], [34, 80], [34, 104]]) + ln(22, 80, 36, 80)
+      + pl([[66, 104], [66, 80], [76, 80], [76, 104]]) + ln(64, 80, 78, 80)
+      + wave(108, 2, 1),
+    () => // XIX The Sun
+      ci(50, 68, 13)
+      + rays(50, 68, 17, 26, 8)
+      + rays(50, 68, 16, 21, 8, Math.PI / 8)
+      + wave(102, 2.5, 0.5),
+    () => // XX Judgement — the trumpet sounds
+      ci(30, 48, 7)
+      + ln(34, 53, 62, 70) + ln(30, 55, 58, 74)
+      + ln(62, 70, 58, 74) + rays(64, 74, 5, 11, 5, -Math.PI / 5)
+      + pa('M 26 104 Q 32 95 38 104') + pa('M 44 104 Q 50 95 56 104')
+      + pa('M 62 104 Q 68 95 74 104'),
+    () => // XXI The World — the wreath
+      ell(50, 73, 17, 27)
+      + ci(48, 60, 3.5)
+      + pa('M 46 65 Q 55 70 48 79 Q 43 86 53 89')
+      + ci(25, 44, 2.5) + ci(75, 44, 2.5) + ci(25, 102, 2.5) + ci(75, 102, 2.5),
+  ];
+
+  const MAJOR_TITLES = [
+    'THE FOOL', 'THE MAGICIAN', 'THE HIGH PRIESTESS', 'THE EMPRESS', 'THE EMPEROR',
+    'THE HIEROPHANT', 'THE LOVERS', 'THE CHARIOT', 'STRENGTH', 'THE HERMIT',
+    'WHEEL OF FORTUNE', 'JUSTICE', 'THE HANGED MAN', 'DEATH', 'TEMPERANCE',
+    'THE DEVIL', 'THE TOWER', 'THE STAR', 'THE MOON', 'THE SUN',
+    'JUDGEMENT', 'THE WORLD',
+  ];
+  const ROMAN = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+    'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
+
+  /* [upright, reversed] keyword meanings */
+  const MAJOR_MEAN = [
+    ['New beginnings, innocence, a leap of faith', 'Recklessness, hesitation, folly'],
+    ['Willpower, manifestation, resourcefulness', 'Manipulation, untapped talent'],
+    ['Intuition, inner voice, hidden knowledge', 'Secrets withheld, ignoring instinct'],
+    ['Abundance, nurturing, creativity', 'Creative block, smothering care'],
+    ['Structure, authority, stability', 'Rigidity, domination, control'],
+    ['Tradition, guidance, shared beliefs', 'Rebellion, questioning dogma'],
+    ['Love, alignment, a meaningful choice', 'Disharmony, misaligned values'],
+    ['Determination, victory, willful control', 'Lost direction, scattered force'],
+    ['Courage, gentle power, patience', 'Self-doubt, raw emotion'],
+    ['Reflection, solitude, inner wisdom', 'Isolation, withdrawal from help'],
+    ['Cycles, fate, a turning point', 'Resisting change, a rough spin'],
+    ['Fairness, truth, accountability', 'Bias, avoiding the truth'],
+    ['Surrender, new perspective, pause', 'Stalling, needless sacrifice'],
+    ['Endings, transformation, release', 'Clinging on, change delayed'],
+    ['Balance, moderation, patience', 'Excess, imbalance, haste'],
+    ['Attachment, temptation, the shadow self', 'Breaking free, reclaiming power'],
+    ['Sudden upheaval, revelation', 'Disaster averted, fear of change'],
+    ['Hope, renewal, quiet faith', 'Discouragement, faded faith'],
+    ['Illusion, intuition, the unknown', 'Clarity emerging, fear released'],
+    ['Joy, vitality, success', 'Dimmed joy, overconfidence'],
+    ['Awakening, reckoning, renewal', 'Self-doubt, ignoring the call'],
+    ['Completion, wholeness, arrival', 'Loose ends, unfinished business'],
+  ];
+
+  /* per suit: ranks 1–10 then Page, Knight, Queen, King */
+  const MINOR_MEAN = {
+    WANDS: [
+      ['Inspiration, a new spark, potential', 'False starts, delays'],
+      ['Planning, future vision, first steps', 'Fear of the unknown'],
+      ['Momentum, expansion, foresight', 'Obstacles, playing small'],
+      ['Celebration, homecoming, harmony', 'Instability, transition'],
+      ['Friction, competition, tension', 'Conflict released, common ground'],
+      ['Victory, recognition, progress', 'Ego, a fall from grace'],
+      ['Defense, standing your ground', 'Overwhelm, giving ground'],
+      ['Swift change, momentum, news', 'Delays, scattered energy'],
+      ['Resilience, persistence, guard up', 'Burnout, paranoia'],
+      ['Burden, responsibility, the last push', 'Overload, time to set it down'],
+      ['Curiosity, free spirit, a fresh spark', 'Aimlessness, stalled ideas'],
+      ['Passion, bold pursuit, adventure', 'Impulsiveness, scattered fire'],
+      ['Confidence, warmth, magnetism', 'Jealousy, dimmed self-belief'],
+      ['Vision, leadership, boldness', 'Impulsive rule, harshness'],
+    ],
+    CUPS: [
+      ['New love, an open heart, intuition', 'Emotional block, running dry'],
+      ['Partnership, mutual attraction', 'Imbalance, a strained bond'],
+      ['Friendship, celebration, community', 'Excess, gossip, drifting apart'],
+      ['Apathy, contemplation, missed gifts', 'Renewed interest, waking up'],
+      ['Loss, grief, regret', 'Acceptance, moving on'],
+      ['Nostalgia, kindness, old joy', 'Stuck in the past'],
+      ['Options, daydreams, illusion', 'Clarity, a choice made'],
+      ['Walking away, seeking deeper meaning', 'Fear of leaving, drifting'],
+      ['Contentment, wishes granted', 'Smugness, hollow satisfaction'],
+      ['Lasting happiness, family, harmony', 'Broken harmony, disconnection'],
+      ['Sensitivity, a creative message', 'Moodiness, blocked feelings'],
+      ['Romance, charm, following the heart', 'Fantasy, a fickle heart'],
+      ['Compassion, calm depths, care', 'Overwhelm, self-neglect'],
+      ['Emotional balance, diplomacy', 'Repression, moodiness'],
+    ],
+    SWORDS: [
+      ['Clarity, breakthrough, hard truth', 'Confusion, a clouded mind'],
+      ['Stalemate, a difficult choice', 'Indecision breaking, truth out'],
+      ['Heartbreak, sorrow, betrayal', 'Healing, forgiveness'],
+      ['Rest, recovery, stillness', 'Restlessness, running on empty'],
+      ['A hollow victory, discord', 'Reconciliation, old grudges released'],
+      ['Transition, moving toward calm', 'Resistance, rough waters'],
+      ['Strategy, stealth, cunning', 'Deception exposed, conscience calls'],
+      ['Restriction, self-imposed limits', 'Freedom, a new perspective'],
+      ['Anxiety, sleepless worry', 'Worry released, hope returns'],
+      ['A painful ending, rock bottom', 'Recovery, the worst is behind you'],
+      ['Curiosity, vigilance, new ideas', 'Gossip, scattered thoughts'],
+      ['Ambition, drive, directness', 'Recklessness, rushing in'],
+      ['Perception, independence, candor', 'Coldness, sharp words'],
+      ['Intellect, authority, clear truth', 'Manipulation, cold logic'],
+    ],
+    PENTACLES: [
+      ['Opportunity, prosperity, a seed planted', 'A missed chance, scarcity thinking'],
+      ['Balance, adaptability, juggling', 'Overcommitment, dropped threads'],
+      ['Teamwork, craft, learning', 'Discord, careless work'],
+      ['Security, holding on, control', 'Loosened grip, generosity'],
+      ['Hardship, feeling left out', 'Recovery, doors reopening'],
+      ['Generosity, giving and receiving', 'Strings attached, one-sided giving'],
+      ['Patience, the long view, harvest', 'Impatience, wasted effort'],
+      ['Diligence, mastery, fine detail', 'Perfectionism, tedium'],
+      ['Independence, self-earned comfort', 'Overwork, hollow success'],
+      ['Legacy, lasting wealth, family', 'Instability, short-term thinking'],
+      ['Ambition, study, a new venture', 'Procrastination, distraction'],
+      ['Diligence, routine, reliability', 'Stagnation, boredom'],
+      ['Practical warmth, resourceful care', 'Self-neglect, imbalance'],
+      ['Abundance, discipline, security', 'Greed, stubbornness'],
+    ],
+  };
+
+  /* ================= the 78-card deck ================= */
+  // mid-tone stops: color-dodge over the dark face turns these into foil
+  const PALETTES = {
+    major:     ['hsl(300 85% 32%)', 'hsl(160 85% 30%)', 'hsl(200 90% 34%)', 'hsl(260 85% 33%)'],
+    WANDS:     ['hsl(330 90% 34%)', 'hsl(25 95% 33%)', 'hsl(215 90% 33%)', 'hsl(350 85% 32%)'],
+    CUPS:      ['hsl(220 85% 33%)', 'hsl(180 85% 28%)', 'hsl(250 80% 33%)', 'hsl(200 90% 30%)'],
+    SWORDS:    ['hsl(170 90% 28%)', 'hsl(210 90% 32%)', 'hsl(280 80% 32%)', 'hsl(140 85% 28%)'],
+    PENTACLES: ['hsl(45 95% 30%)', 'hsl(95 75% 27%)', 'hsl(28 90% 31%)', 'hsl(150 75% 27%)'],
+  };
+  const TIERS = {
+    major: { holo: 0.75, sparkle: 0.8, stars: '✦✦✦' },
+    court: { holo: 0.58, sparkle: 0.35, stars: '✦✦' },
+    pip:   { holo: 0.4,  sparkle: 0.12, stars: '✦' },
+  };
+
+  const NUMBER_WORDS = ['ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN'];
+  const COURTS = [['PAGE', 'P'], ['KNIGHT', 'KN'], ['QUEEN', 'Q'], ['KING', 'K']];
+
+  const ALL = [];
+  MAJOR_TITLES.forEach((t, i) => ALL.push({
+    id: 'M' + i, title: t, numeral: ROMAN[i], arcana: 'MAJOR ARCANA',
+    tier: 'major', palette: 'major', art: MAJOR_ART[i], mean: MAJOR_MEAN[i],
+  }));
+  for (const suit of ['WANDS', 'CUPS', 'SWORDS', 'PENTACLES']) {
+    NUMBER_WORDS.forEach((w, i) => ALL.push({
+      id: suit + (i + 1), title: `${w} OF ${suit}`,
+      numeral: i === 0 ? 'A' : ROMAN[i + 1], arcana: suit,
+      tier: 'pip', palette: suit, art: () => pipArt(suit, i + 1),
+      mean: MINOR_MEAN[suit][i],
+    }));
+    COURTS.forEach(([c, n], i) => ALL.push({
+      id: suit + c, title: `${c} OF ${suit}`, numeral: n, arcana: suit,
+      tier: 'court', palette: suit, art: () => courtArt(suit, c),
+      mean: MINOR_MEAN[suit][10 + i],
+    }));
+  }
+
+  /* draw without replacement; reshuffle everything not on the table when dry */
+  const cards = [];
+  let deck = [];
+
+  function reshuffle() {
+    const onTable = new Set(cards.filter(c => c.data).map(c => c.data.def.id));
+    deck = ALL.filter(d => !onTable.has(d.id));
+    if (showAll) { deck.reverse(); return; }
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+  }
+
+  function updateNote() {
+    deckNote.textContent = `${deck.length} / 78 STILL IN THE DECK`;
+  }
+
+  function drawCard() {
+    if (!deck.length) reshuffle();
+    const data = { def: deck.pop(), reversed: !showAll && Math.random() < 0.22 };
+    updateNote();
+    return data;
+  }
+
+  /* ================= card rendering ================= */
+  function renderFace(card) {
+    const d = card.data.def, rev = card.data.reversed;
+    const tier = TIERS[d.tier], pal = PALETTES[d.palette];
+    card.el.style.setProperty('--c1', pal[0]);
+    card.el.style.setProperty('--c2', pal[1]);
+    card.el.style.setProperty('--c3', pal[2]);
+    card.el.style.setProperty('--c4', pal[3]);
+    card.el.style.setProperty('--holo-o', tier.holo);
+    card.el.style.setProperty('--sparkle-o', tier.sparkle);
+    card.el.setAttribute('aria-label',
+      `${d.title.toLowerCase()}${rev ? ', reversed' : ''}, ${d.arcana.toLowerCase()} ${d.numeral}. Click to flip and read its meaning.`);
+    card.el.setAttribute('aria-pressed', 'false');
+
+    const head = `
+        <div class="top-row">
+          <div class="name">${d.title}</div>
+          <div class="numeral">${d.numeral}</div>
+        </div>`;
+    const foot = `
+        <div class="footer-row">
+          <span>${d.arcana}${rev ? ' · REV' : ''}</span>
+          <span class="stars">${tier.stars}</span>
+        </div>`;
+
+    const block = (label, text, primary) => `
+          <div class="m-block ${primary ? 'primary' : 'secondary'}">
+            <div class="m-label">${label}${primary ? ' · DRAWN' : ''}</div>
+            <div class="m-text">${text}</div>
+          </div>`;
+    const upright = block('UPRIGHT', d.mean[0], !rev);
+    const reversed = block('REVERSED', d.mean[1], rev);
+    const meaning = rev
+      ? reversed + '<div class="m-divider"></div>' + upright
+      : upright + '<div class="m-divider"></div>' + reversed;
+
+    card.flipper.innerHTML = `
+      <div class="face front">
+        <div class="art${rev ? ' rev' : ''}"><svg viewBox="0 0 100 140" aria-hidden="true">${d.art()}</svg></div>
+        <div class="holo"></div>
+        <div class="sparkle"></div>
+        <div class="glare"></div>
+        <div class="meta">${head}${foot}</div>
+      </div>
+      <div class="face back">
+        <div class="holo"></div>
+        <div class="glare"></div>
+        <div class="meta">
+          ${head}
+          <div class="meaning">${meaning}</div>
+          ${foot}
+        </div>
+      </div>`;
+  }
+
+  function makeCard() {
+    const el = document.createElement('button');
+    el.className = 'card';
+    el.type = 'button';
+    const flipper = document.createElement('div');
+    flipper.className = 'flipper';
+    el.appendChild(flipper);
+    grid.appendChild(el);
+
+    const card = {
+      el, flipper,
+      data: null,
+      rect: null, cx: 0, cy: 0,
+      cur: { rx: 0, ry: 0, angle: 115, hue: 0, gx: 50, gy: 50, go: 0.3, lift: 0, wake: 1 },
+      tgt: { rx: 0, ry: 0, angle: 115, hue: 0, gx: 50, gy: 50, go: 0.3, lift: 0, wake: 1 },
+      hover: false,
+    };
+    card.data = drawCard();
+    renderFace(card);
+
+    el.addEventListener('pointerenter', () => { card.hover = true; });
+    el.addEventListener('pointerleave', () => { card.hover = false; });
+    el.addEventListener('click', () => {
+      if (el.classList.contains('flipping')) return;
+      const showing = el.classList.toggle('revealed');
+      el.setAttribute('aria-pressed', showing);
+    });
+    return card;
+  }
+
+  function reroll(card, delay) {
+    if (card.el.classList.contains('flipping')) return;
+    if (reduceMotion) {
+      card.el.classList.remove('revealed');
+      card.data = drawCard();
+      renderFace(card);
+      return;
+    }
+    setTimeout(() => {
+      card.el.classList.add('flipping');
+      card.el.classList.remove('revealed');
+      setTimeout(() => {
+        card.data = drawCard();
+        renderFace(card);
+        card.el.classList.remove('flipping');
+      }, 280);
+    }, delay);
+  }
+
+  for (let i = 0; i < NUM_CARDS; i++) cards.push(makeCard());
+
+  shuffleBtn.addEventListener('click', () => {
+    cards.forEach((c, i) => reroll(c, i * 55));
+  });
+
+  /* ================= light engine ================= */
+  let mouseX = innerWidth / 2, mouseY = innerHeight / 3;
+  let hasPointer = false, lastMove = 0;
+
+  addEventListener('pointermove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    hasPointer = true; lastMove = performance.now();
+  }, { passive: true });
+
+  addEventListener('touchmove', e => {
+    const t = e.touches[0];
+    if (t) { mouseX = t.clientX; mouseY = t.clientY; hasPointer = true; lastMove = performance.now(); }
+  }, { passive: true });
+
+  // cache centers in page coordinates: scrolling never forces a re-layout
+  function layout() {
+    for (const c of cards) {
+      const r = c.el.getBoundingClientRect();
+      c.w = r.width;
+      c.h = r.height;
+      c.pcx = r.left + scrollX + r.width / 2;
+      c.pcy = r.top + scrollY + r.height / 2;
+    }
+  }
+  addEventListener('resize', layout);
+  layout();
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  // shortest-path lerp for the gradient angle so it never spins the long way
+  function lerpAngle(a, b, t) {
+    let d = ((b - a + 540) % 360) - 180;
+    return a + d * t;
+  }
+
+  function frame(now) {
+    // idle: an invisible light source drifts in a slow circle
+    let mx = mouseX, my = mouseY;
+    const idle = !hasPointer || now - lastMove > 3500;
+    if (idle) {
+      const t = now / 4200;
+      mx = innerWidth / 2 + Math.cos(t) * innerWidth * 0.4;
+      my = innerHeight / 2 + Math.sin(t * 0.8) * innerHeight * 0.35;
+    }
+
+    document.documentElement.style.setProperty('--page-hue',
+      ((mx / innerWidth) * 100).toFixed(1));
+
+    const sx = scrollX, sy = scrollY;
+    for (const c of cards) {
+      if (!c.w) continue;
+      const cy = c.pcy - sy;
+      // offscreen cards keep their last foil state untouched
+      if (cy < -280 || cy > innerHeight + 280) continue;
+      const dx = mx - (c.pcx - sx), dy = my - cy;
+      const dist = Math.hypot(dx, dy);
+      const halfW = c.w / 2, halfH = c.h / 2;
+
+      // gradient angle: perpendicular-ish to the light direction
+      c.tgt.angle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+      // oil-slick hue travels with the light
+      c.tgt.hue = (dx * 0.06 + dy * 0.08) % 360;
+
+      // tilt: strong on hover, gentle falloff nearby, flat far away
+      const influence = c.hover ? 1 : Math.max(0, 1 - dist / 640) * 0.35;
+      c.tgt.ry = clamp(dx / halfW, -1.15, 1.15) * 8.5 * influence;
+      c.tgt.rx = clamp(-dy / halfH, -1.15, 1.15) * 8.5 * influence;
+      c.tgt.lift = c.hover ? 26 : 0;
+
+      // glare tracks the light in card-local coords, pinned near edges when outside
+      c.tgt.gx = clamp(50 + (dx / c.w) * 100, -25, 125);
+      c.tgt.gy = clamp(50 + (dy / c.h) * 100, -25, 125);
+      c.tgt.go = c.hover ? 0.55 : clamp(0.42 * (1 - dist / 1000), 0.08, 0.42);
+      // distant cards dim their foil slightly so the near ones read as "catching" it
+      c.tgt.wake = c.hover ? 1 : clamp(1 - dist / 2400, 0.55, 1);
+
+      const K = idle ? 0.045 : 0.14;
+      c.cur.angle = lerpAngle(c.cur.angle, c.tgt.angle, K);
+      for (const k of ['rx', 'ry', 'hue', 'gx', 'gy', 'go', 'lift', 'wake'])
+        c.cur[k] = lerp(c.cur[k], c.tgt[k], K);
+
+      const s = c.el.style;
+      s.setProperty('--angle', c.cur.angle.toFixed(2) + 'deg');
+      s.setProperty('--hue', c.cur.hue.toFixed(1));
+      s.setProperty('--gx', c.cur.gx.toFixed(1));
+      s.setProperty('--gy', c.cur.gy.toFixed(1));
+      s.setProperty('--glare-o', c.cur.go.toFixed(3));
+      s.setProperty('--wake', c.cur.wake.toFixed(3));
+      if (!reduceMotion) {
+        s.setProperty('--rx', c.cur.rx.toFixed(2) + 'deg');
+        s.setProperty('--ry', c.cur.ry.toFixed(2) + 'deg');
+        s.setProperty('--lift', c.cur.lift.toFixed(1));
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // rects shift once fonts/images settle
+  addEventListener('load', layout);
+})();
+</script>
+</body>
+</html>
