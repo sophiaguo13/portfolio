@@ -7,47 +7,51 @@
 const cursor = document.getElementById('cursor');
 const cursorDot = document.getElementById('cursorDot');
 
-let mouseX = 0, mouseY = 0;
-let cursorX = 0, cursorY = 0;
+if (cursor && cursorDot) {
+  let mouseX = 0, mouseY = 0;
+  let cursorX = 0, cursorY = 0;
 
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  cursorDot.style.left = mouseX + 'px';
-  cursorDot.style.top = mouseY + 'px';
-});
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+  });
 
-// Smooth cursor follow
-function animateCursor() {
-  cursorX += (mouseX - cursorX) * 0.12;
-  cursorY += (mouseY - cursorY) * 0.12;
-  cursor.style.left = cursorX + 'px';
-  cursor.style.top = cursorY + 'px';
-  requestAnimationFrame(animateCursor);
+  // Smooth cursor follow
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * 0.12;
+    cursorY += (mouseY - cursorY) * 0.12;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Cursor states on interactive elements
+  document.querySelectorAll('[data-cursor="link"]').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+  });
+  document.querySelectorAll('[data-cursor="view"]').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.classList.add('view-cursor');
+      cursorDot.style.opacity = '0';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.classList.remove('view-cursor');
+      cursorDot.style.opacity = '1';
+    });
+  });
 }
-animateCursor();
-
-// Cursor states on interactive elements
-document.querySelectorAll('[data-cursor="link"]').forEach(el => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-});
-document.querySelectorAll('[data-cursor="view"]').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.classList.add('view-cursor');
-    cursorDot.style.opacity = '0';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.classList.remove('view-cursor');
-    cursorDot.style.opacity = '1';
-  });
-});
 
 /* ── Nav Scroll Effect ── */
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
+if (nav) {
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+}
 
 /* ── Hero Title Spotlight Effect ── */
 const heroTitle = document.querySelector('.hero-title');
@@ -243,12 +247,14 @@ document.querySelectorAll('.nav-link, .nav-logo').forEach(el => {
 
 /* ── Skills marquee — pause on hover (handled in CSS) + speed control ── */
 const marqueeTrack = document.getElementById('marqueeTrack');
-marqueeTrack.addEventListener('mouseenter', () => {
-  marqueeTrack.style.animationPlayState = 'paused';
-});
-marqueeTrack.addEventListener('mouseleave', () => {
-  marqueeTrack.style.animationPlayState = 'running';
-});
+if (marqueeTrack) {
+  marqueeTrack.addEventListener('mouseenter', () => {
+    marqueeTrack.style.animationPlayState = 'paused';
+  });
+  marqueeTrack.addEventListener('mouseleave', () => {
+    marqueeTrack.style.animationPlayState = 'running';
+  });
+}
 
 /* ── Smooth active nav highlighting ── */
 const sections = document.querySelectorAll('section[id]');
@@ -306,12 +312,14 @@ document.querySelectorAll('.tag').forEach((tag, i) => {
 
 /* ── Back to top ── */
 const backTop = document.getElementById('backTop');
-window.addEventListener('scroll', () => {
-  backTop.classList.toggle('visible', window.scrollY > 500);
-});
-backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-backTop.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-backTop.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+if (backTop) {
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('visible', window.scrollY > 500);
+  });
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  backTop.addEventListener('mouseenter', () => cursor?.classList.add('hovered'));
+  backTop.addEventListener('mouseleave', () => cursor?.classList.remove('hovered'));
+}
 
 /* ── Book cover peek on hover ── */
 (() => {
