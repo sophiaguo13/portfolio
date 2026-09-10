@@ -80,7 +80,8 @@
     const clearBtn = document.getElementById('clear');
     let hintGone = false;
 
-    const fontSize = 44;
+    const embedded = window.self !== window.top;   // true in the playground thumbnail iframe
+    const fontSize = embedded ? 34 : 44;
     const PAD_X = 28;     // side margin for the packed grid
     const PAD_TOP = 26;   // ceiling margin
 
@@ -279,6 +280,22 @@
       cursor.x = Math.min(cursor.x, window.innerWidth - 40);
       cursor.y = Math.min(cursor.y, window.innerHeight - 40);
     });
+
+    // Preview seed — when embedded in the playground thumbnail, auto-type a
+    // greeting so the frame isn't a blank screen. Full-screen stays a blank canvas.
+    if (embedded) {
+      const greeting = "hi nice to meet you, i'm sophia!";
+      cursor.x = window.innerWidth / 2 - 70;
+      cursor.y = window.innerHeight * 0.72;
+      lineStartX = cursor.x;
+      dismissHint();
+      [...greeting].forEach((ch, i) => {
+        setTimeout(() => {
+          if (ch === ' ') cursor.x += fontSize * 0.5;
+          else spawnLetter(ch);
+        }, 300 + i * 80);
+      });
+    }
   </script>
 </body>
 </html>
