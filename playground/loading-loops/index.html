@@ -146,6 +146,14 @@ const PALETTES=[
   page:'#08181f',card:'#0e2530',ink:'#dff2ef',line:'#17394a',muted:'#3f6d7d',
   a1:'#ffab4a',a2:'#3fd0c9',sand:'#ffd79a',frame:'#123243',light:'#dff2ef',
   deep:'#041015',glow:'#3fd0c9',dim:'#0f2a36'},
+ {id:'blueprint', name:'Blueprint',
+  page:'#0b1a2b',card:'#10263c',ink:'#dbeaf7',line:'#1d3d5c',muted:'#5a7f9e',
+  a1:'#7fd4ff',a2:'#ffd166',sand:'#ffd166',frame:'#0a1c2e',light:'#f2f9ff',
+  deep:'#050f1a',glow:'#7fd4ff',dim:'#16324c'},
+ {id:'signal', name:'Signal',
+  page:'#111112',card:'#1a1a1c',ink:'#f3f1ec',line:'#2b2b2e',muted:'#77767a',
+  a1:'#ff5a2b',a2:'#8fa3b8',sand:'#ffb066',frame:'#08080a',light:'#f3f1ec',
+  deep:'#0a0a0c',glow:'#ff5a2b',dim:'#242427'},
  {id:'powder', name:'Powder',
   page:'#efeaf3',card:'#e6e0ed',ink:'#3a3348',line:'#d6cee2',muted:'#9e93b0',
   a1:'#e8879f',a2:'#7fa4e0',sand:'#f2cdb2',frame:'#5a5070',light:'#fbf8fd',
@@ -372,6 +380,189 @@ function flipdots(g,p){
   g.fillStyle=vg;g.fillRect(0,0,400,300);
 }
 
+/* ───────────────── 06. PENROSE ESCALATOR ───────────────── */
+function penrose(g,p){
+  bg(g,C.card);
+  const ax=30,ay=-17, bx=42,by=24, H=11;
+  const sx=ax, sy=ay-H;              /* one module = (30,-28) */
+  const P0x=44,P0y=256, drop=46;
+  const sky=g.createLinearGradient(0,0,0,300);
+  sky.addColorStop(0,mix(C.card,C.light,.30));sky.addColorStop(1,C.card);
+  g.fillStyle=sky;g.fillRect(0,0,400,300);
+
+  const la=Math.hypot(ax,ay), lb=Math.hypot(bx,by);
+  const ua=[ax/la,ay/la], ub=[bx/lb,by/lb];
+  function ball(cx,cy,hop,rise){
+    const R=12;
+    const c=Math.max(0,1-Math.min(p,1-p)/0.07);   /* 1 at the instant of contact */
+    const spd=Math.abs(1-2*p);                      /* fastest at contact, 0 at apex */
+    const sy=1+0.16*spd*(1-c)-0.28*c, sx=1/sy;
+    g.save();
+    g.transform(ua[0],ua[1],ub[0],ub[1],cx,cy);
+    g.fillStyle=al(dk(C.frame,.55),.34*(1-0.62*rise));
+    g.beginPath();g.arc(0,0,R*(1-0.42*rise),0,TAU);g.fill();
+    g.restore();
+    const by2=cy+hop-R*sy;
+    const gr=g.createRadialGradient(cx-R*0.42,by2-R*0.5,R*0.12,cx,by2,R*1.25);
+    gr.addColorStop(0,lt(C.a1,.42));gr.addColorStop(.55,C.a1);gr.addColorStop(1,dk(C.a1,.34));
+    g.fillStyle=gr;
+    g.beginPath();g.ellipse(cx,by2,R*sx,R*sy,0,0,TAU);g.fill();
+    g.fillStyle=al(C.light,.5);
+    g.beginPath();g.ellipse(cx-R*0.36,by2-R*0.44,R*0.24*sx,R*0.17*sy,-0.5,0,TAU);g.fill();
+  }
+
+  g.save();
+  g.translate(-sx*p,-sy*p);
+  for(let i=12;i>=-3;i--){
+    const x=P0x+i*sx, y=P0y+i*sy;
+    const A=[x,y], B=[x+ax,y+ay], Cc=[x+ax+bx,y+ay+by], D=[x+bx,y+by];
+    g.fillStyle=al(C.deep,.10);
+    path(g,[[D[0]-9,D[1]+drop+7],[Cc[0]-9,Cc[1]+drop+7],[Cc[0],Cc[1]+drop],[D[0],D[1]+drop]]);g.fill();
+    g.fillStyle=C.frame;
+    path(g,[D,Cc,[Cc[0],Cc[1]+drop],[D[0],D[1]+drop]]);g.fill();
+    g.fillStyle=C.a2;
+    path(g,[A,D,[D[0],D[1]+H],[A[0],A[1]+H]]);g.fill();
+    g.fillStyle=mix(C.light,C.card,.06);
+    path(g,[A,B,Cc,D]);g.fill();
+    g.strokeStyle=al(C.ink,.34);g.lineWidth=1.1;g.lineJoin='round';g.stroke();
+    if(i===4){
+      const HOP=38, hop=-4*HOP*p*(1-p);
+      ball(P0x+(4+p)*sx+ax/2+bx/2, P0y+(4+p)*sy+ay/2+by/2, hop, -hop/HOP);
+    }
+  }
+  g.restore();
+}
+
+/* ───────────────── 07. ORIGAMI FOLD ───────────────── */
+const OFACE=[
+  {pts:[[-45,-45],[45,-45],[45,45]], op:-1},
+  {pts:[[-45,-45],[45,45],[-45,45]], op:-1},
+  {pts:[[-45,-45],[0,-90],[45,-45]], op:0},
+  {pts:[[45,-45],[90,0],[45,45]],    op:1},
+  {pts:[[45,45],[0,90],[-45,45]],    op:2},
+  {pts:[[-45,45],[-90,0],[-45,-45]], op:3},
+];
+const OOPS=[
+  {a:[-45,-45],b:[45,-45], side:-1,w:[0.00,0.40]},
+  {a:[45,-45], b:[45,45],  side: 1,w:[0.08,0.48]},
+  {a:[45,45],  b:[-45,45], side: 1,w:[0.16,0.56]},
+  {a:[-45,45], b:[-45,-45],side:-1,w:[0.24,0.64]},
+];
+const OGL={a:[-45,-45],b:[45,45],side:1,w:[0.70,1.00]};
+function ofold(P,op){
+  const dx0=op.b[0]-op.a[0], dy0=op.b[1]-op.a[1], L=Math.hypot(dx0,dy0);
+  const dx=dx0/L, dy=dy0/L, nx=-dy, ny=dx;
+  const px=P[0]-op.a[0], py=P[1]-op.a[1];
+  const t=px*dx+py*dy, d=px*nx+py*ny;
+  if(d*op.side<=0.0001) return P;
+  const dd=d*Math.cos(op.th);
+  return [op.a[0]+dx*t+nx*dd, op.a[1]+dy*t+ny*dd];
+}
+function oside(P,op){
+  const dx0=op.b[0]-op.a[0], dy0=op.b[1]-op.a[1], L=Math.hypot(dx0,dy0);
+  return ((P[0]-op.a[0])*(-dy0/L)+(P[1]-op.a[1])*(dx0/L))*op.side>0.0001;
+}
+function origami(g,p){
+  bg(g,C.card);
+  const t=(1-Math.cos(TAU*p))/2;
+  const th=w=>Math.PI*ss(cl((t-w[0])/(w[1]-w[0]),0,1));
+  const ops=OOPS.map(o=>({a:o.a,b:o.b,side:o.side,th:th(o.w)}));
+  const gl={a:OGL.a,b:OGL.b,side:OGL.side,th:th(OGL.w)};
+
+  const polys=OFACE.map(f=>{
+    const chain=f.op<0?[gl]:[ops[f.op],gl];
+    const cen=[f.pts.reduce((s,q)=>s+q[0],0)/f.pts.length,
+               f.pts.reduce((s,q)=>s+q[1],0)/f.pts.length];
+    let c=cen, flips=0, top=0;
+    chain.forEach((op,k)=>{
+      if(oside(c,op)&&Math.cos(op.th)<0){flips++; if(k===chain.length-1)top=1;}
+      c=ofold(c,op);
+    });
+    let pts=f.pts;
+    chain.forEach(op=>{pts=pts.map(q=>ofold(q,op));});
+    return {pts,flips,z:(f.op<0?0:1)+top*2,cy:c[1]-c[0]};
+  });
+  polys.sort((A,B)=>A.z-B.z||B.cy-A.cy);
+
+  const gf=(1-Math.cos(gl.th))/2;
+  g.save();g.translate(200-19.5*gf,150+19.5*gf);
+  g.rotate(Math.sin(TAU*p)*0.06);g.scale(1.3,1.3);
+  g.fillStyle=al(C.deep,.11);
+  g.beginPath();g.ellipse(4,102,66-t*16,9,0,0,TAU);g.fill();
+  polys.forEach(P=>{
+    const back=P.flips%2===1;
+    g.fillStyle=back?C.a1:C.light;
+    path(g,P.pts);g.fill();
+    if(P.flips>0){g.fillStyle=al(C.deep,.055*P.flips);g.fill();}
+    g.strokeStyle=al(C.ink,back?.26:.17);g.lineWidth=1/1.3;g.lineJoin='round';g.stroke();
+  });
+  g.restore();
+}
+
+/* ───────────────── 08. SOPHIA — SPLIT-FLAP ───────────────── */
+const AZ='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const NAME='SOPHIA';
+function flapChar(g,ch,cx,cy,w,h,half){
+  g.save();g.beginPath();
+  if(half>0) g.rect(cx-w/2,cy-h/2,w,h/2); else g.rect(cx-w/2,cy,w,h/2);
+  g.clip();
+  g.fillStyle=C.sand;g.textAlign='center';g.textBaseline='middle';
+  g.font='700 47px ui-monospace,SFMono-Regular,Menlo,monospace';
+  g.fillText(ch,cx,cy+1);
+  g.restore();
+}
+function splitflap(g,p){
+  bg(g,C.card);
+  const w=50,h=74,gap=7, n=NAME.length;
+  const x0=200-(n*w+(n-1)*gap)/2+w/2, cy=150;
+  const FACE=lt(C.frame,.12), LEAFA=lt(C.frame,.20), LEAFB=lt(C.frame,.05);
+  const bw=n*w+(n-1)*gap+32;
+  const board=()=>{g.beginPath();g.roundRect(200-bw/2,cy-h/2-19,bw,h+38,12);g.fill();};
+  g.save();
+  g.fillStyle=C.frame;
+  g.shadowColor=al(dk(C.frame,.6),.34);g.shadowBlur=34;g.shadowOffsetY=22;board();
+  g.shadowColor=al(dk(C.frame,.6),.30);g.shadowBlur=14;g.shadowOffsetY=8;board();
+  g.shadowColor=al(dk(C.frame,.6),.26);g.shadowBlur=5;g.shadowOffsetY=2;board();
+  g.restore();
+  g.fillStyle=C.frame;board();
+  g.strokeStyle=al(C.light,.12);g.lineWidth=1;g.stroke();
+
+  for(let k=0;k<n;k++){
+    const cx=x0+k*(w+gap);
+    const base=AZ.indexOf(NAME[k]);
+    const s0=0.05+k*0.028, s1=0.60+k*0.058;
+    const spinning=p>s0&&p<s1;
+    let cur=NAME[k], nxt=NAME[k], f=0;
+    if(spinning){
+      const raw=cl((p-s0)/(s1-s0),0,1)*26, idx=Math.min(25,Math.floor(raw));
+      f=raw-idx; cur=AZ[(base+idx)%26]; nxt=AZ[(base+idx+1)%26];
+    }
+    g.fillStyle=FACE;
+    g.beginPath();g.roundRect(cx-w/2,cy-h/2,w,h,5);g.fill();
+    g.save();g.beginPath();g.roundRect(cx-w/2,cy-h/2,w,h,5);g.clip();
+    flapChar(g,spinning?nxt:cur,cx,cy,w,h,1);
+    flapChar(g,cur,cx,cy,w,h,-1);
+    if(spinning){
+      const c=Math.cos(Math.PI*f), sc=Math.max(0.02,Math.abs(c));
+      g.save();
+      g.translate(cx,cy);g.scale(1,sc);g.translate(-cx,-cy);
+      g.fillStyle=c>0?LEAFA:LEAFB;
+      g.beginPath();g.rect(cx-w/2,c>0?cy-h/2:cy,w,h/2);g.fill();
+      flapChar(g,c>0?cur:nxt,cx,cy,w,h,c>0?1:-1);
+      g.restore();
+      g.fillStyle=al(dk(C.frame,.6),.34*(1-sc));
+      g.fillRect(cx-w/2,cy-h/2,w,h);
+    }
+    g.strokeStyle=dk(C.frame,.55);g.lineWidth=2;
+    g.beginPath();g.moveTo(cx-w/2,cy);g.lineTo(cx+w/2,cy);g.stroke();
+    g.restore();
+    g.fillStyle=dk(C.frame,.4);
+    g.fillRect(cx-w/2-3,cy-4,4,8);g.fillRect(cx+w/2-1,cy-4,4,8);
+    g.strokeStyle=al(C.light,.10);g.lineWidth=1;
+    g.beginPath();g.roundRect(cx-w/2,cy-h/2,w,h,5);g.stroke();
+  }
+}
+
 /* ───────────────── registry ───────────────── */
 const ANIMS=[
  {n:'Loom',          pal:'deepsea',  note:'Weft alternates over/under; two rows per cycle restores the parity.',     per:2.6, d:loom},
@@ -379,6 +570,9 @@ const ANIMS=[
  {n:'Ink Drop',      pal:'nocturne', note:'Three ripple generations overlap, each offset by a third of a period.',   per:1.7, d:drop},
  {n:'Möbius Ribbon', pal:'riso',     note:'Tiles advance one slot per cycle. Half-twist swaps the two faces.',       per:4.4, d:mobius},
  {n:'Flip-Dot Wave', pal:'acid',     note:'Each dot flips twice per cycle, so every dot lands on its start face.',   per:2.8, d:flipdots},
+ {n:'Penrose Escalator',pal:'signal',  note:'The stair slides down exactly one tread while the climber steps up one.',   per:2.2, d:penrose},
+ {n:'Origami Fold',  pal:'blueprint',   note:'Folds, then unfolds along the same creases — the back half runs in reverse.',per:5.0, d:origami},
+ {n:'Sophia — Split-Flap',pal:'acid',  note:'Every drum spins through all 26 letters and lands back on its own.',     per:5.6, d:splitflap},
 ];
 
 /* ───────────────── plumbing ───────────────── */
